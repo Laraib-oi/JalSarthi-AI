@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { MessagesSquare, FileText, Languages, Clock, type LucideIcon } from "lucide-react";
 
-const stats: { icon: LucideIcon; value: number; suffix: string; label: string }[] = [
-  { icon: MessagesSquare, value: 1200, suffix: "+", label: "Simulated Citizen Queries Handled" },
-  { icon: FileText, value: 50, suffix: "+", label: "Government Schemes Indexed" },
-  { icon: Languages, value: 12, suffix: "", label: "Languages Planned for Support" },
-  { icon: Clock, value: 24, suffix: "/7", label: "AI Availability" },
+import { useLanguage } from "@/components/providers/LanguageProvider";
+
+const stats: { icon: LucideIcon; value: number; suffix: string }[] = [
+  { icon: MessagesSquare, value: 1200, suffix: "+" },
+  { icon: FileText, value: 50, suffix: "+" },
+  { icon: Languages, value: 12, suffix: "" },
+  { icon: Clock, value: 24, suffix: "/7" },
 ];
 
 function useCountUp(target: number, active: boolean, duration = 1400) {
@@ -57,6 +59,7 @@ function StatCard({
 }
 
 export default function Statistics() {
+  const { t } = useLanguage();
   const [active, setActive] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -82,15 +85,15 @@ export default function Statistics() {
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">
           </span>
-          <h2 className="mt-2 text-3xl font-bold text-blue-950 sm:text-4xl">Illustrative Impact Metrics</h2>
+          <h2 className="mt-2 text-3xl font-bold text-blue-950 sm:text-4xl">{t.statistics.heading}</h2>
           <p className="mt-3 text-slate-600">
-            Demonstration figures for prototype purposes only — not live production data.
+            {t.statistics.description}
           </p>
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s) => (
-            <StatCard key={s.label} {...s} active={active} />
+          {stats.map((s, index) => (
+            <StatCard key={t.statistics.labels[index]} {...s} label={t.statistics.labels[index] ?? ""} active={active} />
           ))}
         </div>
       </div>

@@ -2,7 +2,11 @@
 
 import { motion } from "framer-motion";
 
+import { useLanguage } from "@/components/providers/LanguageProvider";
+
 export default function WelcomeSection() {
+  const { t } = useLanguage();
+
   return (
     <section
       aria-labelledby="assistant-welcome-heading"
@@ -24,7 +28,7 @@ export default function WelcomeSection() {
         transition={{ duration: 0.4, delay: 0.1 }}
         className="mt-2 text-2xl font-bold text-blue-900 sm:text-3xl"
       >
-        Welcome to JalSarthi AI
+        {t.assistant.welcome}
       </motion.h2>
 
       <motion.p
@@ -33,7 +37,7 @@ export default function WelcomeSection() {
         transition={{ duration: 0.4, delay: 0.2 }}
         className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base"
       >
-        JalSarthi AI is your intelligent Government assistant that helps citizens discover schemes, resolve water-related queries, draft complaints, and access verified Ministry information through natural conversation.
+        {t.assistant.welcomeDescription}
       </motion.p>
     </section>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import type { LucideIcon } from "lucide-react";
 import {
   BookOpenCheck,
@@ -8,28 +10,22 @@ import {
   Leaf,
 } from "lucide-react";
 
-interface Suggestion {
-  icon: LucideIcon;
-  text: string;
-}
+import { useLanguage } from "@/components/providers/LanguageProvider";
 
-const SUGGESTIONS: Suggestion[] = [
-  { icon: BookOpenCheck, text: "How do I apply for Jal Jeevan Mission?" },
-  { icon: Droplets, text: "Find rainwater harvesting guidelines." },
-  { icon: FileEdit, text: "Draft a complaint about water supply." },
-  { icon: Landmark, text: "Explain Atal Bhujal Yojana." },
-  { icon: Leaf, text: "Water conservation tips." },
-  { icon: FileSearch, text: "Check eligibility for PMKSY." },
-];
+const SUGGESTION_ICONS: LucideIcon[] = [BookOpenCheck, Droplets, FileEdit, Landmark, Leaf, FileSearch];
 
 export function ConversationSuggestions() {
+  const { t } = useLanguage();
+
   return (
     <div>
       <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
-        Try asking
+        {t.assistant.tryAsking}
       </p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {SUGGESTIONS.map(({ icon: Icon, text }, i) => (
+        {t.assistant.suggestions.map((text, i) => {
+          const Icon = SUGGESTION_ICONS[i]!;
+          return (
           <button
             key={text}
             type="button"
@@ -43,7 +39,8 @@ export function ConversationSuggestions() {
               {text}
             </span>
           </button>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

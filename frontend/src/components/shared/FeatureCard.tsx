@@ -18,6 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useLanguage } from "@/components/providers/LanguageProvider";
 import type { FeatureIconName, FeatureItem } from "@/types";
 
 /**
@@ -41,6 +42,7 @@ interface FeatureCardProps {
 }
 
 export function FeatureCard({ feature, index }: FeatureCardProps) {
+  const { t } = useLanguage();
   const Icon = ICONS[feature.icon];
 
   return (
@@ -59,7 +61,7 @@ export function FeatureCard({ feature, index }: FeatureCardProps) {
             </span>
             {feature.status === "upcoming" && (
               <span className="rounded-full border border-border bg-surface px-2.5 py-1 text-caption font-medium text-ink-muted">
-                Coming soon
+                {t.features.comingSoon}
               </span>
             )}
           </div>

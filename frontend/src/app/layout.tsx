@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 
-import  Footer from "@/components/layout/Footer";
+import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
+import SkipToContent from "@/components/layout/SkipToContent";
+import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { SITE } from "@/constants/site";
 
 // Suppress TS error for side-effect CSS import in the app directory
@@ -48,15 +50,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
       <body>
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-body-sm focus:font-semibold focus:text-primary-700 focus:shadow-card"
-        >
-          Skip to main content
-        </a>
-        <Navbar />
-        <main id="main-content">{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <SkipToContent />
+          <Navbar />
+          <main id="main-content">{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

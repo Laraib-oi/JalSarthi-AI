@@ -1,37 +1,11 @@
+"use client";
+
 import { Users, Briefcase, Landmark, CheckCircle2 } from "lucide-react";
 
-const groups = [
-  {
-    icon: Users,
-    title: "Citizens",
-    color: "blue",
-    benefits: [
-      "Simple, jargon-free answers to water scheme queries",
-      "Faster, guided complaint drafting",
-      "24/7 availability in multiple languages",
-    ],
-  },
-  {
-    icon: Briefcase,
-    title: "Government Officers",
-    color: "emerald",
-    benefits: [
-      "Reduced repetitive query load",
-      "Structured, pre-drafted complaint summaries",
-      "Faster access to relevant circulars and guidelines",
-    ],
-  },
-  {
-    icon: Landmark,
-    title: "Ministry",
-    color: "amber",
-    benefits: [
-      "Consistent, standardized citizen communication",
-      "Better visibility into common citizen concerns",
-      "Scalable first point of contact for water governance",
-    ],
-  },
-] as const;
+import { useLanguage } from "@/components/providers/LanguageProvider";
+
+const groupIcons = [Users, Briefcase, Landmark];
+const groupColors = ["blue", "emerald", "amber"] as const;
 
 const colorMap = {
   blue: { bg: "bg-blue-50", text: "text-blue-700", ring: "ring-blue-100" },
@@ -40,21 +14,24 @@ const colorMap = {
 };
 
 export default function StakeholderBenefits() {
+  const { t } = useLanguage();
+
   return (
     <section id="benefits" className="bg-slate-50 py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">
           </span>
-          <h2 className="mt-2 text-3xl font-bold text-blue-950 sm:text-4xl">Built for Everyone Involved</h2>
+          <h2 className="mt-2 text-3xl font-bold text-blue-950 sm:text-4xl">{t.benefits.heading}</h2>
           <p className="mt-3 text-slate-600">
-            Designed to create value across citizens, officers and the Ministry.
+            {t.benefits.description}
           </p>
         </div>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {groups.map(({ icon: Icon, title, benefits, color }) => {
-            const c = colorMap[color];
+          {t.benefits.groups.map(({ title, benefits }, index) => {
+            const Icon = groupIcons[index]!;
+            const c = colorMap[groupColors[index]!];
             return (
               <div key={title} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                 <span
