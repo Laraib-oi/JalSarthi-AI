@@ -9,11 +9,11 @@ export default function Navbar() {
   const [lang, setLang] = useState<"en" | "hi">("en");
 
   const navLinks = [
-    { label: lang === "en" ? "Home" : "होम", href: "#home" },
-    { label: lang === "en" ? "Capabilities" : "क्षमताएँ", href: "#capabilities" },
-    { label: lang === "en" ? "How It Works" : "कार्यप्रणाली", href: "#how-it-works" },
-    { label: lang === "en" ? "Benefits" : "लाभ", href: "#benefits" },
-    { label: lang === "en" ? "About" : "परिचय", href: "#about" },
+    { label: lang === "en" ? "Home" : "होम", href: "/#home" },
+    { label: lang === "en" ? "Capabilities" : "क्षमताएँ", href: "/#capabilities" },
+    { label: lang === "en" ? "How It Works" : "कार्यप्रणाली", href: "/#how-it-works" },
+    { label: lang === "en" ? "Benefits" : "लाभ", href: "/#benefits" },
+    { label: lang === "en" ? "About" : "परिचय", href: "/#about" },
   ];
 
   return (
@@ -49,7 +49,7 @@ export default function Navbar() {
           className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8"
           aria-label="Primary"
         >
-          <a href="#home" className="flex items-center gap-3">
+          <Link href="/#home" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-900 text-white shadow-inner ring-2 ring-amber-500/40">
               <Droplets className="h-5 w-5" aria-hidden="true" />
             </span>
@@ -61,7 +61,7 @@ export default function Navbar() {
                 {lang === "en" ? "Ministry of Jal Shakti  " : "जल शक्ति मंत्रालय · प्रोटोटाइप"}
               </span>
             </span>
-          </a>
+          </Link>
 
           <ul className="hidden items-center gap-7 lg:flex">
             {navLinks.map((l) => (

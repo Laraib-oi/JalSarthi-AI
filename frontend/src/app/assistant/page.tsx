@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function AssistantPage() {
   return (
-    <main className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white">
       <StatusBanner />
 
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center px-4 sm:px-6">
@@ -26,6 +26,6 @@ export default function AssistantPage() {
 </div>
 
       <ChatInputPlaceholder />
-    </main>
+    </div>
   );
 }

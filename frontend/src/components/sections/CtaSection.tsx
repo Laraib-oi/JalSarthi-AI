@@ -17,7 +17,7 @@ export function CtaSection() {
           Jal Shakti — starting simple, and growing with the people who use it.
         </p>
         <Button asChild variant="outline" size="lg" className="mt-2">
-          <a href="#chat">
+          <a href="/assistant">
             Start Chat with JalSarthi AI
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </a>

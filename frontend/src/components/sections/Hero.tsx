@@ -60,7 +60,7 @@ export default function Hero() {
           {/* CTA Buttons */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="#assistant"
+              href="/assistant"
               className="inline-flex items-center justify-center gap-2 rounded-md bg-blue-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition-colors hover:bg-blue-800"
             >
               Ask JalSarthi AI
@@ -68,7 +68,7 @@ export default function Hero() {
             </a>
 
             <a
-              href="#services"
+              href="#capabilities"
               className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-300 hover:text-blue-800"
             >
               <PlayCircle className="h-4 w-4" aria-hidden="true" />

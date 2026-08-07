@@ -1,4 +1,5 @@
 import { Droplets, ExternalLink, ShieldAlert } from "lucide-react";
+import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-blue-950 text-blue-200">
@@ -23,27 +24,27 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-white"></p>
+            <p className="text-sm font-semibold text-white">Quick Links</p>
             <ul className="mt-4 space-y-2 text-sm">
               <li>
-                <a href="#services" className="hover:text-white transition-colors">
-                  
-                </a>
+                <Link href="/#capabilities" className="hover:text-white transition-colors">
+                  Services
+                </Link>
               </li>
               <li>
-                <a href="#how-it-works" className="hover:text-white transition-colors">
-                 
-                </a>
+                <Link href="/#how-it-works" className="hover:text-white transition-colors">
+                  How It Works
+                </Link>
               </li>
               <li>
-                <a href="#Impact" className="hover:text-white transition-colors">
-                  
-                </a>
+                <Link href="/#impact" className="hover:text-white transition-colors">
+                  Impact
+                </Link>
               </li>
               <li>
-                <a href="#assistant" className="hover:text-white transition-colors">
-                  
-                </a>
+                <Link href="/assistant" className="hover:text-white transition-colors">
+                  AI Assistant
+                </Link>
               </li>
             </ul>
           </div>
