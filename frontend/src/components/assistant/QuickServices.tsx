@@ -14,7 +14,12 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 
 const QUICK_SERVICE_ICONS: LucideIcon[] = [FileSearch, FileEdit, Droplets, ScrollText, PhoneCall, HelpCircle];
 
-export default function QuickServices() {
+type QuickServicesProps = {
+  isLoading?: boolean;
+  onPromptSelect?: (prompt: string) => void;
+};
+
+export default function QuickServices({ isLoading = false, onPromptSelect }: QuickServicesProps) {
   const { t } = useLanguage();
 
   return (
@@ -28,7 +33,9 @@ export default function QuickServices() {
             <button
             key={label}
             type="button"
-            className="group flex min-w-[132px] cursor-pointer flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md sm:min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+            disabled={isLoading}
+            onClick={() => onPromptSelect?.(label)}
+            className="group flex min-w-[132px] cursor-pointer flex-col items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-center shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md sm:min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-900/5 text-blue-800 transition-colors group-hover:bg-blue-900 group-hover:text-white">
               <Icon className="h-5 w-5" aria-hidden="true" />

@@ -1,8 +1,7 @@
 # JalSarthi Platform
 
 Frontend foundation for **JalSarthi AI** — an intelligent virtual assistant
-concept for the Ministry of Jal Shakti, built for a Smart India Hackathon
-prototype.
+concept for the Ministry of Jal Shakti.
 
 This repository contains **only the frontend foundation**: a landing page,
 design system, and project structure. No backend, AI, authentication, or

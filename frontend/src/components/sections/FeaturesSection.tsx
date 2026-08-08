@@ -1,6 +1,5 @@
 "use client";
 
-import { WaveDivider } from "@/components/shared/WaveDivider";
 import { FeatureCard } from "@/components/shared/FeatureCard";
 import { FEATURES } from "@/constants/features";
 import { useLanguage } from "@/components/providers/LanguageProvider";
@@ -10,8 +9,6 @@ export function FeaturesSection() {
 
   return (
     <section id="features" className="relative bg-surface-raised py-20 md:py-28">
-      {/* <WaveDivider className="absolute inset-x-0 -top-4" /> */}
-
       <div className="container">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-caption font-semibold uppercase tracking-wide text-primary-600">

@@ -17,7 +17,7 @@ export const FEATURES: FeatureItem[] = [
     icon: "ai-assistant",
     title: "AI Assistant",
     description:
-      "A conversational guide that answers water-related questions in plain language, in the citizen's own words.",
+      "A conversational guide for general water-related questions in plain language.",
     status: "upcoming",
   },
   {
@@ -25,7 +25,7 @@ export const FEATURES: FeatureItem[] = [
     icon: "government-knowledge",
     title: "Government Knowledge",
     description:
-      "Verified schemes, policies, and Jal Shakti guidelines, kept current and sourced directly from official documentation.",
+      "A planned knowledge layer for source-backed answers from official documentation.",
     status: "upcoming",
   },
   {
@@ -33,7 +33,7 @@ export const FEATURES: FeatureItem[] = [
     icon: "complaint-generator",
     title: "Complaint Generator",
     description:
-      "Turns a citizen's description of a water issue into a properly formatted complaint, ready for submission.",
+      "A planned tool for preparing a structured complaint from a citizen's description.",
     status: "upcoming",
   },
   {
@@ -41,7 +41,7 @@ export const FEATURES: FeatureItem[] = [
     icon: "voice-assistant",
     title: "Voice Assistant",
     description:
-      "Speak your query in your preferred language — built for citizens who are more comfortable talking than typing.",
+      "A planned voice interaction option for citizens who prefer speaking to typing.",
     status: "upcoming",
   },
   {
@@ -49,7 +49,7 @@ export const FEATURES: FeatureItem[] = [
     icon: "officer-copilot",
     title: "Officer Copilot",
     description:
-      "A companion for field and desk officers to triage complaints, draft responses, and track resolution status.",
+      "A planned companion for field and desk officers to manage service workflows.",
     status: "upcoming",
   },
   {
@@ -57,7 +57,7 @@ export const FEATURES: FeatureItem[] = [
     icon: "analytics-dashboard",
     title: "Analytics Dashboard",
     description:
-      "District and state-level visibility into complaint volumes, scheme reach, and response times.",
+      "A planned dashboard for district and state-level service insights.",
     status: "upcoming",
   },
 ];

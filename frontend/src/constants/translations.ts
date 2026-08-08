@@ -68,13 +68,15 @@ type Translation = {
     emptyDescription: string;
     tryAsking: string;
     suggestions: string[];
-    nextMilestone: string;
     attachFile: string;
     voiceInput: string;
     sendMessage: string;
     askLabel: string;
     placeholder: string;
-    prototypeNotice: string;
+    chatNotice: string;
+    loading: string;
+    error: string;
+    unavailable: string;
   };
 };
 
@@ -101,34 +103,34 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       eyebrow: "Government of India • Ministry of Jal Shakti",
       headingStart: "Empowering Every Citizen with",
       headingAccent: "Intelligent Water Governance",
-      description: "JalSarthi AI helps citizens discover government water schemes, access official information, draft complaints, search public resources, and receive reliable guidance powered by the Ministry of Jal Shakti knowledge base.",
+      description: "JalSarthi AI offers a simple place to explore general water-related questions in plain language. Official-document retrieval and other assisted services are planned for a later stage.",
       askAssistant: "Ask JalSarthi AI",
       exploreServices: "Explore Services",
       trustBadges: ["Ministry of Jal Shakti", "AI-Powered • Citizen-First"],
       assistantName: "JalSarthi AI Assistant",
-      demoQuestion: "How do I apply for the Jal Jeevan Mission scheme in my district?",
-      demoResponse: "I can help you with eligibility, required documents, application steps, and the nearest implementing authority for your district.",
+      demoQuestion: "What are some practical ways to conserve water at home?",
+      demoResponse: "I can share general water-conservation ideas and explain when you should check with a relevant local authority for official information.",
     },
     capabilities: {
       heading: "What JalSarthi AI Can Do",
       description: "A focused set of AI-assisted capabilities built around real citizen needs in water governance.",
       items: [
-        { title: "Scheme Guidance", description: "Step-by-step guidance on eligibility, documentation and application process for water-related government schemes." },
-        { title: "AI Water Assistant", description: "Conversational assistant that answers citizen queries on water supply, quality and governance in plain language." },
-        { title: "Complaint Drafting", description: "Helps citizens draft clear, formal complaints for water-related grievances, ready to submit to the right authority." },
+        { title: "General Water Information", description: "Plain-language explanations of everyday water topics and conservation practices." },
+        { title: "AI Water Assistant", description: "Conversational assistance for general water-related questions in plain language." },
+        { title: "Guided Next Steps", description: "Helps citizens identify when to contact the appropriate official or local authority." },
         { title: "Voice Assistant", description: "Voice-based interaction designed for accessibility, including low-literacy and regional-language users." },
-        { title: "Official Document Search", description: "Quickly locate relevant circulars, guidelines and notifications from the Ministry's knowledge base." },
+        { title: "Document Search", description: "Official-document retrieval is planned once the knowledge layer is available." },
         { title: "Water Conservation Advisor", description: "Practical, localized advice on water conservation and sustainable usage for households and communities." },
       ],
     },
     howItWorks: {
       heading: "How JalSarthi Works",
-      description: "A transparent flow from citizen query to a verified, ministry-grounded response.",
+      description: "A transparent flow from a citizen query to a general AI response, with clear limits until a knowledge layer is added.",
       steps: [
         { title: "Citizen", description: "Asks a question in their own words, by text or voice." },
-        { title: "AI", description: "JalSarthi AI interprets the query and identifies the right context." },
-        { title: "Ministry Knowledge", description: "Cross-checks against Ministry schemes, documents and guidelines." },
-        { title: "Verified Response", description: "Delivers a clear, grounded answer citizens can act on." },
+        { title: "AI", description: "JalSarthi AI interprets the query and prepares a general response." },
+        { title: "Knowledge Layer", description: "Official-document retrieval is not enabled yet." },
+        { title: "Clear Response", description: "Delivers a concise answer and points to an authority when verification is needed." },
       ],
     },
     benefits: {
@@ -151,7 +153,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       comingSoon: "Coming soon",
       items: {
         "ai-assistant": { title: "AI Assistant", description: "A conversational guide that answers water-related questions in plain language, in the citizen's own words." },
-        "government-knowledge": { title: "Government Knowledge", description: "Verified schemes, policies, and Jal Shakti guidelines, kept current and sourced directly from official documentation." },
+        "government-knowledge": { title: "Government Knowledge", description: "A planned knowledge layer for source-backed answers from official documentation." },
         "complaint-generator": { title: "Complaint Generator", description: "Turns a citizen's description of a water issue into a properly formatted complaint, ready for submission." },
         "voice-assistant": { title: "Voice Assistant", description: "Speak your query in your preferred language — built for citizens who are more comfortable talking than typing." },
         "officer-copilot": { title: "Officer Copilot", description: "A companion for field and desk officers to triage complaints, draft responses, and track resolution status." },
@@ -168,12 +170,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     },
     assistant: {
       status: "Status",
-      statusItems: [{ label: "AI Response Engine", value: "Coming Soon" }, { label: "Knowledge Base", value: "Ready" }, { label: "Government Schemes", value: "Loaded" }, { label: "Voice Assistant", value: "Coming Soon" }],
-      welcome: "Welcome to JalSarthi AI", welcomeDescription: "JalSarthi AI is your intelligent Government assistant that helps citizens discover schemes, resolve water-related queries, draft complaints, and access verified Ministry information through natural conversation.",
-      quickServicesLabel: "Quick services", quickServices: ["Scheme Search", "Complaint Draft", "Water Saving Tips", "Policies", "Emergency Contacts", "FAQ"],
-      conversationArea: "Conversation area", emptyTitle: "Your conversation starts here", emptyDescription: "JalSarthi AI can assist citizens with government water schemes, policies, complaint drafting and official guidance.",
-      tryAsking: "Try asking", suggestions: ["How do I apply for Jal Jeevan Mission?", "Find rainwater harvesting guidelines.", "Draft a complaint about water supply.", "Explain Atal Bhujal Yojana.", "Water conservation tips.", "Check eligibility for PMKSY."],
-      nextMilestone: "Available in next milestone", attachFile: "Attach a file", voiceInput: "Voice input", sendMessage: "Send message", askLabel: "Ask JalSarthi AI", placeholder: "Ask about water schemes, complaints, policies, conservation or government services...", prototypeNotice: "Chat functionality will be enabled in a future milestone.",
+      statusItems: [{ label: "AI chat", value: "Available when configured" }, { label: "Conversation", value: "This session only" }, { label: "Knowledge retrieval", value: "Not enabled" }, { label: "Voice input", value: "Not enabled" }],
+      welcome: "Welcome to JalSarthi AI", welcomeDescription: "Ask general water-related questions in natural language. Official-document retrieval, scheme-specific guidance, complaint drafting, and voice support are not enabled yet.",
+      quickServicesLabel: "Quick prompts", quickServices: ["Water conservation tips", "Rainwater harvesting", "Water quality basics", "Water-saving at home", "Community awareness", "General water question"],
+      conversationArea: "Conversation area", emptyTitle: "Your conversation starts here", emptyDescription: "JalSarthi AI can provide general water-related information. It cannot yet verify official documents, local records, or scheme details.",
+      tryAsking: "Try asking", suggestions: ["How can I reduce water use at home?", "What is rainwater harvesting?", "What are common causes of water wastage?", "How can a community conserve water?", "What are basic water-quality precautions?", "Why is water conservation important?"],
+      attachFile: "Attach a file", voiceInput: "Voice input", sendMessage: "Send message", askLabel: "Ask JalSarthi AI", placeholder: "Ask a general question about water or conservation...", chatNotice: "AI responses are general information and do not use official documents or local records.", loading: "JalSarthi AI is preparing a response…", error: "JalSarthi AI could not respond. Please try again.", unavailable: "AI chat is not configured yet. Please try again after the service is configured.",
     },
   },
   hi: {
@@ -182,26 +184,26 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       government: "भारत सरकार · जल शक्ति मंत्रालय", skipToContent: "मुख्य सामग्री पर जाएँ", switchLanguage: "भाषा बदलें", home: "होम", capabilities: "क्षमताएँ", howItWorks: "कार्यप्रणाली", benefits: "लाभ", about: "परिचय", ministry: "जल शक्ति मंत्रालय", officialAssistant: "आधिकारिक एआई सहायक", talkToAssistant: "जलसारथी से बात करें", openMenu: "मेनू खोलें", closeMenu: "मेनू बंद करें", primaryNavigation: "मुख्य नेविगेशन",
     },
     hero: {
-      eyebrow: "भारत सरकार • जल शक्ति मंत्रालय", headingStart: "हर नागरिक को सशक्त बनाना", headingAccent: "बुद्धिमान जल शासन के साथ", description: "जलसारथी एआई नागरिकों को सरकारी जल योजनाएँ खोजने, आधिकारिक जानकारी पाने, शिकायतें लिखने, सार्वजनिक संसाधन खोजने और जल शक्ति मंत्रालय के ज्ञान आधार से विश्वसनीय मार्गदर्शन पाने में सहायता करता है।", askAssistant: "जलसारथी एआई से पूछें", exploreServices: "सेवाएँ देखें", trustBadges: ["जल शक्ति मंत्रालय", "एआई-संचालित • नागरिक-केंद्रित"], assistantName: "जलसारथी एआई सहायक", demoQuestion: "मैं अपने जिले में जल जीवन मिशन योजना के लिए कैसे आवेदन करूँ?", demoResponse: "मैं पात्रता, आवश्यक दस्तावेज़, आवेदन के चरण और आपके जिले की निकटतम कार्यान्वयन प्राधिकरण की जानकारी में सहायता कर सकता हूँ।",
+      eyebrow: "भारत सरकार • जल शक्ति मंत्रालय", headingStart: "हर नागरिक को सशक्त बनाना", headingAccent: "बुद्धिमान जल शासन के साथ", description: "जलसारथी एआई सरल भाषा में सामान्य जल-संबंधी प्रश्नों को समझने का स्थान प्रदान करता है। आधिकारिक दस्तावेज़ खोज और अन्य सहायक सेवाएँ बाद के चरण के लिए नियोजित हैं।", askAssistant: "जलसारथी एआई से पूछें", exploreServices: "सेवाएँ देखें", trustBadges: ["जल शक्ति मंत्रालय", "एआई-संचालित • नागरिक-केंद्रित"], assistantName: "जलसारथी एआई सहायक", demoQuestion: "घर पर पानी बचाने के व्यावहारिक तरीके क्या हैं?", demoResponse: "मैं पानी बचाने के सामान्य उपाय साझा कर सकता हूँ और बता सकता हूँ कि आधिकारिक जानकारी के लिए स्थानीय प्राधिकरण से कब संपर्क करना चाहिए।",
     },
     capabilities: {
       heading: "जलसारथी एआई क्या कर सकता है", description: "जल शासन में नागरिकों की वास्तविक आवश्यकताओं पर आधारित एआई-सहायित क्षमताओं का एक केंद्रित समूह।",
       items: [
-        { title: "योजना मार्गदर्शन", description: "जल-संबंधी सरकारी योजनाओं की पात्रता, दस्तावेज़ों और आवेदन प्रक्रिया पर चरण-दर-चरण मार्गदर्शन।" },
-        { title: "एआई जल सहायक", description: "सरल भाषा में जल आपूर्ति, गुणवत्ता और शासन संबंधी नागरिक प्रश्नों का उत्तर देने वाला संवादात्मक सहायक।" },
-        { title: "शिकायत प्रारूपण", description: "नागरिकों को जल-संबंधी समस्याओं के लिए स्पष्ट, औपचारिक शिकायतें तैयार करने में सहायता।" },
+        { title: "सामान्य जल जानकारी", description: "रोज़मर्रा के जल विषयों और संरक्षण उपायों की सरल भाषा में व्याख्या।" },
+        { title: "एआई जल सहायक", description: "सामान्य जल-संबंधी प्रश्नों के लिए सरल भाषा में संवादात्मक सहायता।" },
+        { title: "अगले कदम", description: "नागरिकों को यह समझने में मदद कि उचित आधिकारिक या स्थानीय प्राधिकरण से कब संपर्क करना चाहिए।" },
         { title: "वॉयस सहायक", description: "कम साक्षरता और क्षेत्रीय भाषा उपयोगकर्ताओं सहित सुलभता के लिए बनाया गया वॉइस-आधारित संवाद।" },
-        { title: "आधिकारिक दस्तावेज़ खोज", description: "मंत्रालय के ज्ञान आधार से प्रासंगिक परिपत्र, दिशा-निर्देश और अधिसूचनाएँ तुरंत खोजें।" },
+        { title: "दस्तावेज़ खोज", description: "ज्ञान परत उपलब्ध होने के बाद आधिकारिक दस्तावेज़ खोज की योजना है।" },
         { title: "जल संरक्षण सलाहकार", description: "घरों और समुदायों के लिए जल संरक्षण और सतत उपयोग पर व्यावहारिक, स्थानीयकृत सलाह।" },
       ],
     },
     howItWorks: {
-      heading: "जलसारथी कैसे काम करता है", description: "नागरिक के प्रश्न से सत्यापित, मंत्रालय-आधारित उत्तर तक एक पारदर्शी प्रक्रिया।",
+      heading: "जलसारथी कैसे काम करता है", description: "नागरिक के प्रश्न से सामान्य एआई उत्तर तक एक पारदर्शी प्रक्रिया, जिसमें ज्ञान परत जुड़ने तक सीमाएँ स्पष्ट रहती हैं।",
       steps: [
         { title: "नागरिक", description: "अपने शब्दों में, टेक्स्ट या वॉइस द्वारा प्रश्न पूछता है।" },
-        { title: "एआई", description: "जलसारथी एआई प्रश्न को समझता है और सही संदर्भ पहचानता है।" },
-        { title: "मंत्रालय ज्ञान", description: "मंत्रालय की योजनाओं, दस्तावेज़ों और दिशा-निर्देशों से जाँच करता है।" },
-        { title: "सत्यापित उत्तर", description: "नागरिकों के लिए स्पष्ट और उपयोगी उत्तर प्रदान करता है।" },
+        { title: "एआई", description: "जलसारथी एआई प्रश्न को समझता है और सामान्य उत्तर तैयार करता है।" },
+        { title: "ज्ञान परत", description: "आधिकारिक दस्तावेज़ खोज अभी सक्षम नहीं है।" },
+        { title: "स्पष्ट उत्तर", description: "संक्षिप्त उत्तर देता है और सत्यापन आवश्यक होने पर प्राधिकरण की ओर संकेत करता है।" },
       ],
     },
     benefits: {
@@ -217,7 +219,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       heading: "एआई के माध्यम से जल शासन में बदलाव", description: "हर क्षमता जल शासन में नागरिक या अधिकारी की वास्तविक बातचीत को तेज़ और स्पष्ट बनाने के लिए डिज़ाइन की गई है।", comingSoon: "जल्द आ रहा है",
       items: {
         "ai-assistant": { title: "एआई सहायक", description: "नागरिक के अपने शब्दों में जल-संबंधी प्रश्नों का सरल भाषा में उत्तर देने वाला संवादात्मक मार्गदर्शक।" },
-        "government-knowledge": { title: "सरकारी ज्ञान", description: "आधिकारिक दस्तावेज़ों से प्राप्त और अद्यतन योजनाएँ, नीतियाँ तथा जल शक्ति दिशा-निर्देश।" },
+        "government-knowledge": { title: "सरकारी ज्ञान", description: "आधिकारिक दस्तावेज़ों से स्रोत-आधारित उत्तरों के लिए नियोजित ज्ञान परत।" },
         "complaint-generator": { title: "शिकायत जनरेटर", description: "नागरिक के जल समस्या विवरण को जमा करने योग्य सही प्रारूप की शिकायत में बदलता है।" },
         "voice-assistant": { title: "वॉयस सहायक", description: "अपनी पसंदीदा भाषा में प्रश्न बोलें — उन नागरिकों के लिए जो टाइप करने की बजाय बोलने में सहज हैं।" },
         "officer-copilot": { title: "अधिकारी सहायक", description: "मैदानी और डेस्क अधिकारियों के लिए शिकायतों की जाँच, उत्तर तैयार करने और समाधान स्थिति देखने का साथी।" },
@@ -229,7 +231,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       ministry: "जल शक्ति मंत्रालय", portal: "एआई-संचालित नागरिक सहायता पोर्टल", description: "जलसारथी एआई एक बुद्धिमान नागरिक सहायता मंच है, जिसे जल-संबंधी सरकारी सेवाओं, योजनाओं, जानकारी और शिकायत सहायता तक पहुँच सरल बनाने के लिए डिज़ाइन किया गया है।", quickLinks: "त्वरित लिंक", services: "सेवाएँ", howItWorks: "कार्यप्रणाली", impact: "प्रभाव", assistant: "एआई सहायक", aboutPrototype: "इस प्रोटोटाइप के बारे में", prototypeNotice: "यह प्रोटोटाइप केवल प्रदर्शन उद्देश्यों के लिए हैकाथॉन हेतु विकसित किया गया है। यह भारत सरकार की आधिकारिक सेवा नहीं है।", repository: "प्रोजेक्ट रिपॉजिटरी देखें",
     },
     assistant: {
-      status: "स्थिति", statusItems: [{ label: "एआई उत्तर इंजन", value: "जल्द आ रहा है" }, { label: "ज्ञान आधार", value: "तैयार" }, { label: "सरकारी योजनाएँ", value: "लोड की गईं" }, { label: "वॉयस सहायक", value: "जल्द आ रहा है" }], welcome: "जलसारथी एआई में आपका स्वागत है", welcomeDescription: "जलसारथी एआई आपका बुद्धिमान सरकारी सहायक है, जो नागरिकों को योजनाएँ खोजने, जल-संबंधी प्रश्नों का समाधान करने, शिकायतें तैयार करने और प्राकृतिक संवाद के माध्यम से सत्यापित मंत्रालय जानकारी तक पहुँचने में मदद करता है।", quickServicesLabel: "त्वरित सेवाएँ", quickServices: ["योजना खोज", "शिकायत प्रारूप", "जल बचत सुझाव", "नीतियाँ", "आपातकालीन संपर्क", "सामान्य प्रश्न"], conversationArea: "बातचीत क्षेत्र", emptyTitle: "आपकी बातचीत यहाँ से शुरू होती है", emptyDescription: "जलसारथी एआई नागरिकों को सरकारी जल योजनाओं, नीतियों, शिकायत प्रारूपण और आधिकारिक मार्गदर्शन में सहायता कर सकता है।", tryAsking: "पूछकर देखें", suggestions: ["जल जीवन मिशन के लिए कैसे आवेदन करूँ?", "वर्षा जल संचयन दिशानिर्देश खोजें।", "जल आपूर्ति की शिकायत तैयार करें।", "अटल भूजल योजना समझाएँ।", "जल संरक्षण के सुझाव।", "पीएमकेएसवाई की पात्रता जाँचें।"], nextMilestone: "अगले चरण में उपलब्ध", attachFile: "फ़ाइल संलग्न करें", voiceInput: "वॉइस इनपुट", sendMessage: "संदेश भेजें", askLabel: "जलसारथी एआई से पूछें", placeholder: "जल योजनाओं, शिकायतों, नीतियों, संरक्षण या सरकारी सेवाओं के बारे में पूछें...", prototypeNotice: "चैट सुविधा भविष्य के चरण में उपलब्ध होगी।",
+      status: "स्थिति", statusItems: [{ label: "एआई चैट", value: "कॉन्फ़िगर होने पर उपलब्ध" }, { label: "बातचीत", value: "केवल इस सत्र में" }, { label: "ज्ञान खोज", value: "सक्षम नहीं" }, { label: "वॉयस इनपुट", value: "सक्षम नहीं" }], welcome: "जलसारथी एआई में आपका स्वागत है", welcomeDescription: "प्राकृतिक भाषा में सामान्य जल-संबंधी प्रश्न पूछें। आधिकारिक दस्तावेज़ खोज, योजना-विशिष्ट मार्गदर्शन, शिकायत प्रारूपण और वॉयस सहायता अभी सक्षम नहीं हैं।", quickServicesLabel: "त्वरित प्रश्न", quickServices: ["जल संरक्षण सुझाव", "वर्षा जल संचयन", "जल गुणवत्ता की मूल बातें", "घर में पानी बचाना", "सामुदायिक जागरूकता", "सामान्य जल प्रश्न"], conversationArea: "बातचीत क्षेत्र", emptyTitle: "आपकी बातचीत यहाँ से शुरू होती है", emptyDescription: "जलसारथी एआई सामान्य जल-संबंधी जानकारी दे सकता है। यह अभी आधिकारिक दस्तावेज़, स्थानीय रिकॉर्ड या योजना विवरण सत्यापित नहीं कर सकता।", tryAsking: "पूछकर देखें", suggestions: ["मैं घर पर पानी का उपयोग कैसे कम कर सकता हूँ?", "वर्षा जल संचयन क्या है?", "पानी की बर्बादी के सामान्य कारण क्या हैं?", "समुदाय पानी का संरक्षण कैसे कर सकता है?", "जल गुणवत्ता से जुड़ी बुनियादी सावधानियाँ क्या हैं?", "जल संरक्षण क्यों महत्वपूर्ण है?"], attachFile: "फ़ाइल संलग्न करें", voiceInput: "वॉइस इनपुट", sendMessage: "संदेश भेजें", askLabel: "जलसारथी एआई से पूछें", placeholder: "पानी या जल संरक्षण के बारे में सामान्य प्रश्न पूछें...", chatNotice: "एआई उत्तर सामान्य जानकारी हैं और इनमें आधिकारिक दस्तावेज़ या स्थानीय रिकॉर्ड का उपयोग नहीं होता।", loading: "जलसारथी एआई उत्तर तैयार कर रहा है…", error: "जलसारथी एआई उत्तर नहीं दे सका। कृपया फिर से प्रयास करें।", unavailable: "एआई चैट अभी कॉन्फ़िगर नहीं है। सेवा कॉन्फ़िगर होने के बाद फिर से प्रयास करें।",
     },
   },
 };

@@ -5,7 +5,12 @@ import { Landmark, MessageCircle } from "lucide-react";
 import { ConversationSuggestions } from "@/components/assistant/ConversationSuggestions";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
-export default function EmptyChatArea() {
+type EmptyChatAreaProps = {
+  isLoading?: boolean;
+  onPromptSelect?: (prompt: string) => void;
+};
+
+export default function EmptyChatArea({ isLoading, onPromptSelect }: EmptyChatAreaProps) {
   const { t } = useLanguage();
 
   return (
@@ -28,7 +33,7 @@ export default function EmptyChatArea() {
       </div>
 
       <div className="mt-8 w-full">
-        <ConversationSuggestions />
+        <ConversationSuggestions isLoading={isLoading} onPromptSelect={onPromptSelect} />
       </div>
     </section>
   );

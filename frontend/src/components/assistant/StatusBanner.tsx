@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/components/providers/LanguageProvider";
 
-const STATUS_TONES = ["pending", "ready", "ready", "pending"] as const;
+const STATUS_TONES = ["pending", "ready", "pending", "pending"] as const;
 
 export default function StatusBanner() {
   const { t } = useLanguage();

@@ -7,9 +7,6 @@ import SkipToContent from "@/components/layout/SkipToContent";
 import { LanguageProvider } from "@/components/providers/LanguageProvider";
 import { SITE } from "@/constants/site";
 
-// Suppress TS error for side-effect CSS import in the app directory
-// Type declarations for CSS imports are not present in this project.
-// @ts-ignore
 import "./globals.css";
 
 const poppins = Poppins({
