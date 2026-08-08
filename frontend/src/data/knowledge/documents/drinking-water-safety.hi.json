@@ -6,23 +6,27 @@
   "category": "drinking-water-safety",
   "language": "hi",
   "jurisdiction": "भारत",
-  "sourceName": null,
-  "sourceUrl": null,
-  "sourceType": null,
-  "publisher": null,
-  "lastVerifiedAt": null,
+  "sourceName": "Concise Handbook for Monitoring Water Quality of Piped Drinking Water Supply to Rural Households",
+  "sourceUrl": "https://jaljeevanmission.gov.in/sites/default/files/wq/handbook-for-monitoring-wq-of-piped-drinking-water.pdf",
+  "sourceType": "official-publication",
+  "publisher": "Department of Drinking Water and Sanitation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
   "effectiveDate": null,
-  "status": "draft",
+  "status": "verified",
   "keywords": ["पेयजल", "जल प्रबंधन", "जल सुरक्षा"],
   "aliases": ["सुरक्षित पेयजल", "पानी की सावधानियाँ"],
-  "summary": "भविष्य में मानव समीक्षा से तैयार होने वाली पेयजल प्रबंधन और सुरक्षा जानकारी के लिए प्रारूप।",
+  "summary": "जल जीवन मिशन की पुस्तिका ग्रामीण घरों में पाइप से होने वाली जलापूर्ति की गुणवत्ता की निगरानी और रखरखाव को सुरक्षित जलापूर्ति के महत्वपूर्ण घटक मानती है।",
   "sections": [
     {
-      "heading": "प्रारूप का दायरा",
-      "content": "नागरिकों के प्रश्नों के उत्तर में इस दस्तावेज़ का उपयोग करने से पहले प्रामाणिक स्रोत शोध और मानव समीक्षा आवश्यक है।"
+      "heading": "जल गुणवत्ता निगरानी",
+      "content": "पुस्तिका पाइप से होने वाली पेयजल आपूर्ति के लिए स्रोत से लेकर उपचार और वितरण बिंदुओं तक जल गुणवत्ता निगरानी का वर्णन करती है।"
+    },
+    {
+      "heading": "दायरे की सीमा",
+      "content": "यह दस्तावेज़ जल गुणवत्ता निगरानी की सामान्य जानकारी देता है। इसमें चिकित्सकीय सलाह या घरेलू जल-उपचार के निर्देश नहीं हैं।"
     }
   ],
   "audience": ["घर-परिवार"],
-  "scope": "केवल सामान्य प्रबंधन और बुनियादी सुरक्षा जानकारी; कोई चिकित्सकीय मार्गदर्शन नहीं।",
-  "verificationNotes": "प्रारूप। कोई स्रोत चुना या सत्यापित नहीं किया गया है।"
+  "scope": "केवल पाइप से होने वाली ग्रामीण जलापूर्ति की सामान्य जल गुणवत्ता निगरानी जानकारी; कोई चिकित्सकीय सलाह या घरेलू जल-उपचार निर्देश नहीं।",
+  "verificationNotes": "08-08-2026 को राष्ट्रीय जल जीवन मिशन की पुस्तिका के आधार पर समीक्षा की गई।"
 }

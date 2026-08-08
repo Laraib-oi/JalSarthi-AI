@@ -6,23 +6,27 @@
   "category": "rainwater-harvesting",
   "language": "hi",
   "jurisdiction": "भारत",
-  "sourceName": null,
-  "sourceUrl": null,
-  "sourceType": null,
-  "publisher": null,
-  "lastVerifiedAt": null,
+  "sourceName": "Information, Education and Communication",
+  "sourceUrl": "https://www.jalshakti-dowr.gov.in/offerings/schemes-and-services/details/information-education-and-communication-QO5ATNtQWa",
+  "sourceType": "official-website",
+  "publisher": "Department of Water Resources, River Development and Ganga Rejuvenation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
   "effectiveDate": null,
-  "status": "draft",
+  "status": "verified",
   "keywords": ["वर्षा जल संचयन", "बारिश का पानी", "वर्षा जल संग्रह"],
   "aliases": ["बारिश का जल इकट्ठा करना", "वर्षा जल भंडारण"],
-  "summary": "भविष्य में मानव समीक्षा से तैयार होने वाली वर्षा जल संचयन जानकारी के लिए प्रारूप।",
+  "summary": "विभाग वर्तमान और भविष्य की जल आवश्यकताओं में मदद के लिए वर्षा जल संचयन और भूजल के कृत्रिम पुनर्भरण के प्रति जागरूकता को बढ़ावा देता है।",
   "sections": [
     {
-      "heading": "प्रारूप का दायरा",
-      "content": "नागरिकों के प्रश्नों के उत्तर में इस दस्तावेज़ का उपयोग करने से पहले प्रामाणिक स्रोत शोध और मानव समीक्षा आवश्यक है।"
+      "heading": "मूल संदर्भ",
+      "content": "वर्षा जल संचयन और भूजल का कृत्रिम पुनर्भरण जल संसाधन संबंधी उपाय हैं, जिन्हें विभाग के जागरूकता उद्देश्यों में रेखांकित किया गया है।"
+    },
+    {
+      "heading": "केवल सामान्य जानकारी",
+      "content": "यह दस्तावेज़ संरक्षण का मूल संदर्भ देता है। इसमें स्थल का डिज़ाइन, अनुमति या स्थानीय कार्यान्वयन आवश्यकताएँ नहीं हैं।"
     }
   ],
   "audience": ["घर-परिवार", "समुदाय"],
-  "scope": "केवल सामान्य वर्षा जल संचयन जानकारी; स्थानीय आवश्यकताओं के लिए सत्यापित स्रोत चाहिए।",
-  "verificationNotes": "प्रारूप। कोई स्रोत चुना या सत्यापित नहीं किया गया है।"
+  "scope": "केवल वर्षा जल संचयन और भूजल पुनर्भरण का सामान्य संदर्भ; कोई स्थल डिज़ाइन, अनुमति या स्थानीय आवश्यकता नहीं।",
+  "verificationNotes": "08-08-2026 को विभाग के आधिकारिक सूचना, शिक्षा और संचार पृष्ठ के आधार पर समीक्षा की गई।"
 }

@@ -6,23 +6,27 @@
   "category": "drinking-water-safety",
   "language": "en",
   "jurisdiction": "India",
-  "sourceName": null,
-  "sourceUrl": null,
-  "sourceType": null,
-  "publisher": null,
-  "lastVerifiedAt": null,
+  "sourceName": "Concise Handbook for Monitoring Water Quality of Piped Drinking Water Supply to Rural Households",
+  "sourceUrl": "https://jaljeevanmission.gov.in/sites/default/files/wq/handbook-for-monitoring-wq-of-piped-drinking-water.pdf",
+  "sourceType": "official-publication",
+  "publisher": "Department of Drinking Water and Sanitation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
   "effectiveDate": null,
-  "status": "draft",
+  "status": "verified",
   "keywords": ["drinking water", "water handling", "water safety"],
   "aliases": ["safe drinking water", "water precautions"],
-  "summary": "Draft placeholder for future human-reviewed drinking-water handling and safety information.",
+  "summary": "The Jal Jeevan Mission handbook identifies monitoring and maintaining the quality of piped water supply as crucial components of safe water supply to rural households.",
   "sections": [
     {
-      "heading": "Draft scope",
-      "content": "Authoritative source research and human review are required before this document may be used to answer citizen questions."
+      "heading": "Water-quality monitoring",
+      "content": "The handbook describes water-quality monitoring from the source through treatment and delivery points for piped drinking-water supply."
+    },
+    {
+      "heading": "Scope limitation",
+      "content": "This document provides general information about water-quality monitoring. It does not provide medical advice or household water-treatment instructions."
     }
   ],
   "audience": ["households"],
-  "scope": "General handling and basic safety information only; no medical guidance.",
-  "verificationNotes": "Draft placeholder. No source has been selected or verified."
+  "scope": "General water-quality monitoring information for piped rural supply only; no medical advice or household water-treatment instructions.",
+  "verificationNotes": "Reviewed against the National Jal Jeevan Mission handbook on 2026-08-08."
 }

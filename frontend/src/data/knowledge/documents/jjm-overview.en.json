@@ -6,23 +6,27 @@
   "category": "scheme-overview",
   "language": "en",
   "jurisdiction": "India",
-  "sourceName": null,
-  "sourceUrl": null,
-  "sourceType": null,
-  "publisher": null,
-  "lastVerifiedAt": null,
+  "sourceName": "Jal Jeevan Mission",
+  "sourceUrl": "https://jaljeevanmission.gov.in/",
+  "sourceType": "official-website",
+  "publisher": "Department of Drinking Water and Sanitation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
   "effectiveDate": null,
-  "status": "draft",
+  "status": "verified",
   "keywords": ["Jal Jeevan Mission", "JJM", "water mission overview"],
   "aliases": ["Jal Jeevan", "mission overview"],
-  "summary": "Draft placeholder for a future human-reviewed high-level overview.",
+  "summary": "Jal Jeevan Mission is envisioned to provide safe and adequate drinking water through individual household tap connections to rural households.",
   "sections": [
     {
-      "heading": "Draft scope",
-      "content": "This placeholder must not be used for eligibility, application, benefit, contact, or policy information. Authoritative source research and human review are required first."
+      "heading": "High-level purpose",
+      "content": "The Mission uses a community approach to water and includes information, education, and communication as a key component."
+    },
+    {
+      "heading": "Source sustainability",
+      "content": "The official Mission overview lists recharge, reuse through greywater management, water conservation, and rainwater harvesting as source-sustainability measures."
     }
   ],
   "audience": ["citizens"],
-  "scope": "High-level overview only; no operational guidance.",
-  "verificationNotes": "Draft placeholder. No source has been selected or verified."
+  "scope": "High-level rural drinking-water overview only; no application, eligibility, benefit, contact, or operational guidance.",
+  "verificationNotes": "Reviewed against the official Jal Jeevan Mission website on 2026-08-08."
 }

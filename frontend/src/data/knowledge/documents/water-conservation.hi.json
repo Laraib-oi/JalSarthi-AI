@@ -6,23 +6,27 @@
   "category": "water-conservation",
   "language": "hi",
   "jurisdiction": "भारत",
-  "sourceName": null,
-  "sourceUrl": null,
-  "sourceType": null,
-  "publisher": null,
-  "lastVerifiedAt": null,
+  "sourceName": "Implementation of National Water Mission",
+  "sourceUrl": "https://www.jalshakti-dowr.gov.in/offerings/schemes-and-services/details/implementation-of-national-water-mission-wNwETNtQWa",
+  "sourceType": "official-website",
+  "publisher": "Department of Water Resources, River Development and Ganga Rejuvenation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
   "effectiveDate": null,
-  "status": "draft",
+  "status": "verified",
   "keywords": ["जल संरक्षण", "पानी बचाना", "घरेलू जल उपयोग"],
   "aliases": ["जल बचत", "कम पानी का उपयोग"],
-  "summary": "भविष्य में मानव समीक्षा से तैयार होने वाली घरेलू जल संरक्षण जानकारी के लिए प्रारूप।",
+  "summary": "राष्ट्रीय जल मिशन जल संरक्षण और पानी की बर्बादी कम करने को प्रमुख उद्देश्य मानता है।",
   "sections": [
     {
-      "heading": "प्रारूप का दायरा",
-      "content": "नागरिकों के प्रश्नों के उत्तर में इस दस्तावेज़ का उपयोग करने से पहले प्रामाणिक स्रोत शोध और मानव समीक्षा आवश्यक है।"
+      "heading": "घर-परिवार के लिए संरक्षण सिद्धांत",
+      "content": "पानी का सावधानी से उपयोग करना और अनावश्यक बर्बादी से बचना इन जल-संरक्षण उद्देश्यों के अनुरूप है। यह दस्तावेज़ केवल सामान्य सिद्धांत देता है; इसमें स्थानीय आवश्यकताएँ नहीं हैं।"
+    },
+    {
+      "heading": "नागरिक कार्रवाई",
+      "content": "मिशन के लक्ष्यों में जल संरक्षण, संवर्धन और संरक्षण के लिए नागरिकों तथा राज्यों की कार्रवाई को बढ़ावा देना शामिल है।"
     }
   ],
   "audience": ["घर-परिवार"],
-  "scope": "केवल सामान्य घरेलू जल संरक्षण जानकारी।",
-  "verificationNotes": "प्रारूप। कोई स्रोत चुना या सत्यापित नहीं किया गया है।"
+  "scope": "केवल सामान्य घरेलू जल संरक्षण सिद्धांत; कोई स्थानीय आवश्यकता या संख्यात्मक लक्ष्य नहीं।",
+  "verificationNotes": "08-08-2026 को राष्ट्रीय जल मिशन के आधिकारिक पृष्ठ के आधार पर समीक्षा की गई।"
 }

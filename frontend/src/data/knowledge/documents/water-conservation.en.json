@@ -6,23 +6,27 @@
   "category": "water-conservation",
   "language": "en",
   "jurisdiction": "India",
-  "sourceName": null,
-  "sourceUrl": null,
-  "sourceType": null,
-  "publisher": null,
-  "lastVerifiedAt": null,
+  "sourceName": "Implementation of National Water Mission",
+  "sourceUrl": "https://www.jalshakti-dowr.gov.in/offerings/schemes-and-services/details/implementation-of-national-water-mission-wNwETNtQWa",
+  "sourceType": "official-website",
+  "publisher": "Department of Water Resources, River Development and Ganga Rejuvenation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
   "effectiveDate": null,
-  "status": "draft",
+  "status": "verified",
   "keywords": ["water conservation", "save water", "household water use"],
   "aliases": ["water saving", "use less water"],
-  "summary": "Draft placeholder for future human-reviewed household water conservation information.",
+  "summary": "The National Water Mission identifies water conservation and minimising wastage as central objectives.",
   "sections": [
     {
-      "heading": "Draft scope",
-      "content": "Authoritative source research and human review are required before this document may be used to answer citizen questions."
+      "heading": "Household conservation principle",
+      "content": "Using water carefully and avoiding unnecessary wastage aligns with these water-conservation objectives. This document provides general principles only and does not set local requirements."
+    },
+    {
+      "heading": "Citizen action",
+      "content": "The Mission includes promotion of citizen and state action for water conservation, augmentation, and preservation."
     }
   ],
   "audience": ["households"],
-  "scope": "General household water conservation information only.",
-  "verificationNotes": "Draft placeholder. No source has been selected or verified."
+  "scope": "General household water conservation principles only; no local requirements or numerical targets.",
+  "verificationNotes": "Reviewed against the official National Water Mission page on 2026-08-08."
 }

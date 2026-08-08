@@ -6,23 +6,27 @@
   "category": "rainwater-harvesting",
   "language": "en",
   "jurisdiction": "India",
-  "sourceName": null,
-  "sourceUrl": null,
-  "sourceType": null,
-  "publisher": null,
-  "lastVerifiedAt": null,
+  "sourceName": "Information, Education and Communication",
+  "sourceUrl": "https://www.jalshakti-dowr.gov.in/offerings/schemes-and-services/details/information-education-and-communication-QO5ATNtQWa",
+  "sourceType": "official-website",
+  "publisher": "Department of Water Resources, River Development and Ganga Rejuvenation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
   "effectiveDate": null,
-  "status": "draft",
+  "status": "verified",
   "keywords": ["rainwater harvesting", "rain water collection", "rainwater"],
   "aliases": ["collect rainwater", "rainwater storage"],
-  "summary": "Draft placeholder for future human-reviewed rainwater harvesting information.",
+  "summary": "The Department promotes awareness of rainwater harvesting and artificial recharge of groundwater to help meet present and future water needs.",
   "sections": [
     {
-      "heading": "Draft scope",
-      "content": "Authoritative source research and human review are required before this document may be used to answer citizen questions."
+      "heading": "Basic context",
+      "content": "Rainwater harvesting and artificial recharge of groundwater are water-resource measures highlighted in the Department's awareness objectives."
+    },
+    {
+      "heading": "General guidance only",
+      "content": "This document provides basic conservation context. It does not provide site design, permission, or local implementation requirements."
     }
   ],
   "audience": ["households", "communities"],
-  "scope": "General rainwater harvesting information only; local requirements require verified sources.",
-  "verificationNotes": "Draft placeholder. No source has been selected or verified."
+  "scope": "General rainwater-harvesting and groundwater-recharge context only; no site design, permissions, or local requirements.",
+  "verificationNotes": "Reviewed against the Department's official Information, Education and Communication page on 2026-08-08."
 }
