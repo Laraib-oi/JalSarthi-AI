@@ -11,6 +11,10 @@ import {
 import { retrieveKnowledge } from "@/lib/knowledge/retrieve";
 import type { RetrievedDocument, RetrievalResult } from "@/lib/knowledge/types";
 import {
+  createComplaintDraft,
+  parseComplaintDraftRequest,
+} from "@/lib/complaint-draft/water-complaint";
+import {
   getWaterConservationPlannerRequest,
   getWaterConservationPlannerResponse,
   isWaterConservationPlannerSelection,
@@ -41,6 +45,7 @@ type ChatBody = {
   language?: unknown;
   messages?: unknown;
   plannerSelection?: unknown;
+  complaintDraft?: unknown;
 };
 
 function isChatBody(value: unknown): value is ChatBody {
@@ -175,6 +180,24 @@ export async function POST(request: Request) {
   const plannerSelection = body.plannerSelection;
   if (plannerSelection !== undefined && !isWaterConservationPlannerSelection(plannerSelection)) {
     return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
+  }
+
+  const complaintDraft = body.complaintDraft;
+  if (plannerSelection !== undefined && complaintDraft !== undefined) {
+    return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
+  }
+
+  if (complaintDraft !== undefined) {
+    const complaintRequest = parseComplaintDraftRequest(complaintDraft);
+    if (!complaintRequest) {
+      return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
+    }
+
+    const response: ChatApiResponse = {
+      message: createComplaintDraft(complaintRequest, body.language),
+      grounding: buildGroundingResponse("none", []),
+    };
+    return NextResponse.json(response);
   }
 
   const plannerRequest = plannerSelection

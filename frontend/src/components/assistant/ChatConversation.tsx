@@ -1,6 +1,7 @@
 "use client";
 
-import { ExternalLink, LoaderCircle, Sparkles, UserRound } from "lucide-react";
+import { Check, Copy, ExternalLink, LoaderCircle, Sparkles, UserRound } from "lucide-react";
+import { useState } from "react";
 
 import EmptyChatArea from "@/components/assistant/EmptyChatArea";
 import { useLanguage } from "@/components/providers/LanguageProvider";
@@ -11,6 +12,7 @@ type ChatConversationProps = {
   messages: ChatMessage[];
   isLoading: boolean;
   isPlannerLoading: boolean;
+  isComplaintDraftLoading: boolean;
   error: string | null;
   onPromptSelect: (prompt: string) => void;
 };
@@ -23,10 +25,12 @@ export default function ChatConversation({
   messages,
   isLoading,
   isPlannerLoading,
+  isComplaintDraftLoading,
   error,
   onPromptSelect,
 }: ChatConversationProps) {
   const { t } = useLanguage();
+  const [copiedMessageId, setCopiedMessageId] = useState<string>();
 
   if (messages.length === 0) {
     return <EmptyChatArea isLoading={isLoading} onPromptSelect={onPromptSelect} />;
@@ -43,6 +47,7 @@ export default function ChatConversation({
           const isUser = message.role === "user";
           const sources = isUser ? [] : uniqueSources(message.grounding?.sources ?? []);
           const isPartial = message.grounding?.status === "partial";
+          const isComplaintDraft = !isUser && Boolean(message.complaintDraftType);
           const plannerLabel =
             message.plannerSelection === "household-water-conservation"
               ? t.assistant.planner.household.label
@@ -74,6 +79,11 @@ export default function ChatConversation({
                     {t.assistant.planner.resultLabel} · {plannerLabel}
                   </p>
                 )}
+                {isComplaintDraft && (
+                  <p className="mb-1 text-xs font-semibold text-amber-800">
+                    {t.assistant.complaintDraft.resultLabel}
+                  </p>
+                )}
                 <p
                   className={cn(
                     "whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm",
@@ -84,6 +94,32 @@ export default function ChatConversation({
                 >
                   {message.content}
                 </p>
+
+                {isComplaintDraft && (
+                  <div className="mt-2">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(message.content);
+                          setCopiedMessageId(message.id);
+                        } catch {
+                          setCopiedMessageId(undefined);
+                        }
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900 transition hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700"
+                    >
+                      {copiedMessageId === message.id ? (
+                        <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                      )}
+                      {copiedMessageId === message.id
+                        ? t.assistant.complaintDraft.copiedDraft
+                        : t.assistant.complaintDraft.copyDraft}
+                    </button>
+                  </div>
+                )}
 
                 {sources.length > 0 && (
                   <aside
@@ -134,7 +170,11 @@ export default function ChatConversation({
                 className="h-4 w-4 animate-spin text-blue-800"
                 aria-hidden="true"
               />
-              {isPlannerLoading ? t.assistant.planner.loading : t.assistant.loading}
+              {isPlannerLoading
+                ? t.assistant.planner.loading
+                : isComplaintDraftLoading
+                  ? t.assistant.complaintDraft.loading
+                  : t.assistant.loading}
             </span>
           </div>
         )}

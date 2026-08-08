@@ -92,6 +92,29 @@ type Translation = {
       household: { label: string; description: string };
       rainwater: { label: string; description: string };
     };
+    complaintDraft: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      privacyNotice: string;
+      chooseIssue: string;
+      noWaterSupply: string;
+      waterLeakage: string;
+      waterQualityConcern: string;
+      descriptionLabel: string;
+      descriptionPlaceholder: string;
+      descriptionHelp: string;
+      locationLabel: string;
+      locationPlaceholder: string;
+      dateLabel: string;
+      datePlaceholder: string;
+      createDraft: string;
+      required: string;
+      resultLabel: string;
+      loading: string;
+      copyDraft: string;
+      copiedDraft: string;
+    };
   };
 };
 
@@ -202,6 +225,29 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         household: { label: "Saving water at home", description: "Guided household water-conservation information." },
         rainwater: { label: "Rainwater harvesting", description: "Guided rainwater-harvesting and recharge context." },
       },
+      complaintDraft: {
+        eyebrow: "Draft assistance",
+        title: "Prepare a water-issue complaint draft",
+        description: "Create a draft you can copy and submit yourself through an appropriate official channel.",
+        privacyNotice: "Draft only — not submitted or stored. Do not include phone numbers, identity details, or health information.",
+        chooseIssue: "Choose the issue type",
+        noWaterSupply: "No water supply",
+        waterLeakage: "Water leakage",
+        waterQualityConcern: "Drinking-water quality concern",
+        descriptionLabel: "Brief description of the issue",
+        descriptionPlaceholder: "Describe the water-related issue without personal or health details.",
+        descriptionHelp: "Only the information needed for this draft is used. Avoid contact, identity, financial, and health details.",
+        locationLabel: "Village/area/locality (optional)",
+        locationPlaceholder: "Citizen-provided location description",
+        dateLabel: "Date or duration (optional)",
+        datePlaceholder: "For example, since yesterday",
+        createDraft: "Prepare complaint draft",
+        required: "Choose an issue type and enter a brief description to prepare a draft.",
+        resultLabel: "Complaint draft — not submitted",
+        loading: "Preparing your complaint draft…",
+        copyDraft: "Copy draft",
+        copiedDraft: "Draft copied locally",
+      },
     },
   },
   hi: {
@@ -268,6 +314,29 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         loading: "उपलब्ध सत्यापित स्रोतों से निर्देशित जानकारी तैयार की जा रही है…",
         household: { label: "घर में पानी बचाना", description: "घरेलू जल संरक्षण की निर्देशित जानकारी।" },
         rainwater: { label: "वर्षा जल संचयन", description: "वर्षा जल संचयन और भूजल पुनर्भरण का निर्देशित संदर्भ।" },
+      },
+      complaintDraft: {
+        eyebrow: "प्रारूप सहायता",
+        title: "जल-संबंधी समस्या का शिकायत प्रारूप तैयार करें",
+        description: "एक प्रारूप तैयार करें जिसे आप कॉपी करके उपयुक्त आधिकारिक माध्यम से स्वयं जमा कर सकते हैं।",
+        privacyNotice: "केवल प्रारूप — इसे जमा या संग्रहीत नहीं किया जाता। फोन नंबर, पहचान संबंधी जानकारी या स्वास्थ्य जानकारी शामिल न करें।",
+        chooseIssue: "समस्या का प्रकार चुनें",
+        noWaterSupply: "जल आपूर्ति नहीं",
+        waterLeakage: "पानी का रिसाव",
+        waterQualityConcern: "पेयजल गुणवत्ता संबंधी चिंता",
+        descriptionLabel: "समस्या का संक्षिप्त विवरण",
+        descriptionPlaceholder: "व्यक्तिगत या स्वास्थ्य संबंधी जानकारी के बिना जल-संबंधी समस्या का वर्णन करें।",
+        descriptionHelp: "इस प्रारूप के लिए केवल आवश्यक जानकारी का उपयोग किया जाता है। संपर्क, पहचान, वित्तीय और स्वास्थ्य संबंधी जानकारी न दें।",
+        locationLabel: "गाँव/क्षेत्र/स्थानीयता (वैकल्पिक)",
+        locationPlaceholder: "नागरिक द्वारा प्रदान किया गया स्थान विवरण",
+        dateLabel: "तिथि या अवधि (वैकल्पिक)",
+        datePlaceholder: "उदाहरण: कल से",
+        createDraft: "शिकायत प्रारूप तैयार करें",
+        required: "प्रारूप तैयार करने के लिए समस्या का प्रकार चुनें और संक्षिप्त विवरण दर्ज करें।",
+        resultLabel: "शिकायत प्रारूप — जमा नहीं किया गया",
+        loading: "आपका शिकायत प्रारूप तैयार किया जा रहा है…",
+        copyDraft: "प्रारूप कॉपी करें",
+        copiedDraft: "प्रारूप स्थानीय रूप से कॉपी किया गया",
       },
     },
   },

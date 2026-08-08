@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 
 import ChatConversation from "@/components/assistant/ChatConversation";
 import ChatInputPlaceholder from "@/components/assistant/ChatInputPlaceholder";
+import ComplaintDraftAssistant from "@/components/assistant/ComplaintDraftAssistant";
 import GuidedWaterConservationPlanner from "@/components/assistant/GuidedWaterConservationPlanner";
 import StatusBanner from "@/components/assistant/StatusBanner";
 import WelcomeSection from "@/components/assistant/WelcomeSection";
@@ -13,6 +14,7 @@ import type {
   ChatGroundingSource,
   ChatMessage,
   ChatRequestMessage,
+  ComplaintDraftRequest,
   WaterConservationPlannerSelection,
 } from "@/types/chat";
 
@@ -58,7 +60,8 @@ function createMessage(
   role: ChatMessage["role"],
   content: string,
   grounding?: ChatGroundingResponse,
-  plannerSelection?: WaterConservationPlannerSelection
+  plannerSelection?: WaterConservationPlannerSelection,
+  complaintDraftType?: ComplaintDraftRequest["type"]
 ): ChatMessage {
   return {
     id: `${role}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -66,6 +69,7 @@ function createMessage(
     content,
     ...(grounding ? { grounding } : {}),
     ...(plannerSelection ? { plannerSelection } : {}),
+    ...(complaintDraftType ? { complaintDraftType } : {}),
   };
 }
 
@@ -76,17 +80,25 @@ export default function AssistantChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [plannerSelectionInFlight, setPlannerSelectionInFlight] =
     useState<WaterConservationPlannerSelection>();
+  const [complaintDraftInFlight, setComplaintDraftInFlight] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isSubmittingRef = useRef(false);
 
   const submitMessage = async (
     plannerSelection?: WaterConservationPlannerSelection,
-    plannerLabel?: string
+    plannerLabel?: string,
+    complaintDraft?: ComplaintDraftRequest
   ) => {
     const content = plannerLabel ?? input.trim();
     if (!content || isSubmittingRef.current) return;
 
-    const userMessage = createMessage("user", content, undefined, plannerSelection);
+    const userMessage = createMessage(
+      "user",
+      content,
+      undefined,
+      plannerSelection,
+      complaintDraft?.type
+    );
     const conversation = [...messages, userMessage];
     const requestMessages: ChatRequestMessage[] = conversation
       .slice(-20)
@@ -101,6 +113,7 @@ export default function AssistantChat() {
     setMessages(conversation);
     setIsLoading(true);
     setPlannerSelectionInFlight(plannerSelection);
+    setComplaintDraftInFlight(Boolean(complaintDraft));
 
     try {
       const response = await fetch("/api/chat", {
@@ -110,6 +123,7 @@ export default function AssistantChat() {
           language,
           messages: requestMessages,
           ...(plannerSelection ? { plannerSelection } : {}),
+          ...(complaintDraft ? { complaintDraft } : {}),
         }),
       });
       const payload = (await response.json()) as ChatApiPayload;
@@ -127,7 +141,13 @@ export default function AssistantChat() {
       const grounding = parseGrounding(payload.grounding);
       setMessages((currentMessages) => [
         ...currentMessages,
-        createMessage("assistant", responseMessage.trim(), grounding, plannerSelection),
+        createMessage(
+          "assistant",
+          responseMessage.trim(),
+          grounding,
+          plannerSelection,
+          complaintDraft?.type
+        ),
       ]);
     } catch (requestError) {
       setError(
@@ -139,6 +159,7 @@ export default function AssistantChat() {
       isSubmittingRef.current = false;
       setIsLoading(false);
       setPlannerSelectionInFlight(undefined);
+      setComplaintDraftInFlight(false);
     }
   };
 
@@ -147,6 +168,14 @@ export default function AssistantChat() {
       setInput(prompt);
       setError(null);
     }
+  };
+
+  const createComplaintDraft = (complaintDraft: ComplaintDraftRequest, label: string) => {
+    void submitMessage(
+      undefined,
+      `${t.assistant.complaintDraft.resultLabel}: ${label}`,
+      complaintDraft
+    );
   };
 
   return (
@@ -161,12 +190,17 @@ export default function AssistantChat() {
               isLoading={isLoading}
               onSelect={(selection, label) => void submitMessage(selection, label)}
             />
+            <ComplaintDraftAssistant
+              isLoading={isLoading}
+              onCreateDraft={createComplaintDraft}
+            />
           </>
         )}
         <ChatConversation
           messages={messages}
           isLoading={isLoading}
           isPlannerLoading={Boolean(plannerSelectionInFlight)}
+          isComplaintDraftLoading={complaintDraftInFlight}
           error={error}
           onPromptSelect={selectPrompt}
         />
@@ -175,7 +209,13 @@ export default function AssistantChat() {
       <ChatInputPlaceholder
         value={input}
         isLoading={isLoading}
-        loadingLabel={plannerSelectionInFlight ? t.assistant.planner.loading : t.assistant.loading}
+        loadingLabel={
+          plannerSelectionInFlight
+            ? t.assistant.planner.loading
+            : complaintDraftInFlight
+              ? t.assistant.complaintDraft.loading
+              : t.assistant.loading
+        }
         onChange={setInput}
         onSubmit={submitMessage}
       />

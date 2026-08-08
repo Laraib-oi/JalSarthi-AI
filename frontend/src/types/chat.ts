@@ -5,6 +5,20 @@ export type WaterConservationPlannerSelection =
   | "household-water-conservation"
   | "rainwater-harvesting";
 
+/** A server-recognised complaint-draft category; it is never a submission route. */
+export type ComplaintDraftType =
+  | "no_water_supply"
+  | "water_leakage"
+  | "water_quality_concern";
+
+/** Session-only details used to prepare a deterministic complaint draft. */
+export type ComplaintDraftRequest = {
+  type: ComplaintDraftType;
+  description: string;
+  location?: string;
+  dateOrDuration?: string;
+};
+
 /** A single message kept only in the active browser session. */
 export interface ChatMessage {
   id: string;
@@ -13,6 +27,8 @@ export interface ChatMessage {
   grounding?: ChatGroundingResponse;
   /** Present only for a locally displayed result of a server-recognised planner choice. */
   plannerSelection?: WaterConservationPlannerSelection;
+  /** Present only for a locally displayed deterministic complaint draft. */
+  complaintDraftType?: ComplaintDraftType;
 }
 
 /** The serializable conversation shape accepted by the chat API. */
