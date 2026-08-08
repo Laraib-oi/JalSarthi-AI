@@ -37,6 +37,10 @@ type ChatBody = {
   messages?: unknown;
 };
 
+function isChatBody(value: unknown): value is ChatBody {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
 function isLanguage(value: unknown): value is Language {
   return value === "en" || value === "hi";
 }
@@ -122,12 +126,14 @@ function buildGroundingContext(
 }
 
 function buildSourceMetadata(documents: RetrievedDocument[]): ChatGroundingSource[] {
-  return documents.flatMap(({ document }) => {
+  const sources = documents.flatMap(({ document }) => {
     const source = getTrustedSource(document);
     if (!source) return [];
 
     return [{ documentTitle: document.title, category: document.category, ...source }];
   });
+
+  return Array.from(new Map(sources.map((source) => [source.url, source])).values());
 }
 
 function buildGroundingResponse(
@@ -140,7 +146,12 @@ function buildGroundingResponse(
 export async function POST(request: Request) {
   let body: ChatBody;
   try {
-    body = (await request.json()) as ChatBody;
+    const payload: unknown = await request.json();
+    if (!isChatBody(payload)) {
+      return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
+    }
+
+    body = payload;
   } catch {
     return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
   }

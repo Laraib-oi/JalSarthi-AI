@@ -3,13 +3,21 @@ import "server-only";
 import type { AiProvider, ChatCompletionRequest, GroundingContext } from "@/lib/ai/types";
 import { AiProviderError } from "@/lib/ai/types";
 
-type OpenRouterResponse = {
-  choices?: Array<{
-    message?: {
-      content?: string | null;
-    };
-  }>;
-};
+function getResponseContent(value: unknown): string | undefined {
+  if (!value || typeof value !== "object") return undefined;
+
+  const choices = (value as { choices?: unknown }).choices;
+  if (!Array.isArray(choices)) return undefined;
+
+  const firstChoice = choices[0];
+  if (!firstChoice || typeof firstChoice !== "object") return undefined;
+
+  const message = (firstChoice as { message?: unknown }).message;
+  if (!message || typeof message !== "object") return undefined;
+
+  const content = (message as { content?: unknown }).content;
+  return typeof content === "string" ? content.trim() : undefined;
+}
 
 function getSystemInstruction(
   language: ChatCompletionRequest["language"],
@@ -83,14 +91,14 @@ export class OpenRouterProvider implements AiProvider {
       throw new AiProviderError("The AI provider could not complete the request.");
     }
 
-    let payload: OpenRouterResponse;
+    let payload: unknown;
     try {
-      payload = (await response.json()) as OpenRouterResponse;
+      payload = await response.json();
     } catch {
       throw new AiProviderError("The AI provider returned an invalid response.");
     }
 
-    const content = payload.choices?.[0]?.message?.content?.trim();
+    const content = getResponseContent(payload);
     if (!content) {
       throw new AiProviderError("The AI provider returned an empty response.");
     }
