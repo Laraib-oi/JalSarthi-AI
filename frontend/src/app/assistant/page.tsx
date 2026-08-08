@@ -1,9 +1,9 @@
 import AssistantChat from "@/components/assistant/AssistantChat";
 
 export const metadata = {
-  title: "JalSarthi AI — Assistant | Ministry of Jal Shakti",
+  title: "JalSarthi AI — Assistant Prototype",
   description:
-    "AI-powered citizen assistance portal for water governance, schemes, and complaint processes.",
+    "A Ministry of Jal Shakti domain-inspired hackathon prototype for grounded water information and complaint-draft assistance.",
 };
 
 export default function AssistantPage() {

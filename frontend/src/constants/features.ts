@@ -18,23 +18,23 @@ export const FEATURES: FeatureItem[] = [
     title: "AI Assistant",
     description:
       "A conversational guide for general water-related questions in plain language.",
-    status: "upcoming",
+    status: "live",
   },
   {
     id: "government-knowledge",
     icon: "government-knowledge",
     title: "Government Knowledge",
     description:
-      "A planned knowledge layer for source-backed answers from official documentation.",
-    status: "upcoming",
+      "Verified knowledge for source-backed answers from selected documentation.",
+    status: "live",
   },
   {
     id: "complaint-generator",
     icon: "complaint-generator",
     title: "Complaint Generator",
     description:
-      "A planned tool for preparing a structured complaint from a citizen's description.",
-    status: "upcoming",
+      "A tool for preparing a structured complaint draft from a citizen's description.",
+    status: "live",
   },
   {
     id: "voice-assistant",

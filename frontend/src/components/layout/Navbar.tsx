@@ -116,6 +116,14 @@ export default function Navbar() {
 </li>
               ))}
             </ul>
+            <button
+              onClick={() => setLanguage(language === "en" ? "hi" : "en")}
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+              aria-label={t.navbar.switchLanguage}
+            >
+              <Languages className="h-4 w-4" aria-hidden="true" />
+              <span>{language === "en" ? "English | हिन्दी" : "हिन्दी | English"}</span>
+            </button>
             <Link
   href="/assistant"
   className="mt-4 flex items-center justify-center gap-2 rounded-md bg-blue-900 px-4 py-2 text-sm font-semibold text-white"

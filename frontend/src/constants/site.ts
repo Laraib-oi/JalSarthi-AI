@@ -7,9 +7,8 @@ export const SITE = {
   name: "JalSarthi",
   assistantName: "JalSarthi AI",
   ministry: "Ministry of Jal Shakti",
-  country: "Government of India",
+  country: "India",
   tagline: "Empowering Citizens Through Intelligent Water Governance",
   description:
-    "JalSarthi AI is an intelligent virtual assistant that helps citizens access water-related information, government schemes, complaint assistance and official guidance.",
-  url: "https://jalsarthi.gov.in",
+    "JalSarthi AI is a Ministry of Jal Shakti domain-inspired hackathon prototype for water-related information and complaint-draft assistance.",
 } as const;

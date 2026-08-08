@@ -59,9 +59,9 @@ export function FeatureCard({ feature, index }: FeatureCardProps) {
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 transition-colors duration-300 group-hover:bg-gradient-primary group-hover:text-white">
               <Icon className="h-6 w-6" strokeWidth={2} aria-hidden="true" />
             </span>
-            {feature.status === "upcoming" && (
+            {feature.status && (
               <span className="rounded-full border border-border bg-surface px-2.5 py-1 text-caption font-medium text-ink-muted">
-                {t.features.comingSoon}
+                {feature.status === "live" ? t.features.availableInPrototype : t.features.comingSoon}
               </span>
             )}
           </div>
