@@ -1,0 +1,36 @@
+{
+  "id": "drinking-water-quality-monitoring-hi",
+  "documentFamilyId": "drinking-water-quality-monitoring",
+  "version": "0.1.0",
+  "title": "ग्रामीण पेयजल गुणवत्ता निगरानी: सामान्य जानकारी",
+  "category": "drinking-water-safety",
+  "language": "hi",
+  "jurisdiction": "भारत",
+  "sourceName": "Drinking Water Quality Monitoring & Surveillance Framework",
+  "sourceUrl": "https://jaljeevanmission.gov.in/sites/default/files/manual_document/WQMS-Framework.pdf",
+  "sourceType": "official-publication",
+  "publisher": "National Jal Jeevan Mission, Department of Drinking Water and Sanitation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
+  "effectiveDate": null,
+  "status": "verified",
+  "keywords": ["जल गुणवत्ता निगरानी", "जल गुणवत्ता परीक्षण", "पेयजल गुणवत्ता", "जल सर्विलांस", "ग्रामीण पेयजल"],
+  "aliases": ["पेयजल की जाँच", "पानी की जाँच", "जल गुणवत्ता जाँच", "जल गुणवत्ता रिपोर्ट"],
+  "summary": "जल जीवन मिशन का आधिकारिक ढाँचा जल गुणवत्ता परीक्षण, निगरानी, सर्विलांस और सामुदायिक जागरूकता को ग्रामीण पेयजल गुणवत्ता प्रबंधन के हिस्सों के रूप में बताता है।",
+  "sections": [
+    {
+      "heading": "निगरानी और सर्विलांस",
+      "content": "ढाँचा जल गुणवत्ता निगरानी और सर्विलांस को परीक्षण, प्रयोगशाला व्यवस्था और जल-गुणवत्ता संबंधी जानकारी की सतत समीक्षा से समर्थित गतिविधियों के रूप में बताता है।"
+    },
+    {
+      "heading": "सामुदायिक जागरूकता",
+      "content": "ढाँचे में जल गुणवत्ता निगरानी और सर्विलांस में समुदायों की भागीदारी तथा जल गुणवत्ता परीक्षण के महत्व के बारे में जागरूकता शामिल है।"
+    },
+    {
+      "heading": "जानकारी की सीमा",
+      "content": "निगरानी की सामान्य जानकारी किसी विशेष घर, स्रोत या समय के पानी की गुणवत्ता या सुरक्षा तय नहीं कर सकती। ऐसे निर्णय के लिए स्थानीय परीक्षण परिणाम और जिम्मेदार प्राधिकरणों की जानकारी आवश्यक है।"
+    }
+  ],
+  "audience": ["ग्रामीण घर-परिवार", "समुदाय"],
+  "scope": "केवल ग्रामीण पेयजल गुणवत्ता निगरानी और जागरूकता की सामान्य जानकारी; कोई निदान, किसी विशेष परिणाम की व्याख्या, उपचार निर्देश, आपातकालीन सलाह या स्थानीय परीक्षण परिणाम नहीं।",
+  "verificationNotes": "08-08-2026 को जल जीवन मिशन के आधिकारिक Water Quality Monitoring & Surveillance Framework के आधार पर समीक्षा की गई। ऐतिहासिक आँकड़े, वित्तपोषण, लक्ष्य और तकनीकी प्रोटोकॉल शामिल नहीं किए गए हैं।"
+}

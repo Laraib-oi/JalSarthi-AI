@@ -1,0 +1,36 @@
+{
+  "id": "drinking-water-quality-monitoring-en",
+  "documentFamilyId": "drinking-water-quality-monitoring",
+  "version": "0.1.0",
+  "title": "Rural Drinking-Water Quality Monitoring: General Information",
+  "category": "drinking-water-safety",
+  "language": "en",
+  "jurisdiction": "India",
+  "sourceName": "Drinking Water Quality Monitoring & Surveillance Framework",
+  "sourceUrl": "https://jaljeevanmission.gov.in/sites/default/files/manual_document/WQMS-Framework.pdf",
+  "sourceType": "official-publication",
+  "publisher": "National Jal Jeevan Mission, Department of Drinking Water and Sanitation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
+  "effectiveDate": null,
+  "status": "verified",
+  "keywords": ["water quality monitoring", "water quality testing", "drinking water quality", "water surveillance", "rural drinking water"],
+  "aliases": ["test drinking water", "water testing", "water quality check", "water quality report"],
+  "summary": "The official Jal Jeevan Mission framework describes water-quality testing, monitoring, surveillance, and community awareness as parts of rural drinking-water quality management.",
+  "sections": [
+    {
+      "heading": "Monitoring and surveillance",
+      "content": "The framework describes water-quality monitoring and surveillance as activities supported by testing, laboratory systems, and ongoing review of water-quality information."
+    },
+    {
+      "heading": "Community awareness",
+      "content": "The framework includes involving communities in water-quality monitoring and surveillance and building awareness about the importance of water-quality testing."
+    },
+    {
+      "heading": "Information boundary",
+      "content": "General information about monitoring cannot determine the quality or safety of water at a particular home, source, or time. Local test results and responsible authorities are needed for such decisions."
+    }
+  ],
+  "audience": ["rural households", "communities"],
+  "scope": "General information about rural drinking-water quality monitoring and awareness only; no diagnosis, interpretation of a specific result, treatment prescription, emergency advice, or local test result.",
+  "verificationNotes": "Reviewed against the official Jal Jeevan Mission Water Quality Monitoring & Surveillance Framework on 2026-08-08. Historical statistics, funding, targets, and technical protocols were excluded."
+}

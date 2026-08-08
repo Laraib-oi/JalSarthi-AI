@@ -1,0 +1,32 @@
+{
+  "id": "jjm-community-participation-en",
+  "documentFamilyId": "jjm-community-participation",
+  "version": "0.1.0",
+  "title": "Jal Jeevan Mission: Community Participation and Source Sustainability",
+  "category": "scheme-overview",
+  "language": "en",
+  "jurisdiction": "India",
+  "sourceName": "About Jal Jeevan Mission",
+  "sourceUrl": "https://jaljeevanmission.gov.in/node/1",
+  "sourceType": "official-website",
+  "publisher": "Department of Drinking Water and Sanitation, Ministry of Jal Shakti",
+  "lastVerifiedAt": "2026-08-08",
+  "effectiveDate": null,
+  "status": "verified",
+  "keywords": ["Jal Jeevan Mission", "JJM", "community participation", "source sustainability", "rural water supply"],
+  "aliases": ["community water management", "village water system", "Paani Samiti", "Village Water and Sanitation Committee"],
+  "summary": "Official Jal Jeevan Mission information describes a role for Gram Panchayats and rural communities in planning, managing, and sustaining in-village water supply systems.",
+  "sections": [
+    {
+      "heading": "Community role",
+      "content": "Official Jal Jeevan Mission information describes Gram Panchayats and rural communities as planning, implementing, managing, owning, operating, and maintaining their in-village water supply systems."
+    },
+    {
+      "heading": "Awareness and sustainability",
+      "content": "The Mission includes community awareness on the significance of water and aims to support the sustainability of water sources and water-supply infrastructure."
+    }
+  ],
+  "audience": ["rural communities", "citizens"],
+  "scope": "High-level information about community participation and source sustainability only; no eligibility, application, funding, contact, or local operational guidance.",
+  "verificationNotes": "Reviewed against the official Jal Jeevan Mission About page on 2026-08-08. Historical targets and operational details were excluded."
+}
