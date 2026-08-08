@@ -1,11 +1,11 @@
 "use client";
 
-import { LoaderCircle, Sparkles, UserRound } from "lucide-react";
+import { ExternalLink, LoaderCircle, Sparkles, UserRound } from "lucide-react";
 
 import EmptyChatArea from "@/components/assistant/EmptyChatArea";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/utils";
-import type { ChatMessage } from "@/types/chat";
+import type { ChatGroundingSource, ChatMessage } from "@/types/chat";
 
 type ChatConversationProps = {
   messages: ChatMessage[];
@@ -13,6 +13,10 @@ type ChatConversationProps = {
   error: string | null;
   onPromptSelect: (prompt: string) => void;
 };
+
+function uniqueSources(sources: ChatGroundingSource[]): ChatGroundingSource[] {
+  return Array.from(new Map(sources.map((source) => [source.url, source])).values());
+}
 
 export default function ChatConversation({
   messages,
@@ -35,6 +39,8 @@ export default function ChatConversation({
       <div className="space-y-5">
         {messages.map((message) => {
           const isUser = message.role === "user";
+          const sources = isUser ? [] : uniqueSources(message.grounding?.sources ?? []);
+          const isPartial = message.grounding?.status === "partial";
 
           return (
             <article
@@ -48,18 +54,56 @@ export default function ChatConversation({
                 )}
                 aria-hidden="true"
               >
-                {isUser ? <UserRound className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-              </span>
-              <p
-                className={cn(
-                  "max-w-[80%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm",
-                  isUser
-                    ? "rounded-tr-sm bg-blue-900 text-white"
-                    : "rounded-tl-sm border border-slate-200 bg-slate-50 text-slate-700"
+                {isUser ? (
+                  <UserRound className="h-4 w-4" />
+                ) : (
+                  <Sparkles className="h-4 w-4" />
                 )}
-              >
-                {message.content}
-              </p>
+              </span>
+              <div className="max-w-[80%]">
+                <p
+                  className={cn(
+                    "whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm",
+                    isUser
+                      ? "rounded-tr-sm bg-blue-900 text-white"
+                      : "rounded-tl-sm border border-slate-200 bg-slate-50 text-slate-700"
+                  )}
+                >
+                  {message.content}
+                </p>
+
+                {sources.length > 0 && (
+                  <aside
+                    className="mt-2 rounded-xl border border-blue-100 bg-blue-50/60 px-3 py-2.5 text-xs text-slate-700"
+                    aria-label={t.assistant.source}
+                  >
+                    <p className="font-semibold text-blue-950">{t.assistant.source}</p>
+                    {isPartial && (
+                      <p className="mt-1 text-slate-600">
+                        {t.assistant.limitedInformation}
+                      </p>
+                    )}
+                    <ul className="mt-2 space-y-2">
+                      {sources.map((source) => (
+                        <li key={source.url}>
+                          <p className="font-medium text-slate-800">{source.name}</p>
+                          <p className="mt-0.5 text-slate-600">{source.publisher}</p>
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-1 inline-flex items-center gap-1 font-medium text-blue-800 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
+                            aria-label={`${t.assistant.viewSource}: ${source.name}`}
+                          >
+                            {t.assistant.viewSource}
+                            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </aside>
+                )}
+              </div>
             </article>
           );
         })}
@@ -70,7 +114,10 @@ export default function ChatConversation({
               <Sparkles className="h-4 w-4" aria-hidden="true" />
             </span>
             <span className="flex items-center gap-2 rounded-2xl rounded-tl-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 shadow-sm">
-              <LoaderCircle className="h-4 w-4 animate-spin text-blue-800" aria-hidden="true" />
+              <LoaderCircle
+                className="h-4 w-4 animate-spin text-blue-800"
+                aria-hidden="true"
+              />
               {t.assistant.loading}
             </span>
           </div>

@@ -5,6 +5,7 @@ export interface ChatMessage {
   id: string;
   role: ChatRole;
   content: string;
+  grounding?: ChatGroundingResponse;
 }
 
 /** The serializable conversation shape accepted by the chat API. */
