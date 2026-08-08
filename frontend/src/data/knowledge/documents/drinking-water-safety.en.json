@@ -1,0 +1,28 @@
+{
+  "id": "drinking-water-safety-en",
+  "documentFamilyId": "drinking-water-safety",
+  "version": "0.1.0",
+  "title": "Drinking-Water Handling and Basic Safety Precautions",
+  "category": "drinking-water-safety",
+  "language": "en",
+  "jurisdiction": "India",
+  "sourceName": null,
+  "sourceUrl": null,
+  "sourceType": null,
+  "publisher": null,
+  "lastVerifiedAt": null,
+  "effectiveDate": null,
+  "status": "draft",
+  "keywords": ["drinking water", "water handling", "water safety"],
+  "aliases": ["safe drinking water", "water precautions"],
+  "summary": "Draft placeholder for future human-reviewed drinking-water handling and safety information.",
+  "sections": [
+    {
+      "heading": "Draft scope",
+      "content": "Authoritative source research and human review are required before this document may be used to answer citizen questions."
+    }
+  ],
+  "audience": ["households"],
+  "scope": "General handling and basic safety information only; no medical guidance.",
+  "verificationNotes": "Draft placeholder. No source has been selected or verified."
+}

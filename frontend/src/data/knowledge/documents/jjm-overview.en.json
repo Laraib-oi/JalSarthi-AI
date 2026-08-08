@@ -1,0 +1,28 @@
+{
+  "id": "jjm-overview-en",
+  "documentFamilyId": "jjm-overview",
+  "version": "0.1.0",
+  "title": "Jal Jeevan Mission High-Level Overview",
+  "category": "scheme-overview",
+  "language": "en",
+  "jurisdiction": "India",
+  "sourceName": null,
+  "sourceUrl": null,
+  "sourceType": null,
+  "publisher": null,
+  "lastVerifiedAt": null,
+  "effectiveDate": null,
+  "status": "draft",
+  "keywords": ["Jal Jeevan Mission", "JJM", "water mission overview"],
+  "aliases": ["Jal Jeevan", "mission overview"],
+  "summary": "Draft placeholder for a future human-reviewed high-level overview.",
+  "sections": [
+    {
+      "heading": "Draft scope",
+      "content": "This placeholder must not be used for eligibility, application, benefit, contact, or policy information. Authoritative source research and human review are required first."
+    }
+  ],
+  "audience": ["citizens"],
+  "scope": "High-level overview only; no operational guidance.",
+  "verificationNotes": "Draft placeholder. No source has been selected or verified."
+}

@@ -1,0 +1,28 @@
+{
+  "id": "water-conservation-en",
+  "documentFamilyId": "water-conservation",
+  "version": "0.1.0",
+  "title": "Household Water Conservation",
+  "category": "water-conservation",
+  "language": "en",
+  "jurisdiction": "India",
+  "sourceName": null,
+  "sourceUrl": null,
+  "sourceType": null,
+  "publisher": null,
+  "lastVerifiedAt": null,
+  "effectiveDate": null,
+  "status": "draft",
+  "keywords": ["water conservation", "save water", "household water use"],
+  "aliases": ["water saving", "use less water"],
+  "summary": "Draft placeholder for future human-reviewed household water conservation information.",
+  "sections": [
+    {
+      "heading": "Draft scope",
+      "content": "Authoritative source research and human review are required before this document may be used to answer citizen questions."
+    }
+  ],
+  "audience": ["households"],
+  "scope": "General household water conservation information only.",
+  "verificationNotes": "Draft placeholder. No source has been selected or verified."
+}

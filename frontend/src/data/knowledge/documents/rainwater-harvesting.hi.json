@@ -1,0 +1,28 @@
+{
+  "id": "rainwater-harvesting-hi",
+  "documentFamilyId": "rainwater-harvesting",
+  "version": "0.1.0",
+  "title": "वर्षा जल संचयन की मूल बातें",
+  "category": "rainwater-harvesting",
+  "language": "hi",
+  "jurisdiction": "भारत",
+  "sourceName": null,
+  "sourceUrl": null,
+  "sourceType": null,
+  "publisher": null,
+  "lastVerifiedAt": null,
+  "effectiveDate": null,
+  "status": "draft",
+  "keywords": ["वर्षा जल संचयन", "बारिश का पानी", "वर्षा जल संग्रह"],
+  "aliases": ["बारिश का जल इकट्ठा करना", "वर्षा जल भंडारण"],
+  "summary": "भविष्य में मानव समीक्षा से तैयार होने वाली वर्षा जल संचयन जानकारी के लिए प्रारूप।",
+  "sections": [
+    {
+      "heading": "प्रारूप का दायरा",
+      "content": "नागरिकों के प्रश्नों के उत्तर में इस दस्तावेज़ का उपयोग करने से पहले प्रामाणिक स्रोत शोध और मानव समीक्षा आवश्यक है।"
+    }
+  ],
+  "audience": ["घर-परिवार", "समुदाय"],
+  "scope": "केवल सामान्य वर्षा जल संचयन जानकारी; स्थानीय आवश्यकताओं के लिए सत्यापित स्रोत चाहिए।",
+  "verificationNotes": "प्रारूप। कोई स्रोत चुना या सत्यापित नहीं किया गया है।"
+}
