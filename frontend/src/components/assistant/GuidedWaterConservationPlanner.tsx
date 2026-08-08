@@ -38,6 +38,7 @@ export default function GuidedWaterConservationPlanner({
   return (
     <section
       aria-labelledby="water-conservation-planner-heading"
+      aria-busy={isLoading}
       className="mx-auto mb-2 w-full max-w-3xl px-4 sm:px-6"
     >
       <div className="rounded-2xl border border-blue-100 bg-blue-50/60 p-4 shadow-sm sm:p-5">

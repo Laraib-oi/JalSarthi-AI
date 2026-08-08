@@ -11,6 +11,8 @@ export interface ChatMessage {
   role: ChatRole;
   content: string;
   grounding?: ChatGroundingResponse;
+  /** Present only for a locally displayed result of a server-recognised planner choice. */
+  plannerSelection?: WaterConservationPlannerSelection;
 }
 
 /** The serializable conversation shape accepted by the chat API. */

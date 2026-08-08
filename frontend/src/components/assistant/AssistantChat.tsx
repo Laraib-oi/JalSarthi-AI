@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 
 import ChatConversation from "@/components/assistant/ChatConversation";
 import ChatInputPlaceholder from "@/components/assistant/ChatInputPlaceholder";
-import QuickServices from "@/components/assistant/QuickServices";
 import GuidedWaterConservationPlanner from "@/components/assistant/GuidedWaterConservationPlanner";
 import StatusBanner from "@/components/assistant/StatusBanner";
 import WelcomeSection from "@/components/assistant/WelcomeSection";
@@ -58,13 +57,15 @@ function parseGrounding(value: unknown): ChatGroundingResponse | undefined {
 function createMessage(
   role: ChatMessage["role"],
   content: string,
-  grounding?: ChatGroundingResponse
+  grounding?: ChatGroundingResponse,
+  plannerSelection?: WaterConservationPlannerSelection
 ): ChatMessage {
   return {
     id: `${role}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     role,
     content,
     ...(grounding ? { grounding } : {}),
+    ...(plannerSelection ? { plannerSelection } : {}),
   };
 }
 
@@ -73,6 +74,8 @@ export default function AssistantChat() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [plannerSelectionInFlight, setPlannerSelectionInFlight] =
+    useState<WaterConservationPlannerSelection>();
   const [error, setError] = useState<string | null>(null);
   const isSubmittingRef = useRef(false);
 
@@ -83,7 +86,7 @@ export default function AssistantChat() {
     const content = plannerLabel ?? input.trim();
     if (!content || isSubmittingRef.current) return;
 
-    const userMessage = createMessage("user", content);
+    const userMessage = createMessage("user", content, undefined, plannerSelection);
     const conversation = [...messages, userMessage];
     const requestMessages: ChatRequestMessage[] = conversation
       .slice(-20)
@@ -97,6 +100,7 @@ export default function AssistantChat() {
     setError(null);
     setMessages(conversation);
     setIsLoading(true);
+    setPlannerSelectionInFlight(plannerSelection);
 
     try {
       const response = await fetch("/api/chat", {
@@ -123,7 +127,7 @@ export default function AssistantChat() {
       const grounding = parseGrounding(payload.grounding);
       setMessages((currentMessages) => [
         ...currentMessages,
-        createMessage("assistant", responseMessage.trim(), grounding),
+        createMessage("assistant", responseMessage.trim(), grounding, plannerSelection),
       ]);
     } catch (requestError) {
       setError(
@@ -134,6 +138,7 @@ export default function AssistantChat() {
     } finally {
       isSubmittingRef.current = false;
       setIsLoading(false);
+      setPlannerSelectionInFlight(undefined);
     }
   };
 
@@ -149,15 +154,19 @@ export default function AssistantChat() {
       <StatusBanner />
 
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center px-4 sm:px-6">
-        <WelcomeSection />
-        <GuidedWaterConservationPlanner
-          isLoading={isLoading}
-          onSelect={(selection, label) => void submitMessage(selection, label)}
-        />
-        <QuickServices isLoading={isLoading} onPromptSelect={selectPrompt} />
+        {messages.length === 0 && (
+          <>
+            <WelcomeSection />
+            <GuidedWaterConservationPlanner
+              isLoading={isLoading}
+              onSelect={(selection, label) => void submitMessage(selection, label)}
+            />
+          </>
+        )}
         <ChatConversation
           messages={messages}
           isLoading={isLoading}
+          isPlannerLoading={Boolean(plannerSelectionInFlight)}
           error={error}
           onPromptSelect={selectPrompt}
         />
@@ -166,6 +175,7 @@ export default function AssistantChat() {
       <ChatInputPlaceholder
         value={input}
         isLoading={isLoading}
+        loadingLabel={plannerSelectionInFlight ? t.assistant.planner.loading : t.assistant.loading}
         onChange={setInput}
         onSubmit={submitMessage}
       />

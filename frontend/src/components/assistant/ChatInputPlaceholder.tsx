@@ -1,52 +1,24 @@
 "use client";
 
-import { LoaderCircle, Mic, Paperclip, SendHorizontal, type LucideIcon } from "lucide-react";
+import { LoaderCircle, SendHorizontal } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { useLanguage } from "@/components/providers/LanguageProvider";
-
-function DisabledActionButton({
-  icon: Icon,
-  label,
-  className,
-}: {
-  icon: LucideIcon;
-  label: string;
-  className?: string;
-}) {
-  const { t } = useLanguage();
-
-  return (
-    <span className="group relative inline-flex">
-      <button
-        type="button"
-        disabled
-        aria-label={`${label} — ${t.features.comingSoon}`}
-        className={cn(
-          "flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors disabled:cursor-not-allowed disabled:opacity-60",
-          className
-        )}
-      >
-        <Icon className="h-5 w-5" aria-hidden="true" />
-      </button>
-      <span
-        role="tooltip"
-        className="pointer-events-none absolute -top-9 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-md bg-blue-950 px-2.5 py-1 text-[11px] font-medium text-white opacity-0 shadow-md transition-opacity duration-150 group-hover:opacity-100"
-      >
-        {t.features.comingSoon}
-      </span>
-    </span>
-  );
-}
 
 type ChatInputProps = {
   value: string;
   isLoading: boolean;
+  loadingLabel: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
 };
 
-export default function ChatInputPlaceholder({ value, isLoading, onChange, onSubmit }: ChatInputProps) {
+export default function ChatInputPlaceholder({
+  value,
+  isLoading,
+  loadingLabel,
+  onChange,
+  onSubmit,
+}: ChatInputProps) {
   const { t } = useLanguage();
   const canSubmit = value.trim().length > 0 && !isLoading;
 
@@ -60,8 +32,6 @@ export default function ChatInputPlaceholder({ value, isLoading, onChange, onSub
         aria-label={t.assistant.askLabel}
         className="mx-auto flex w-full max-w-3xl items-center gap-2 px-4 py-4 sm:px-6"
       >
-        <DisabledActionButton icon={Paperclip} label={t.assistant.attachFile} />
-
         <div className="relative flex-1">
           <label htmlFor="assistant-input" className="sr-only">
             {t.assistant.askLabel}
@@ -77,11 +47,10 @@ export default function ChatInputPlaceholder({ value, isLoading, onChange, onSub
           />
         </div>
 
-        <DisabledActionButton icon={Mic} label={t.assistant.voiceInput} />
         <button
           type="submit"
           disabled={!canSubmit}
-          aria-label={isLoading ? t.assistant.loading : t.assistant.sendMessage}
+          aria-label={isLoading ? loadingLabel : t.assistant.sendMessage}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white transition-colors hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-blue-900/40 disabled:opacity-60"
         >
           {isLoading ? (

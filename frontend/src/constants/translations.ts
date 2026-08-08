@@ -87,6 +87,8 @@ type Translation = {
       description: string;
       question: string;
       resetHint: string;
+      resultLabel: string;
+      loading: string;
       household: { label: string; description: string };
       rainwater: { label: string; description: string };
     };
@@ -183,20 +185,22 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     },
     assistant: {
       status: "Status",
-      statusItems: [{ label: "AI chat", value: "Available when configured" }, { label: "Conversation", value: "This session only" }, { label: "Knowledge retrieval", value: "Not enabled" }, { label: "Voice input", value: "Not enabled" }],
-      welcome: "Welcome to JalSarthi AI", welcomeDescription: "Ask general water-related questions in natural language. Official-document retrieval, scheme-specific guidance, complaint drafting, and voice support are not enabled yet.",
+      statusItems: [{ label: "AI chat", value: "Available when configured" }, { label: "Conversation", value: "This session only" }, { label: "Knowledge retrieval", value: "Verified source-backed information available" }, { label: "Voice input", value: "Not enabled" }],
+      welcome: "Welcome to JalSarthi AI", welcomeDescription: "Ask water-related questions in natural language, or choose guided water-conservation help below. When available verified information matches your question, JalSarthi shows the supporting official source.",
       quickServicesLabel: "Quick prompts", quickServices: ["Water conservation tips", "Rainwater harvesting", "Water quality basics", "Water-saving at home", "Community awareness", "General water question"],
-      conversationArea: "Conversation area", emptyTitle: "Your conversation starts here", emptyDescription: "JalSarthi AI can provide general water-related information. It cannot yet verify official documents, local records, or scheme details.",
+      conversationArea: "Conversation area", emptyTitle: "Your conversation starts here", emptyDescription: "Choose a suggested question or use the guided planner. Answers are limited to information available in JalSarthi's knowledge base; matching answers show their official source.",
       tryAsking: "Try asking", suggestions: ["How can I reduce water use at home?", "What is rainwater harvesting?", "What are common causes of water wastage?", "How can a community conserve water?", "What are basic water-quality precautions?", "Why is water conservation important?"],
-      attachFile: "Attach a file", voiceInput: "Voice input", sendMessage: "Send message", askLabel: "Ask JalSarthi AI", placeholder: "Ask a general question about water or conservation...", chatNotice: "AI responses are general information and do not use official documents or local records.", loading: "JalSarthi AI is preparing a response…", error: "JalSarthi AI could not respond. Please try again.", unavailable: "AI chat is not configured yet. Please try again after the service is configured.", source: "Source", officialSource: "Official source", viewSource: "View source", limitedInformation: "Information is limited to the relevant source context.",
+      attachFile: "Attach a file", voiceInput: "Voice input", sendMessage: "Send message", askLabel: "Ask JalSarthi AI", placeholder: "Ask about water, conservation, Jal Jeevan Mission, or water quality...", chatNotice: "Answers are limited to the information currently available in JalSarthi's knowledge base. Source cards appear only when verified information supports an answer.", loading: "JalSarthi AI is preparing a response…", error: "JalSarthi AI could not respond. Please try again.", unavailable: "AI chat is not configured yet. Please try again after the service is configured.", source: "Source", officialSource: "Official source", viewSource: "View source", limitedInformation: "Information is limited to the relevant source context.",
       planner: {
         eyebrow: "Guided assistance",
         title: "Water-conservation planner",
-        description: "Choose a topic for concise guidance based on available official information.",
+        description: "Choose a goal for guided, source-backed water-conservation information.",
         question: "What would you like help with?",
         resetHint: "Choose another topic at any time to start again.",
-        household: { label: "Saving water at home", description: "General household conservation principles." },
-        rainwater: { label: "Rainwater harvesting", description: "Basic official conservation context only." },
+        resultLabel: "Guided water-conservation result",
+        loading: "Preparing guided information from available verified sources…",
+        household: { label: "Saving water at home", description: "Guided household water-conservation information." },
+        rainwater: { label: "Rainwater harvesting", description: "Guided rainwater-harvesting and recharge context." },
       },
     },
   },
@@ -253,15 +257,17 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       ministry: "जल शक्ति मंत्रालय", portal: "एआई-संचालित नागरिक सहायता पोर्टल", description: "जलसारथी एआई एक बुद्धिमान नागरिक सहायता मंच है, जिसे जल-संबंधी सरकारी सेवाओं, योजनाओं, जानकारी और शिकायत सहायता तक पहुँच सरल बनाने के लिए डिज़ाइन किया गया है।", quickLinks: "त्वरित लिंक", services: "सेवाएँ", howItWorks: "कार्यप्रणाली", impact: "प्रभाव", assistant: "एआई सहायक", aboutPrototype: "इस प्रोटोटाइप के बारे में", prototypeNotice: "यह प्रोटोटाइप केवल प्रदर्शन उद्देश्यों के लिए हैकाथॉन हेतु विकसित किया गया है। यह भारत सरकार की आधिकारिक सेवा नहीं है।", repository: "प्रोजेक्ट रिपॉजिटरी देखें",
     },
     assistant: {
-      status: "स्थिति", statusItems: [{ label: "एआई चैट", value: "कॉन्फ़िगर होने पर उपलब्ध" }, { label: "बातचीत", value: "केवल इस सत्र में" }, { label: "ज्ञान खोज", value: "सक्षम नहीं" }, { label: "वॉयस इनपुट", value: "सक्षम नहीं" }], welcome: "जलसारथी एआई में आपका स्वागत है", welcomeDescription: "प्राकृतिक भाषा में सामान्य जल-संबंधी प्रश्न पूछें। आधिकारिक दस्तावेज़ खोज, योजना-विशिष्ट मार्गदर्शन, शिकायत प्रारूपण और वॉयस सहायता अभी सक्षम नहीं हैं।", quickServicesLabel: "त्वरित प्रश्न", quickServices: ["जल संरक्षण सुझाव", "वर्षा जल संचयन", "जल गुणवत्ता की मूल बातें", "घर में पानी बचाना", "सामुदायिक जागरूकता", "सामान्य जल प्रश्न"], conversationArea: "बातचीत क्षेत्र", emptyTitle: "आपकी बातचीत यहाँ से शुरू होती है", emptyDescription: "जलसारथी एआई सामान्य जल-संबंधी जानकारी दे सकता है। यह अभी आधिकारिक दस्तावेज़, स्थानीय रिकॉर्ड या योजना विवरण सत्यापित नहीं कर सकता।", tryAsking: "पूछकर देखें", suggestions: ["मैं घर पर पानी का उपयोग कैसे कम कर सकता हूँ?", "वर्षा जल संचयन क्या है?", "पानी की बर्बादी के सामान्य कारण क्या हैं?", "समुदाय पानी का संरक्षण कैसे कर सकता है?", "जल गुणवत्ता से जुड़ी बुनियादी सावधानियाँ क्या हैं?", "जल संरक्षण क्यों महत्वपूर्ण है?"], attachFile: "फ़ाइल संलग्न करें", voiceInput: "वॉइस इनपुट", sendMessage: "संदेश भेजें", askLabel: "जलसारथी एआई से पूछें", placeholder: "पानी या जल संरक्षण के बारे में सामान्य प्रश्न पूछें...", chatNotice: "एआई उत्तर सामान्य जानकारी हैं और इनमें आधिकारिक दस्तावेज़ या स्थानीय रिकॉर्ड का उपयोग नहीं होता।", loading: "जलसारथी एआई उत्तर तैयार कर रहा है…", error: "जलसारथी एआई उत्तर नहीं दे सका। कृपया फिर से प्रयास करें।", unavailable: "एआई चैट अभी कॉन्फ़िगर नहीं है। सेवा कॉन्फ़िगर होने के बाद फिर से प्रयास करें।", source: "स्रोत", officialSource: "आधिकारिक स्रोत", viewSource: "स्रोत देखें", limitedInformation: "जानकारी संबंधित स्रोत के संदर्भ तक सीमित है।",
+      status: "स्थिति", statusItems: [{ label: "एआई चैट", value: "कॉन्फ़िगर होने पर उपलब्ध" }, { label: "बातचीत", value: "केवल इस सत्र में" }, { label: "ज्ञान खोज", value: "सत्यापित स्रोत-आधारित जानकारी उपलब्ध" }, { label: "वॉयस इनपुट", value: "सक्षम नहीं" }], welcome: "जलसारथी एआई में आपका स्वागत है", welcomeDescription: "प्राकृतिक भाषा में जल-संबंधी प्रश्न पूछें या नीचे दिए गए निर्देशित जल-संरक्षण विकल्प को चुनें। जब उपलब्ध सत्यापित जानकारी आपके प्रश्न से मेल खाती है, जलसारथी सहायक आधिकारिक स्रोत दिखाता है।", quickServicesLabel: "त्वरित प्रश्न", quickServices: ["जल संरक्षण सुझाव", "वर्षा जल संचयन", "जल गुणवत्ता की मूल बातें", "घर में पानी बचाना", "सामुदायिक जागरूकता", "सामान्य जल प्रश्न"], conversationArea: "बातचीत क्षेत्र", emptyTitle: "आपकी बातचीत यहाँ से शुरू होती है", emptyDescription: "सुझाया गया प्रश्न चुनें या निर्देशित योजनाकार का उपयोग करें। उत्तर जलसारथी के ज्ञान-भंडार में उपलब्ध जानकारी तक सीमित हैं; मेल खाने वाले उत्तरों के साथ आधिकारिक स्रोत दिखाया जाता है।", tryAsking: "पूछकर देखें", suggestions: ["मैं घर पर पानी का उपयोग कैसे कम कर सकता हूँ?", "वर्षा जल संचयन क्या है?", "पानी की बर्बादी के सामान्य कारण क्या हैं?", "समुदाय पानी का संरक्षण कैसे कर सकता है?", "जल गुणवत्ता से जुड़ी बुनियादी सावधानियाँ क्या हैं?", "जल संरक्षण क्यों महत्वपूर्ण है?"], attachFile: "फ़ाइल संलग्न करें", voiceInput: "वॉइस इनपुट", sendMessage: "संदेश भेजें", askLabel: "जलसारथी एआई से पूछें", placeholder: "जल, जल संरक्षण, जल जीवन मिशन या जल गुणवत्ता के बारे में पूछें...", chatNotice: "उत्तर जलसारथी के ज्ञान-भंडार में वर्तमान में उपलब्ध जानकारी तक सीमित हैं। सत्यापित जानकारी उपलब्ध होने पर ही स्रोत कार्ड दिखते हैं।", loading: "जलसारथी एआई उत्तर तैयार कर रहा है…", error: "जलसारथी एआई उत्तर नहीं दे सका। कृपया फिर से प्रयास करें।", unavailable: "एआई चैट अभी कॉन्फ़िगर नहीं है। सेवा कॉन्फ़िगर होने के बाद फिर से प्रयास करें।", source: "स्रोत", officialSource: "आधिकारिक स्रोत", viewSource: "स्रोत देखें", limitedInformation: "जानकारी संबंधित स्रोत के संदर्भ तक सीमित है।",
       planner: {
         eyebrow: "निर्देशित सहायता",
         title: "जल संरक्षण योजनाकार",
-        description: "उपलब्ध आधिकारिक जानकारी पर आधारित संक्षिप्त मार्गदर्शन के लिए विषय चुनें।",
+        description: "स्रोत-आधारित जल-संरक्षण जानकारी के लिए लक्ष्य चुनें।",
         question: "आपको किस विषय में सहायता चाहिए?",
         resetHint: "फिर से शुरू करने के लिए कभी भी दूसरा विषय चुनें।",
-        household: { label: "घर में पानी बचाना", description: "घरेलू जल संरक्षण के सामान्य सिद्धांत।" },
-        rainwater: { label: "वर्षा जल संचयन", description: "केवल संरक्षण का मूल आधिकारिक संदर्भ।" },
+        resultLabel: "निर्देशित जल-संरक्षण परिणाम",
+        loading: "उपलब्ध सत्यापित स्रोतों से निर्देशित जानकारी तैयार की जा रही है…",
+        household: { label: "घर में पानी बचाना", description: "घरेलू जल संरक्षण की निर्देशित जानकारी।" },
+        rainwater: { label: "वर्षा जल संचयन", description: "वर्षा जल संचयन और भूजल पुनर्भरण का निर्देशित संदर्भ।" },
       },
     },
   },

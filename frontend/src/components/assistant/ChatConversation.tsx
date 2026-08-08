@@ -10,6 +10,7 @@ import type { ChatGroundingSource, ChatMessage } from "@/types/chat";
 type ChatConversationProps = {
   messages: ChatMessage[];
   isLoading: boolean;
+  isPlannerLoading: boolean;
   error: string | null;
   onPromptSelect: (prompt: string) => void;
 };
@@ -21,6 +22,7 @@ function uniqueSources(sources: ChatGroundingSource[]): ChatGroundingSource[] {
 export default function ChatConversation({
   messages,
   isLoading,
+  isPlannerLoading,
   error,
   onPromptSelect,
 }: ChatConversationProps) {
@@ -41,11 +43,17 @@ export default function ChatConversation({
           const isUser = message.role === "user";
           const sources = isUser ? [] : uniqueSources(message.grounding?.sources ?? []);
           const isPartial = message.grounding?.status === "partial";
+          const plannerLabel =
+            message.plannerSelection === "household-water-conservation"
+              ? t.assistant.planner.household.label
+              : message.plannerSelection === "rainwater-harvesting"
+                ? t.assistant.planner.rainwater.label
+                : undefined;
 
           return (
             <article
               key={message.id}
-              className={cn("flex items-start gap-3", isUser && "flex-row-reverse")}
+              className={cn("flex min-w-0 items-start gap-3", isUser && "flex-row-reverse")}
             >
               <span
                 className={cn(
@@ -60,7 +68,12 @@ export default function ChatConversation({
                   <Sparkles className="h-4 w-4" />
                 )}
               </span>
-              <div className="max-w-[80%]">
+              <div className="min-w-0 max-w-[88%] sm:max-w-[80%]">
+                {!isUser && message.plannerSelection && (
+                  <p className="mb-1 text-xs font-semibold text-blue-800">
+                    {t.assistant.planner.resultLabel} · {plannerLabel}
+                  </p>
+                )}
                 <p
                   className={cn(
                     "whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm",
@@ -74,7 +87,7 @@ export default function ChatConversation({
 
                 {sources.length > 0 && (
                   <aside
-                    className="mt-2 rounded-xl border border-blue-100 bg-blue-50/60 px-3 py-2.5 text-xs text-slate-700"
+                    className="mt-2 break-words rounded-xl border border-blue-100 bg-blue-50/60 px-3 py-2.5 text-xs text-slate-700"
                     aria-label={t.assistant.source}
                   >
                     <p className="font-semibold text-blue-950">{t.assistant.source}</p>
@@ -95,7 +108,7 @@ export default function ChatConversation({
                             href={source.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-1 inline-flex items-center gap-1 font-medium text-blue-800 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
+                            className="mt-1 inline-flex max-w-full items-center gap-1 break-all font-medium text-blue-800 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
                             aria-label={`${t.assistant.viewSource}: ${source.name}`}
                           >
                             {t.assistant.viewSource}
@@ -121,7 +134,7 @@ export default function ChatConversation({
                 className="h-4 w-4 animate-spin text-blue-800"
                 aria-hidden="true"
               />
-              {t.assistant.loading}
+              {isPlannerLoading ? t.assistant.planner.loading : t.assistant.loading}
             </span>
           </div>
         )}
