@@ -98,7 +98,17 @@ function boundText(value: string): string {
 function getTrustedSource(
   document: RetrievedDocument["document"]
 ): GroundingSource | undefined {
-  if (document.status === "draft") return undefined;
+  if (
+    (document.status !== "verified" && document.status !== "approved") ||
+    typeof document.sourceName !== "string" ||
+    typeof document.sourceUrl !== "string" ||
+    !document.sourceUrl.startsWith("https://") ||
+    typeof document.sourceType !== "string" ||
+    typeof document.publisher !== "string" ||
+    typeof document.lastVerifiedAt !== "string"
+  ) {
+    return undefined;
+  }
 
   return {
     name: document.sourceName,

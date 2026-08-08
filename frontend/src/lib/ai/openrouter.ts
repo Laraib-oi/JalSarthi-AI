@@ -3,6 +3,8 @@ import "server-only";
 import type { AiProvider, ChatCompletionRequest, GroundingContext } from "@/lib/ai/types";
 import { AiProviderError } from "@/lib/ai/types";
 
+const PROVIDER_TIMEOUT_MS = 15_000;
+
 function getResponseContent(value: unknown): string | undefined {
   if (!value || typeof value !== "object") return undefined;
 
@@ -82,6 +84,7 @@ export class OpenRouterProvider implements AiProvider {
           ],
         }),
         cache: "no-store",
+        signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
       });
     } catch {
       throw new AiProviderError("The AI provider could not be reached.");
