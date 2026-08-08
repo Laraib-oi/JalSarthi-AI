@@ -10,6 +10,11 @@ import {
 } from "@/lib/ai/types";
 import { retrieveKnowledge } from "@/lib/knowledge/retrieve";
 import type { RetrievedDocument, RetrievalResult } from "@/lib/knowledge/types";
+import {
+  getWaterConservationPlannerRequest,
+  getWaterConservationPlannerResponse,
+  isWaterConservationPlannerSelection,
+} from "@/lib/planner/water-conservation";
 import type {
   ChatApiResponse,
   ChatGroundingResponse,
@@ -35,6 +40,7 @@ const NONE_FALLBACK: Record<Language, string> = {
 type ChatBody = {
   language?: unknown;
   messages?: unknown;
+  plannerSelection?: unknown;
 };
 
 function isChatBody(value: unknown): value is ChatBody {
@@ -166,9 +172,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
   }
 
+  const plannerSelection = body.plannerSelection;
+  if (plannerSelection !== undefined && !isWaterConservationPlannerSelection(plannerSelection)) {
+    return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
+  }
+
+  const plannerRequest = plannerSelection
+    ? getWaterConservationPlannerRequest(plannerSelection, body.language)
+    : undefined;
+  const retrievalQuery = plannerRequest?.query ?? latestUserMessage.content;
+  const completionMessages = plannerRequest
+    ? [
+        ...messages.slice(0, -1),
+        { role: "user" as const, content: plannerRequest.prompt },
+      ]
+    : messages;
+
   let retrieval: RetrievalResult;
   try {
-    retrieval = retrieveKnowledge(latestUserMessage.content, body.language);
+    retrieval = retrieveKnowledge(retrievalQuery, body.language);
   } catch {
     return NextResponse.json({ error: "KNOWLEDGE_RETRIEVAL_ERROR" }, { status: 500 });
   }
@@ -183,10 +205,18 @@ export async function POST(request: Request) {
 
   const grounding = buildGroundingContext(retrieval.status, retrieval.documents);
 
+  if (plannerSelection) {
+    const response: ChatApiResponse = {
+      message: getWaterConservationPlannerResponse(plannerSelection, body.language),
+      grounding: buildGroundingResponse(retrieval.status, retrieval.documents),
+    };
+    return NextResponse.json(response);
+  }
+
   try {
     const message = await getAiProvider().completeChat({
       language: body.language,
-      messages,
+      messages: completionMessages,
       grounding,
     });
     const response: ChatApiResponse = {

@@ -1,5 +1,10 @@
 export type ChatRole = "user" | "assistant";
 
+/** A server-recognised guided-assistance choice; it is not free-form input. */
+export type WaterConservationPlannerSelection =
+  | "household-water-conservation"
+  | "rainwater-harvesting";
+
 /** A single message kept only in the active browser session. */
 export interface ChatMessage {
   id: string;

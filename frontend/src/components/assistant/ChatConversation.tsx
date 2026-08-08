@@ -86,7 +86,10 @@ export default function ChatConversation({
                     <ul className="mt-2 space-y-2">
                       {sources.map((source) => (
                         <li key={source.url}>
-                          <p className="font-medium text-slate-800">{source.name}</p>
+                          <p className="font-medium text-slate-800">{source.documentTitle}</p>
+                          <p className="mt-0.5 text-slate-600">
+                            {t.assistant.officialSource}: {source.name}
+                          </p>
                           <p className="mt-0.5 text-slate-600">{source.publisher}</p>
                           <a
                             href={source.url}

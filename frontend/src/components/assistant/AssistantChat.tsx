@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import ChatConversation from "@/components/assistant/ChatConversation";
 import ChatInputPlaceholder from "@/components/assistant/ChatInputPlaceholder";
 import QuickServices from "@/components/assistant/QuickServices";
+import GuidedWaterConservationPlanner from "@/components/assistant/GuidedWaterConservationPlanner";
 import StatusBanner from "@/components/assistant/StatusBanner";
 import WelcomeSection from "@/components/assistant/WelcomeSection";
 import { useLanguage } from "@/components/providers/LanguageProvider";
@@ -13,6 +14,7 @@ import type {
   ChatGroundingSource,
   ChatMessage,
   ChatRequestMessage,
+  WaterConservationPlannerSelection,
 } from "@/types/chat";
 
 type ChatApiPayload = {
@@ -74,8 +76,11 @@ export default function AssistantChat() {
   const [error, setError] = useState<string | null>(null);
   const isSubmittingRef = useRef(false);
 
-  const submitMessage = async () => {
-    const content = input.trim();
+  const submitMessage = async (
+    plannerSelection?: WaterConservationPlannerSelection,
+    plannerLabel?: string
+  ) => {
+    const content = plannerLabel ?? input.trim();
     if (!content || isSubmittingRef.current) return;
 
     const userMessage = createMessage("user", content);
@@ -97,7 +102,11 @@ export default function AssistantChat() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language, messages: requestMessages }),
+        body: JSON.stringify({
+          language,
+          messages: requestMessages,
+          ...(plannerSelection ? { plannerSelection } : {}),
+        }),
       });
       const payload = (await response.json()) as ChatApiPayload;
       const responseMessage = payload.message;
@@ -141,6 +150,10 @@ export default function AssistantChat() {
 
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center px-4 sm:px-6">
         <WelcomeSection />
+        <GuidedWaterConservationPlanner
+          isLoading={isLoading}
+          onSelect={(selection, label) => void submitMessage(selection, label)}
+        />
         <QuickServices isLoading={isLoading} onPromptSelect={selectPrompt} />
         <ChatConversation
           messages={messages}
