@@ -8,6 +8,12 @@ import type { RetrievedDocument, RetrievalResult } from "./types";
 const MAX_RESULTS = 3;
 const MINIMUM_SCORE = 4;
 const RELEVANT_SCORE = 14;
+const RETRIEVAL_ELIGIBLE_STATUSES = new Set(["verified", "approved"]);
+
+/** Only human-verified or approved documents may reach grounding. */
+function isRetrievalEligible(document: KnowledgeDocument): boolean {
+  return RETRIEVAL_ELIGIBLE_STATUSES.has(document.status);
+}
 
 /**
  * Stable scoring order, from strongest to weakest:
@@ -15,9 +21,9 @@ const RELEVANT_SCORE = 14;
  * - exact keyword phrase: 16
  * - exact alias phrase: 12
  * - exact category phrase: 8
- * - useful keyword token: 8 each, capped at 16
- * - useful alias token: 6 each, capped at 12
- * - useful content token: 1 each, capped at 4
+ * - distinct useful keyword token: 8 each, capped at 16
+ * - distinct useful alias token: 6 each, capped at 12
+ * - distinct useful content token: 1 each, capped at 4
  */
 function scoreDocument(query: string, document: KnowledgeDocument): RetrievedDocument {
   const normalizedQuery = normalizeText(query);
@@ -52,7 +58,7 @@ function scoreDocument(query: string, document: KnowledgeDocument): RetrievedDoc
 
   const countTokenMatches = (value: string, pointsPerMatch: number, maximum: number, label: string) => {
     let awarded = 0;
-    for (const token of usefulTokens(value)) {
+    for (const token of new Set(usefulTokens(value))) {
       if (queryTokens.has(token) && awarded < maximum) {
         score += pointsPerMatch;
         awarded += pointsPerMatch;
@@ -76,14 +82,15 @@ function scoreDocument(query: string, document: KnowledgeDocument): RetrievedDoc
 }
 
 /**
- * Retrieves the best deterministic matches for one language only. Draft status
- * and source metadata are passed through unchanged for later policy decisions.
+ * Retrieves the best deterministic matches for one language only. Only
+ * verified or approved documents are eligible to become retrieval candidates.
  */
 export function retrieveKnowledge(query: string, language: KnowledgeDocumentLanguage): RetrievalResult {
   const normalizedQuery = normalizeText(query);
   if (!normalizedQuery) return { status: "none", documents: [] };
 
   const documents = getKnowledgeDocuments(language)
+    .filter(isRetrievalEligible)
     .map((document) => scoreDocument(normalizedQuery, document))
     .filter((result) => result.score >= MINIMUM_SCORE)
     .sort((first, second) => second.score - first.score || first.document.id.localeCompare(second.document.id))
