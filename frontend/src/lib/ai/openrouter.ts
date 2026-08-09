@@ -27,7 +27,7 @@ function getSystemInstruction(
 ) {
   const languageInstruction =
     language === "hi"
-      ? "Respond entirely in Hindi, using clear and respectful language."
+      ? "उत्तर स्वाभाविक हिंदी (देवनागरी) में दें और स्पष्ट व सम्मानजनक भाषा का उपयोग करें। उत्तर का पूरा वर्णन—स्पष्टीकरण, सावधानियाँ, शीर्षक और निर्देश—हिंदी में लिखें; अनावश्यक अंग्रेज़ी वाक्य, वाक्यांश या व्याख्यात्मक शब्द न लिखें। भेजने से पहले जाँचें कि लैटिन लिपि में केवल अपरिहार्य व्यक्तिवाचक नाम, आधिकारिक नाम, JJM जैसे संक्षिप्त नाम, URL या स्थापित तकनीकी शब्द ही हों; अन्यथा उन्हें हिंदी में लिखें। ऐसे अनुमत शब्दों को उनके मूल रूप में रखें तथा स्रोत के नाम या URL का अनुवाद या परिवर्तन न करें।"
       : "Respond entirely in English, using clear and respectful language.";
 
   const groundingInstruction =
