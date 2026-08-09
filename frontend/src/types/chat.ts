@@ -29,6 +29,8 @@ export interface ChatMessage {
   plannerSelection?: WaterConservationPlannerSelection;
   /** Present only for a locally displayed deterministic complaint draft. */
   complaintDraftType?: ComplaintDraftType;
+  /** Present only for a server-owned official-source discovery result. */
+  officialSources?: ChatOfficialSource[];
 }
 
 /** The serializable conversation shape accepted by the chat API. */
@@ -38,6 +40,17 @@ export interface ChatRequestMessage {
 }
 
 export type ChatGroundingStatus = "relevant" | "partial" | "none";
+
+/** A server-owned result from the static official-source catalogue. */
+export interface ChatOfficialSource {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  publisher: string;
+  category: string;
+  lastVerifiedAt: string;
+}
 
 /** Source details returned by the server only when a document has trusted metadata. */
 export interface ChatGroundingSource {
@@ -59,4 +72,5 @@ export interface ChatGroundingResponse {
 export interface ChatApiResponse {
   message: string;
   grounding: ChatGroundingResponse;
+  officialSources?: ChatOfficialSource[];
 }

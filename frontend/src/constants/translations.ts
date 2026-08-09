@@ -82,6 +82,18 @@ type Translation = {
     officialSource: string;
     viewSource: string;
     limitedInformation: string;
+    officialInformation: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      searchLabel: string;
+      placeholder: string;
+      searchButton: string;
+      loading: string;
+      resultLabel: string;
+      lastVerified: string;
+      suggestions: string[];
+    };
     planner: {
       eyebrow: string;
       title: string;
@@ -216,6 +228,18 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       conversationArea: "Conversation area", emptyTitle: "Your conversation starts here", emptyDescription: "Choose a suggested question or use the guided planner. Answers are limited to information available in JalSarthi's knowledge base; matching answers show their official source.",
       tryAsking: "Try asking", suggestions: ["How can I reduce water use at home?", "What is rainwater harvesting?", "What are common causes of water wastage?", "How can a community conserve water?", "What are basic water-quality precautions?", "Why is water conservation important?"],
       attachFile: "Attach a file", voiceInput: "Voice input", sendMessage: "Send message", askLabel: "Ask JalSarthi AI", placeholder: "Ask about water, conservation, Jal Jeevan Mission, or water quality...", chatNotice: "Answers are limited to the information currently available in JalSarthi's knowledge base. Source cards appear only when verified information supports an answer.", loading: "JalSarthi AI is preparing a response…", error: "JalSarthi AI could not respond. Please try again.", unavailable: "AI chat is not configured yet. Please try again after the service is configured.", source: "Source", officialSource: "Official source", viewSource: "View source", limitedInformation: "Information is limited to the relevant source context.",
+      officialInformation: {
+        eyebrow: "Official information",
+        title: "Find verified official sources",
+        description: "Search JalSarthi's static catalogue of previously verified official resources. This is not live web search.",
+        searchLabel: "Search verified official sources",
+        placeholder: "For example, Jal Jeevan Mission",
+        searchButton: "Find sources",
+        loading: "Finding verified official sources…",
+        resultLabel: "Verified official sources",
+        lastVerified: "Last verified",
+        suggestions: ["Jal Jeevan Mission", "Water conservation", "Rainwater harvesting", "Water quality monitoring"],
+      },
       planner: {
         eyebrow: "Guided assistance",
         title: "Water-conservation planner",
@@ -306,6 +330,18 @@ export const TRANSLATIONS: Record<Language, Translation> = {
     },
     assistant: {
       status: "स्थिति", statusItems: [{ label: "एआई चैट", value: "कॉन्फ़िगर होने पर उपलब्ध" }, { label: "बातचीत", value: "केवल इस सत्र में" }, { label: "ज्ञान खोज", value: "सत्यापित स्रोत-आधारित जानकारी उपलब्ध" }, { label: "वॉयस इनपुट", value: "सक्षम नहीं" }], welcome: "जलसारथी एआई में आपका स्वागत है", welcomeDescription: "प्राकृतिक भाषा में जल-संबंधी प्रश्न पूछें या नीचे दिए गए निर्देशित जल-संरक्षण विकल्प को चुनें। जब उपलब्ध सत्यापित जानकारी आपके प्रश्न से मेल खाती है, जलसारथी सहायक आधिकारिक स्रोत दिखाता है।", quickServicesLabel: "त्वरित प्रश्न", quickServices: ["जल संरक्षण सुझाव", "वर्षा जल संचयन", "जल गुणवत्ता की मूल बातें", "घर में पानी बचाना", "सामुदायिक जागरूकता", "सामान्य जल प्रश्न"], conversationArea: "बातचीत क्षेत्र", emptyTitle: "आपकी बातचीत यहाँ से शुरू होती है", emptyDescription: "सुझाया गया प्रश्न चुनें या निर्देशित योजनाकार का उपयोग करें। उत्तर जलसारथी के ज्ञान-भंडार में उपलब्ध जानकारी तक सीमित हैं; मेल खाने वाले उत्तरों के साथ आधिकारिक स्रोत दिखाया जाता है।", tryAsking: "पूछकर देखें", suggestions: ["मैं घर पर पानी का उपयोग कैसे कम कर सकता हूँ?", "वर्षा जल संचयन क्या है?", "पानी की बर्बादी के सामान्य कारण क्या हैं?", "समुदाय पानी का संरक्षण कैसे कर सकता है?", "जल गुणवत्ता से जुड़ी बुनियादी सावधानियाँ क्या हैं?", "जल संरक्षण क्यों महत्वपूर्ण है?"], attachFile: "फ़ाइल संलग्न करें", voiceInput: "वॉइस इनपुट", sendMessage: "संदेश भेजें", askLabel: "जलसारथी एआई से पूछें", placeholder: "जल, जल संरक्षण, जल जीवन मिशन या जल गुणवत्ता के बारे में पूछें...", chatNotice: "उत्तर जलसारथी के ज्ञान-भंडार में वर्तमान में उपलब्ध जानकारी तक सीमित हैं। सत्यापित जानकारी उपलब्ध होने पर ही स्रोत कार्ड दिखते हैं।", loading: "जलसारथी एआई उत्तर तैयार कर रहा है…", error: "जलसारथी एआई उत्तर नहीं दे सका। कृपया फिर से प्रयास करें।", unavailable: "एआई चैट अभी कॉन्फ़िगर नहीं है। सेवा कॉन्फ़िगर होने के बाद फिर से प्रयास करें।", source: "स्रोत", officialSource: "आधिकारिक स्रोत", viewSource: "स्रोत देखें", limitedInformation: "जानकारी संबंधित स्रोत के संदर्भ तक सीमित है।",
+      officialInformation: {
+        eyebrow: "आधिकारिक जानकारी",
+        title: "सत्यापित आधिकारिक स्रोत खोजें",
+        description: "जलसारथी के पहले से सत्यापित आधिकारिक संसाधनों के स्थिर कैटलॉग में खोजें। यह लाइव वेब खोज नहीं है।",
+        searchLabel: "सत्यापित आधिकारिक स्रोत खोजें",
+        placeholder: "उदाहरण: जल जीवन मिशन",
+        searchButton: "स्रोत खोजें",
+        loading: "सत्यापित आधिकारिक स्रोत खोजे जा रहे हैं…",
+        resultLabel: "सत्यापित आधिकारिक स्रोत",
+        lastVerified: "अंतिम सत्यापन",
+        suggestions: ["जल जीवन मिशन", "जल संरक्षण", "वर्षा जल संचयन", "जल गुणवत्ता निगरानी"],
+      },
       planner: {
         eyebrow: "निर्देशित सहायता",
         title: "जल संरक्षण योजनाकार",

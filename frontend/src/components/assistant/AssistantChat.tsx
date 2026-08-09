@@ -6,6 +6,7 @@ import ChatConversation from "@/components/assistant/ChatConversation";
 import ChatInputPlaceholder from "@/components/assistant/ChatInputPlaceholder";
 import ComplaintDraftAssistant from "@/components/assistant/ComplaintDraftAssistant";
 import GuidedWaterConservationPlanner from "@/components/assistant/GuidedWaterConservationPlanner";
+import OfficialSourceDiscovery from "@/components/assistant/OfficialSourceDiscovery";
 import StatusBanner from "@/components/assistant/StatusBanner";
 import WelcomeSection from "@/components/assistant/WelcomeSection";
 import { useLanguage } from "@/components/providers/LanguageProvider";
@@ -13,6 +14,7 @@ import type {
   ChatGroundingResponse,
   ChatGroundingSource,
   ChatMessage,
+  ChatOfficialSource,
   ChatRequestMessage,
   ComplaintDraftRequest,
   WaterConservationPlannerSelection,
@@ -21,6 +23,7 @@ import type {
 type ChatApiPayload = {
   message?: unknown;
   grounding?: unknown;
+  officialSources?: unknown;
   error?: unknown;
 };
 
@@ -56,12 +59,32 @@ function parseGrounding(value: unknown): ChatGroundingResponse | undefined {
   return { status: grounding.status, sources: grounding.sources };
 }
 
+function isChatOfficialSource(value: unknown): value is ChatOfficialSource {
+  if (!value || typeof value !== "object") return false;
+
+  const source = value as Record<string, unknown>;
+  return (
+    typeof source.id === "string" &&
+    typeof source.title === "string" &&
+    typeof source.description === "string" &&
+    typeof source.url === "string" &&
+    typeof source.publisher === "string" &&
+    typeof source.category === "string" &&
+    typeof source.lastVerifiedAt === "string"
+  );
+}
+
+function parseOfficialSources(value: unknown): ChatOfficialSource[] | undefined {
+  return Array.isArray(value) && value.every(isChatOfficialSource) ? value : undefined;
+}
+
 function createMessage(
   role: ChatMessage["role"],
   content: string,
   grounding?: ChatGroundingResponse,
   plannerSelection?: WaterConservationPlannerSelection,
-  complaintDraftType?: ComplaintDraftRequest["type"]
+  complaintDraftType?: ComplaintDraftRequest["type"],
+  officialSources?: ChatOfficialSource[]
 ): ChatMessage {
   return {
     id: `${role}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -70,6 +93,7 @@ function createMessage(
     ...(grounding ? { grounding } : {}),
     ...(plannerSelection ? { plannerSelection } : {}),
     ...(complaintDraftType ? { complaintDraftType } : {}),
+    ...(officialSources ? { officialSources } : {}),
   };
 }
 
@@ -81,13 +105,15 @@ export default function AssistantChat() {
   const [plannerSelectionInFlight, setPlannerSelectionInFlight] =
     useState<WaterConservationPlannerSelection>();
   const [complaintDraftInFlight, setComplaintDraftInFlight] = useState(false);
+  const [officialSourceDiscoveryInFlight, setOfficialSourceDiscoveryInFlight] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isSubmittingRef = useRef(false);
 
   const submitMessage = async (
     plannerSelection?: WaterConservationPlannerSelection,
     plannerLabel?: string,
-    complaintDraft?: ComplaintDraftRequest
+    complaintDraft?: ComplaintDraftRequest,
+    officialSourceDiscoveryQuery?: string
   ) => {
     const content = plannerLabel ?? input.trim();
     if (!content || isSubmittingRef.current) return;
@@ -114,6 +140,7 @@ export default function AssistantChat() {
     setIsLoading(true);
     setPlannerSelectionInFlight(plannerSelection);
     setComplaintDraftInFlight(Boolean(complaintDraft));
+    setOfficialSourceDiscoveryInFlight(Boolean(officialSourceDiscoveryQuery));
 
     try {
       const response = await fetch("/api/chat", {
@@ -124,6 +151,9 @@ export default function AssistantChat() {
           messages: requestMessages,
           ...(plannerSelection ? { plannerSelection } : {}),
           ...(complaintDraft ? { complaintDraft } : {}),
+          ...(officialSourceDiscoveryQuery
+            ? { officialSourceDiscovery: { query: officialSourceDiscoveryQuery } }
+            : {}),
         }),
       });
       const payload = (await response.json()) as ChatApiPayload;
@@ -139,6 +169,7 @@ export default function AssistantChat() {
       }
 
       const grounding = parseGrounding(payload.grounding);
+      const officialSources = parseOfficialSources(payload.officialSources);
       setMessages((currentMessages) => [
         ...currentMessages,
         createMessage(
@@ -146,7 +177,8 @@ export default function AssistantChat() {
           responseMessage.trim(),
           grounding,
           plannerSelection,
-          complaintDraft?.type
+          complaintDraft?.type,
+          officialSources
         ),
       ]);
     } catch (requestError) {
@@ -160,6 +192,7 @@ export default function AssistantChat() {
       setIsLoading(false);
       setPlannerSelectionInFlight(undefined);
       setComplaintDraftInFlight(false);
+      setOfficialSourceDiscoveryInFlight(false);
     }
   };
 
@@ -178,6 +211,10 @@ export default function AssistantChat() {
     );
   };
 
+  const discoverOfficialSources = (query: string) => {
+    void submitMessage(undefined, query, undefined, query);
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <StatusBanner />
@@ -190,6 +227,10 @@ export default function AssistantChat() {
               isLoading={isLoading}
               onSelect={(selection, label) => void submitMessage(selection, label)}
             />
+            <OfficialSourceDiscovery
+              isLoading={isLoading}
+              onDiscover={discoverOfficialSources}
+            />
             <ComplaintDraftAssistant
               isLoading={isLoading}
               onCreateDraft={createComplaintDraft}
@@ -201,6 +242,7 @@ export default function AssistantChat() {
           isLoading={isLoading}
           isPlannerLoading={Boolean(plannerSelectionInFlight)}
           isComplaintDraftLoading={complaintDraftInFlight}
+          isOfficialSourceDiscoveryLoading={officialSourceDiscoveryInFlight}
           error={error}
           onPromptSelect={selectPrompt}
         />
@@ -214,6 +256,8 @@ export default function AssistantChat() {
             ? t.assistant.planner.loading
             : complaintDraftInFlight
               ? t.assistant.complaintDraft.loading
+              : officialSourceDiscoveryInFlight
+                ? t.assistant.officialInformation.loading
               : t.assistant.loading
         }
         onChange={setInput}

@@ -6,13 +6,14 @@ import { useState } from "react";
 import EmptyChatArea from "@/components/assistant/EmptyChatArea";
 import { useLanguage } from "@/components/providers/LanguageProvider";
 import { cn } from "@/lib/utils";
-import type { ChatGroundingSource, ChatMessage } from "@/types/chat";
+import type { ChatGroundingSource, ChatMessage, ChatOfficialSource } from "@/types/chat";
 
 type ChatConversationProps = {
   messages: ChatMessage[];
   isLoading: boolean;
   isPlannerLoading: boolean;
   isComplaintDraftLoading: boolean;
+  isOfficialSourceDiscoveryLoading: boolean;
   error: string | null;
   onPromptSelect: (prompt: string) => void;
 };
@@ -21,11 +22,16 @@ function uniqueSources(sources: ChatGroundingSource[]): ChatGroundingSource[] {
   return Array.from(new Map(sources.map((source) => [source.url, source])).values());
 }
 
+function uniqueOfficialSources(sources: ChatOfficialSource[]): ChatOfficialSource[] {
+  return Array.from(new Map(sources.map((source) => [source.url, source])).values());
+}
+
 export default function ChatConversation({
   messages,
   isLoading,
   isPlannerLoading,
   isComplaintDraftLoading,
+  isOfficialSourceDiscoveryLoading,
   error,
   onPromptSelect,
 }: ChatConversationProps) {
@@ -48,6 +54,7 @@ export default function ChatConversation({
           const sources = isUser ? [] : uniqueSources(message.grounding?.sources ?? []);
           const isPartial = message.grounding?.status === "partial";
           const isComplaintDraft = !isUser && Boolean(message.complaintDraftType);
+          const officialSources = isUser ? [] : uniqueOfficialSources(message.officialSources ?? []);
           const plannerLabel =
             message.plannerSelection === "household-water-conservation"
               ? t.assistant.planner.household.label
@@ -155,6 +162,39 @@ export default function ChatConversation({
                     </ul>
                   </aside>
                 )}
+
+                {officialSources.length > 0 && (
+                  <aside
+                    className="mt-2 break-words rounded-xl border border-emerald-200 bg-emerald-50/60 px-3 py-2.5 text-xs text-slate-700"
+                    aria-label={t.assistant.officialInformation.resultLabel}
+                  >
+                    <p className="font-semibold text-emerald-950">
+                      {t.assistant.officialInformation.resultLabel}
+                    </p>
+                    <ul className="mt-2 space-y-3">
+                      {officialSources.map((source) => (
+                        <li key={source.id}>
+                          <p className="font-medium text-slate-800">{source.title}</p>
+                          <p className="mt-0.5 leading-relaxed text-slate-600">{source.description}</p>
+                          <p className="mt-1 text-slate-600">{source.publisher}</p>
+                          <p className="mt-0.5 text-slate-600">
+                            {t.assistant.officialInformation.lastVerified}: {source.lastVerifiedAt}
+                          </p>
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-1 inline-flex max-w-full items-center gap-1 break-all font-medium text-emerald-800 underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
+                            aria-label={`${t.assistant.viewSource}: ${source.title}`}
+                          >
+                            {t.assistant.viewSource}
+                            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </aside>
+                )}
               </div>
             </article>
           );
@@ -174,6 +214,8 @@ export default function ChatConversation({
                 ? t.assistant.planner.loading
                 : isComplaintDraftLoading
                   ? t.assistant.complaintDraft.loading
+                  : isOfficialSourceDiscoveryLoading
+                    ? t.assistant.officialInformation.loading
                   : t.assistant.loading}
             </span>
           </div>

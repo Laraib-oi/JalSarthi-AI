@@ -10,6 +10,7 @@ import {
 } from "@/lib/ai/types";
 import { retrieveKnowledge } from "@/lib/knowledge/retrieve";
 import type { RetrievedDocument, RetrievalResult } from "@/lib/knowledge/types";
+import { discoverOfficialSources } from "@/lib/official-sources/discover";
 import {
   createComplaintDraft,
   parseComplaintDraftRequest,
@@ -23,6 +24,7 @@ import type {
   ChatApiResponse,
   ChatGroundingResponse,
   ChatGroundingSource,
+  ChatOfficialSource,
   ChatRequestMessage,
   ChatRole,
 } from "@/types/chat";
@@ -35,6 +37,7 @@ const MAX_MESSAGE_LENGTH = 2_000;
 const MAX_GROUNDING_DOCUMENTS = 3;
 const MAX_GROUNDING_SECTIONS_PER_DOCUMENT = 2;
 const MAX_GROUNDING_TEXT_LENGTH = 1_200;
+const MAX_OFFICIAL_SOURCE_DISCOVERY_QUERY_LENGTH = 200;
 
 const NONE_FALLBACK: Record<Language, string> = {
   en: "The information you requested is not currently available in JalSarthi's knowledge base.",
@@ -46,6 +49,7 @@ type ChatBody = {
   messages?: unknown;
   plannerSelection?: unknown;
   complaintDraft?: unknown;
+  officialSourceDiscovery?: unknown;
 };
 
 function isChatBody(value: unknown): value is ChatBody {
@@ -87,6 +91,18 @@ function parseMessages(value: unknown): ChatRequestMessage[] | undefined {
   }
 
   return messages.at(-1)?.role === "user" ? messages : undefined;
+}
+
+function parseOfficialSourceDiscoveryQuery(value: unknown): string | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+
+  const discovery = value as Record<string, unknown>;
+  if (Object.keys(discovery).length !== 1 || !("query" in discovery)) return undefined;
+
+  const query = discovery.query;
+  return typeof query === "string" && query.trim() && query.length <= MAX_OFFICIAL_SOURCE_DISCOVERY_QUERY_LENGTH
+    ? query.trim()
+    : undefined;
 }
 
 function boundText(value: string): string {
@@ -164,6 +180,21 @@ function buildGroundingResponse(
   return { status, sources: buildSourceMetadata(documents) };
 }
 
+function buildOfficialSourceResponse(
+  query: string,
+  language: Language
+): ChatOfficialSource[] {
+  return discoverOfficialSources(query, language).map((source) => ({
+    id: source.id,
+    title: source.title,
+    description: source.description,
+    url: source.url,
+    publisher: source.publisher,
+    category: source.category,
+    lastVerifiedAt: source.lastVerifiedAt,
+  }));
+}
+
 export async function POST(request: Request) {
   let body: ChatBody;
   try {
@@ -193,7 +224,10 @@ export async function POST(request: Request) {
   }
 
   const complaintDraft = body.complaintDraft;
-  if (plannerSelection !== undefined && complaintDraft !== undefined) {
+  const officialSourceDiscovery = body.officialSourceDiscovery;
+  const workflowCount = [plannerSelection, complaintDraft, officialSourceDiscovery]
+    .filter((workflow) => workflow !== undefined).length;
+  if (workflowCount > 1) {
     return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
   }
 
@@ -206,6 +240,27 @@ export async function POST(request: Request) {
     const response: ChatApiResponse = {
       message: createComplaintDraft(complaintRequest, body.language),
       grounding: buildGroundingResponse("none", []),
+    };
+    return NextResponse.json(response);
+  }
+
+  if (officialSourceDiscovery !== undefined) {
+    const discoveryQuery = parseOfficialSourceDiscoveryQuery(officialSourceDiscovery);
+    if (!discoveryQuery) {
+      return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });
+    }
+
+    const officialSources = buildOfficialSourceResponse(discoveryQuery, body.language);
+    const response: ChatApiResponse = {
+      message: officialSources.length > 0
+        ? body.language === "en"
+          ? "Here are verified official sources from the JalSarthi catalogue."
+          : "जलसारथी कैटलॉग से सत्यापित आधिकारिक स्रोत यहाँ दिए गए हैं।"
+        : body.language === "en"
+          ? "No verified official source was found for this request in the JalSarthi catalogue."
+          : "इस अनुरोध के लिए जलसारथी कैटलॉग में कोई सत्यापित आधिकारिक स्रोत नहीं मिला।",
+      grounding: buildGroundingResponse("none", []),
+      officialSources,
     };
     return NextResponse.json(response);
   }
