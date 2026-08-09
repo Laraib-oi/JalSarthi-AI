@@ -2,7 +2,7 @@
   "name": "jalsarthi-platform",
   "version": "0.1.0",
   "private": true,
-  "description": "JalSarthi Platform — AI-powered Government Water Assistance Platform (frontend foundation) for the Ministry of Jal Shakti.",
+  "description": "JalSarthi AI — a Ministry of Jal Shakti domain-inspired water-information hackathon prototype.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

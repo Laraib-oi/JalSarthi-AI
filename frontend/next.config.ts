@@ -1,11 +1,10 @@
 import type { NextConfig } from "next";
 
 /**
- * Next.js configuration for the JalSarthi Platform.
+ * Next.js configuration for the JalSarthi AI prototype.
  *
- * Kept intentionally minimal for the foundation phase — no rewrites,
- * no backend proxying, no env wiring. Those are introduced when the
- * FastAPI backend and Gemini-powered AI layer are added.
+ * Kept intentionally minimal: the application uses its own Next.js API
+ * route and does not proxy to, or integrate with, external government APIs.
  */
 const nextConfig: NextConfig = {
   reactStrictMode: true,

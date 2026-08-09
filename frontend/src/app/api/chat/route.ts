@@ -53,7 +53,16 @@ type ChatBody = {
 };
 
 function isChatBody(value: unknown): value is ChatBody {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+
+  const allowedKeys = new Set([
+    "language",
+    "messages",
+    "plannerSelection",
+    "complaintDraft",
+    "officialSourceDiscovery",
+  ]);
+  return Object.keys(value).every((key) => allowedKeys.has(key));
 }
 
 function isLanguage(value: unknown): value is Language {

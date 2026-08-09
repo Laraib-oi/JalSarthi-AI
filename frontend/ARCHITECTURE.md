@@ -12,7 +12,7 @@
 | `src/constants/`           | The only place literal copy and link targets live. Changing a headline or adding a nav item never touches JSX.                                |
 | `src/types/`               | Shared interfaces (`FeatureItem`, `NavLink`, ...) so `constants/` and the components consuming them stay in sync at compile time.             |
 | `src/hooks/`               | Client-side reusable behavior (`useScrolled`). Isolated so it's independently testable.                                                       |
-| `src/lib/`                 | Framework-agnostic helpers (`cn`). No React, no Next.js imports — portable if the design system moves elsewhere.                              |
+| `src/lib/`                 | Server-owned deterministic workflows, retrieval, source catalogues, AI provider boundary, and shared helpers.                                 |
 | `src/styles/`              | Base/typography CSS layer, imported once by `app/globals.css`, so global styling has a home that isn't a route file.                          |
 | `public/`                  | Static assets served as-is. Empty for now — icon/OG-image work is a later pass.                                                               |
 
@@ -37,10 +37,16 @@ codebase safe to hand to another engineer without a walkthrough.
 | `eslint`, `eslint-config-next`, `eslint-config-prettier` | Lint baseline that matches Next.js conventions without fighting Prettier's formatting.                                          |
 | `prettier`, `prettier-plugin-tailwindcss`                | Consistent formatting; the Tailwind plugin auto-sorts utility classes so diffs stay clean.                                      |
 
-Nothing else was added. No state-management library (no cross-page state
-yet), no data-fetching library (no APIs yet), no CMS, no form library — all
-deliberately deferred per the "don't overengineer" constraint until the
-backend milestone defines what they'd actually need to do.
+The prototype deliberately avoids extra state-management, data-fetching,
+form, and persistence libraries. Its `/api/chat` route validates requests and
+keeps retrieval, source metadata, planner guidance, and complaint-draft
+generation server-owned. Gemini is used only for grounded normal chat when
+configured; planner, complaint drafting, and official-source discovery are
+deterministic and do not call it.
+
+There is no live government API, complaint submission, complaint tracking,
+authentication, database, or persistence. JalSarthi AI is a hackathon
+prototype, not an official Government of India service.
 
 ## Design system approach
 

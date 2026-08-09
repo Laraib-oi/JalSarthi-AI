@@ -3,22 +3,36 @@ import "server-only";
 import type { AiProvider, ChatCompletionRequest, GroundingContext } from "@/lib/ai/types";
 import { AiProviderError } from "@/lib/ai/types";
 
+const GEMINI_MODEL = "gemini-3.5-flash";
 const PROVIDER_TIMEOUT_MS = 15_000;
+
+type GeminiPart = {
+  text?: unknown;
+};
+
+type GeminiCandidate = {
+  content?: {
+    parts?: GeminiPart[];
+  };
+};
 
 function getResponseContent(value: unknown): string | undefined {
   if (!value || typeof value !== "object") return undefined;
 
-  const choices = (value as { choices?: unknown }).choices;
-  if (!Array.isArray(choices)) return undefined;
+  const candidates = (value as { candidates?: unknown }).candidates;
+  if (!Array.isArray(candidates)) return undefined;
 
-  const firstChoice = choices[0];
-  if (!firstChoice || typeof firstChoice !== "object") return undefined;
+  const firstCandidate = candidates[0] as GeminiCandidate | undefined;
+  const parts = firstCandidate?.content?.parts;
+  if (!Array.isArray(parts)) return undefined;
 
-  const message = (firstChoice as { message?: unknown }).message;
-  if (!message || typeof message !== "object") return undefined;
+  const content = parts
+    .flatMap((part) => (typeof part?.text === "string" ? [part.text.trim()] : []))
+    .filter(Boolean)
+    .join("\n")
+    .trim();
 
-  const content = (message as { content?: unknown }).content;
-  return typeof content === "string" ? content.trim() : undefined;
+  return content || undefined;
 }
 
 function getSystemInstruction(
@@ -54,13 +68,8 @@ function getSystemInstruction(
   ].join(" ");
 }
 
-export class OpenRouterProvider implements AiProvider {
-  constructor(
-    private readonly configuration: {
-      apiKey: string;
-      model: string;
-    }
-  ) {}
+export class GeminiProvider implements AiProvider {
+  constructor(private readonly configuration: { apiKey: string }) {}
 
   async completeChat({
     language,
@@ -70,22 +79,27 @@ export class OpenRouterProvider implements AiProvider {
     let response: Response;
 
     try {
-      response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${this.configuration.apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: this.configuration.model,
-          messages: [
-            { role: "system", content: getSystemInstruction(language, grounding) },
-            ...messages,
-          ],
-        }),
-        cache: "no-store",
-        signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
-      });
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "x-goog-api-key": this.configuration.apiKey,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: getSystemInstruction(language, grounding) }],
+            },
+            contents: messages.map((message) => ({
+              role: message.role === "assistant" ? "model" : "user",
+              parts: [{ text: message.content }],
+            })),
+          }),
+          cache: "no-store",
+          signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
+        }
+      );
     } catch {
       throw new AiProviderError("The AI provider could not be reached.");
     }

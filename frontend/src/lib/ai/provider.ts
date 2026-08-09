@@ -1,6 +1,6 @@
 import "server-only";
 
-import { OpenRouterProvider } from "@/lib/ai/openrouter";
+import { GeminiProvider } from "@/lib/ai/gemini";
 import { AiProviderError, type AiProvider } from "@/lib/ai/types";
 
 let provider: AiProvider | undefined;
@@ -10,16 +10,15 @@ let provider: AiProvider | undefined;
  * future provider or knowledge-retrieval layer can be introduced here.
  */
 export function getAiProvider(): AiProvider {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  const model = process.env.OPENROUTER_MODEL;
+  const apiKey = process.env.GEMINI_API_KEY;
 
-  if (!apiKey || !model) {
+  if (!apiKey) {
     throw new AiProviderError(
-      "AI chat is not configured. Set OPENROUTER_API_KEY and OPENROUTER_MODEL on the server.",
+      "AI chat is not configured. Set GEMINI_API_KEY on the server.",
       "AI_NOT_CONFIGURED"
     );
   }
 
-  provider ??= new OpenRouterProvider({ apiKey, model });
+  provider ??= new GeminiProvider({ apiKey });
   return provider;
 }
