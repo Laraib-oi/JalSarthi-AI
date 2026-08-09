@@ -31,6 +31,18 @@ const DRAFT_COPY: Record<ComplaintDraftType, Record<Language, { subject: string;
   },
 };
 
+/**
+ * Server-owned preparation shape for the current draft-only workflow. This is
+ * intentionally not an official complaint or submission schema.
+ */
+type CanonicalComplaintDraft = {
+  issueType: ComplaintDraftType;
+  description: string;
+  locality?: string;
+  dateOrDuration?: string;
+  language: Language;
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
@@ -85,36 +97,54 @@ function redactSensitiveText(value: string, language: Language): string {
     : "कोई अतिरिक्त गैर-संवेदनशील विवरण उपलब्ध नहीं कराया गया है।");
 }
 
+function createCanonicalComplaintDraft(
+  request: ComplaintDraftRequest,
+  language: Language
+): CanonicalComplaintDraft {
+  return {
+    issueType: request.type,
+    description: redactSensitiveText(request.description, language),
+    ...(request.location
+      ? { locality: redactSensitiveText(request.location, language) }
+      : {}),
+    ...(request.dateOrDuration
+      ? { dateOrDuration: redactSensitiveText(request.dateOrDuration, language) }
+      : {}),
+    language,
+  };
+}
+
 /** Creates a draft only. It has no submission, routing, persistence, or provider behaviour. */
 export function createComplaintDraft(request: ComplaintDraftRequest, language: Language): string {
-  const copy = DRAFT_COPY[request.type][language];
-  const description = redactSensitiveText(request.description, language);
-  const location = request.location
-    ? redactSensitiveText(request.location, language)
-    : language === "en"
+  const draft = createCanonicalComplaintDraft(request, language);
+  const copy = DRAFT_COPY[draft.issueType][draft.language];
+  const description = draft.description;
+  const location = draft.locality
+    ? draft.locality
+    : draft.language === "en"
       ? "Not provided"
       : "उपलब्ध नहीं कराया गया";
-  const dateOrDuration = request.dateOrDuration
-    ? redactSensitiveText(request.dateOrDuration, language)
-    : language === "en"
+  const dateOrDuration = draft.dateOrDuration
+    ? draft.dateOrDuration
+    : draft.language === "en"
       ? "Not provided"
       : "उपलब्ध नहीं कराया गया";
 
-  if (language === "hi") {
+  if (draft.language === "hi") {
     return [
       `शिकायत प्रारूप — जमा नहीं किया गया\n\nविषय: ${copy.subject}\n\nमहोदय/महोदया,\n\nमैं निम्न जल-संबंधी समस्या की सूचना देना चाहता/चाहती हूँ।\n\nप्रकार: ${copy.issue}\nस्थान: ${location}\nविवरण: ${description}\nतिथि/अवधि: ${dateOrDuration}`,
-      request.type === "water_quality_concern"
+      draft.issueType === "water_quality_concern"
         ? "\n\nनागरिक ने पेयजल की गुणवत्ता को लेकर चिंता बताई है। यह पानी की सुरक्षा के बारे में कोई निष्कर्ष नहीं है।"
         : "",
-      "\n\nकृपया बताई गई समस्या की समीक्षा कर उचित कार्रवाई करें।\n\nधन्यवाद।\n\nयह जलसारथी एआई द्वारा तैयार किया गया केवल एक शिकायत प्रारूप है। इसे किसी सरकारी प्राधिकरण को जमा नहीं किया गया है। आप इसे कॉपी करके उपयुक्त आधिकारिक माध्यम से स्वयं जमा कर सकते हैं।",
+      "\n\nकृपया बताई गई समस्या की समीक्षा कर उचित कार्रवाई करें।\n\nधन्यवाद।\n\nयह जलसारथी एआई प्रोटोटाइप द्वारा तैयार किया गया केवल एक शिकायत प्रारूप है। इसे किसी सरकारी प्राधिकरण को जमा नहीं किया गया है और जलसारथी एआई ने किसी सरकारी विभाग से संपर्क नहीं किया है। कोई शिकायत संदर्भ संख्या नहीं बनाई गई है और यह प्रोटोटाइप वर्तमान में शिकायत ट्रैकिंग प्रदान नहीं करता। आप इसे कॉपी करके उपयुक्त आधिकारिक माध्यम से स्वयं जमा कर सकते हैं।",
     ].join("");
   }
 
   return [
     `Complaint draft — not submitted\n\nSubject: ${copy.subject}\n\nDear Sir/Madam,\n\nI would like to report the following water-related issue.\n\nIssue: ${copy.issue}\nLocation: ${location}\nDetails: ${description}\nDate/Duration: ${dateOrDuration}`,
-    request.type === "water_quality_concern"
+    draft.issueType === "water_quality_concern"
       ? "\n\nThe citizen reports a concern regarding drinking-water quality. This is not a finding about the water's safety."
       : "",
-    "\n\nI request that the concerned authority kindly review the reported issue and take appropriate action.\n\nThank you.\n\nThis is only a complaint draft prepared by JalSarthi AI. It has NOT been submitted to any government authority. You can copy this draft and submit it yourself through an appropriate official channel.",
+    "\n\nI request that the concerned authority kindly review the reported issue and take appropriate action.\n\nThank you.\n\nThis is only a prototype-generated complaint draft prepared by JalSarthi AI. It has NOT been submitted to any government authority, and JalSarthi AI has not contacted any government department. No complaint reference number has been created, and this prototype does not currently provide complaint tracking. You can copy this draft and submit it yourself through an appropriate official channel.",
   ].join("");
 }

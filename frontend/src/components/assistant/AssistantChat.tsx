@@ -206,7 +206,7 @@ export default function AssistantChat() {
   const createComplaintDraft = (complaintDraft: ComplaintDraftRequest, label: string) => {
     void submitMessage(
       undefined,
-      `${t.assistant.complaintDraft.resultLabel}: ${label}`,
+      `${t.assistant.complaintDraft.detailsEntered}: ${label}`,
       complaintDraft
     );
   };

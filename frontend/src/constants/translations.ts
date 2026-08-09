@@ -123,7 +123,9 @@ type Translation = {
       datePlaceholder: string;
       createDraft: string;
       required: string;
+      detailsEntered: string;
       resultLabel: string;
+      reviewBeforeCopy: string;
       loading: string;
       copyDraft: string;
       copiedDraft: string;
@@ -269,10 +271,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         datePlaceholder: "For example, since yesterday",
         createDraft: "Prepare complaint draft",
         required: "Choose an issue type and enter a brief description to prepare a draft.",
+        detailsEntered: "Complaint details entered",
         resultLabel: "Complaint draft — not submitted",
+        reviewBeforeCopy: "Draft generated. Review the details below before copying it.",
         loading: "Preparing your complaint draft…",
         copyDraft: "Copy draft",
-        copiedDraft: "Draft copied locally",
+        copiedDraft: "Draft copied locally — still not submitted",
       },
     },
   },
@@ -371,10 +375,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         datePlaceholder: "उदाहरण: कल से",
         createDraft: "शिकायत प्रारूप तैयार करें",
         required: "प्रारूप तैयार करने के लिए समस्या का प्रकार चुनें और संक्षिप्त विवरण दर्ज करें।",
+        detailsEntered: "शिकायत विवरण दर्ज किया गया",
         resultLabel: "शिकायत प्रारूप — जमा नहीं किया गया",
+        reviewBeforeCopy: "शिकायत प्रारूप तैयार है। कॉपी करने से पहले नीचे दिए गए विवरण की समीक्षा करें।",
         loading: "आपका शिकायत प्रारूप तैयार किया जा रहा है…",
         copyDraft: "प्रारूप कॉपी करें",
-        copiedDraft: "प्रारूप स्थानीय रूप से कॉपी किया गया",
+        copiedDraft: "प्रारूप स्थानीय रूप से कॉपी किया गया — फिर भी जमा नहीं किया गया",
       },
     },
   },
