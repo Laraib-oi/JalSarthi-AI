@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 /**
- * Next.js configuration for the JalSarthi AI prototype.
+ * Next.js configuration for the JalSarthi AI application.
  *
  * Kept intentionally minimal: the application uses its own Next.js API
  * route and does not proxy to, or integrate with, external government APIs.

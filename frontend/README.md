@@ -1,7 +1,7 @@
 # JalSarthi AI
 
-JalSarthi AI is a Ministry of Jal Shakti domain-inspired hackathon prototype
-for bilingual water information and complaint-draft assistance. It is not an
+JalSarthi AI is a Ministry of Jal Shakti domain-inspired application for
+bilingual water information and complaint-draft assistance. It is not an
 official Government of India service.
 
 The Next.js application includes a server-owned `/api/chat` route with:
@@ -15,6 +15,18 @@ The Next.js application includes a server-owned `/api/chat` route with:
 Normal grounded chat uses Gemini only when its server environment variable is
 configured. Planner, complaint drafting, and official-source discovery do not
 call Gemini.
+
+The guided water-accumulating-pothole flow is isolated from normal chat. It
+validates JPEG, PNG, and WebP images on the server, sends only sanitized image
+bytes to the server-owned Gemini visual analyzer, and continues only when the
+server determines that both a visible pothole and visible standing water are
+present with sufficient confidence. The location step supports one-time,
+user-initiated browser GPS or manual latitude, longitude, and area input. Both
+paths use the same Leaflet/OpenStreetMap map, draggable marker, explicit
+confirmation, and server-side Nominatim reverse-geocoding route. The final
+preview shows the confirmed coordinates, the real reverse-geocoded address, and
+the user-entered area when applicable. It ends at `READY FOR REVIEW` and
+`NOT SUBMITTED`; there is no government submission API.
 
 ## Getting started
 
@@ -66,14 +78,20 @@ Colors, type scale, spacing, radii, and shadows are defined once in
 `tailwind.config.ts` as semantic tokens (`primary`, `ink`, `surface`, ...).
 Components should always reach for a token class over an arbitrary value.
 
-## Prototype boundaries
+## Boundaries and data lifecycle
 
-This prototype does not include:
+The application does not include:
 
 - Live government APIs or real-time government data
 - Complaint submission, routing, reference numbers, or tracking
 - Authentication, database storage, persistence, or analytics
 - Voice input
+
+Selected images, analysis results, GPS/manual location, addresses, and drafts
+remain in React/browser memory for the current session. They are not written to
+localStorage, sessionStorage, cookies, IndexedDB, or a database. Confirmed
+coordinates are sent through the server only for the explicit reverse-geocoding
+request; they are not sent to a government service.
 
 For normal chat, set `GEMINI_API_KEY` only in a local, untracked environment
 file such as `.env.local`. Do not expose it to the client.

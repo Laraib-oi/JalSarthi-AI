@@ -34,6 +34,7 @@ export const dynamic = "force-dynamic";
 
 const MAX_HISTORY_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 2_000;
+const MAX_REQUEST_BODY_BYTES = 128 * 1024;
 const MAX_GROUNDING_DOCUMENTS = 3;
 const MAX_GROUNDING_SECTIONS_PER_DOCUMENT = 2;
 const MAX_GROUNDING_TEXT_LENGTH = 1_200;
@@ -205,6 +206,11 @@ function buildOfficialSourceResponse(
 }
 
 export async function POST(request: Request) {
+  const contentLength = Number(request.headers.get("content-length"));
+  if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BODY_BYTES) {
+    return NextResponse.json({ error: "REQUEST_TOO_LARGE" }, { status: 413 });
+  }
+
   let body: ChatBody;
   try {
     const payload: unknown = await request.json();

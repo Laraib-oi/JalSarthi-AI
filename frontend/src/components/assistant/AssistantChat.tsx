@@ -1,5 +1,7 @@
 "use client";
 
+import { Camera } from "lucide-react";
+import Link from "next/link";
 import { useRef, useState } from "react";
 
 import ChatConversation from "@/components/assistant/ChatConversation";
@@ -235,6 +237,32 @@ export default function AssistantChat() {
               isLoading={isLoading}
               onCreateDraft={createComplaintDraft}
             />
+            <section className="mx-auto mb-2 w-full max-w-3xl px-4 sm:px-6">
+              <div className="rounded-2xl border border-cyan-200 bg-cyan-50/60 p-4 shadow-sm sm:p-5">
+                <div className="flex items-start gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-800 text-white">
+                    <Camera className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-cyan-800">
+                      {t.assistant.potholeReport.entry.eyebrow}
+                    </p>
+                    <h2 className="mt-1 text-lg font-bold text-cyan-950">
+                      {t.assistant.potholeReport.entry.title}
+                    </h2>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-700">
+                      {t.assistant.potholeReport.entry.description}
+                    </p>
+                    <Link
+                      href="/assistant/report-water-accumulating-pothole"
+                      className="mt-4 inline-flex rounded-xl bg-cyan-800 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-800"
+                    >
+                      {t.assistant.potholeReport.entry.open}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </section>
           </>
         )}
         <ChatConversation

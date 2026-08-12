@@ -10,5 +10,5 @@ export const SITE = {
   country: "India",
   tagline: "Empowering Citizens Through Intelligent Water Governance",
   description:
-    "JalSarthi AI is a Ministry of Jal Shakti domain-inspired hackathon prototype for water-related information and complaint-draft assistance.",
+    "JalSarthi AI is a Ministry of Jal Shakti domain-inspired assistant for water-related information and complaint-draft assistance.",
 } as const;

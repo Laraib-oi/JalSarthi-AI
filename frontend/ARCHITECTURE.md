@@ -37,7 +37,7 @@ codebase safe to hand to another engineer without a walkthrough.
 | `eslint`, `eslint-config-next`, `eslint-config-prettier` | Lint baseline that matches Next.js conventions without fighting Prettier's formatting.                                          |
 | `prettier`, `prettier-plugin-tailwindcss`                | Consistent formatting; the Tailwind plugin auto-sorts utility classes so diffs stay clean.                                      |
 
-The prototype deliberately avoids extra state-management, data-fetching,
+The application deliberately avoids extra state-management, data-fetching,
 form, and persistence libraries. Its `/api/chat` route validates requests and
 keeps retrieval, source metadata, planner guidance, and complaint-draft
 generation server-owned. Gemini is used only for grounded normal chat when
@@ -45,8 +45,20 @@ configured; planner, complaint drafting, and official-source discovery are
 deterministic and do not call it.
 
 There is no live government API, complaint submission, complaint tracking,
-authentication, database, or persistence. JalSarthi AI is a hackathon
-prototype, not an official Government of India service.
+authentication, database, or persistence. JalSarthi AI is not an official
+Government of India service.
+
+The water-accumulating-pothole workflow is an isolated client flow backed by
+the `/api/pothole/analyze` and `/api/pothole/reverse-geocode` routes. Server-side
+image validation uses Sharp to decode and canonicalize supported JPEG, PNG, and
+WebP input before the server-owned Gemini visual analyzer receives it. The
+server owns the eligibility threshold. GPS uses a single user-initiated
+`getCurrentPosition()` call; manual coordinates and area remain in React state.
+Both location methods converge on the same Leaflet/OpenStreetMap map, draggable
+marker, confirmation, confirmed-coordinate reverse geocoding, and report
+preview. The preview is deliberately the terminal state: `READY FOR REVIEW`
+and `NOT SUBMITTED`. No government submission, tracking, or location/image
+persistence exists.
 
 ## Design system approach
 

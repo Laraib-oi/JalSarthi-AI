@@ -136,7 +136,7 @@ export function createComplaintDraft(request: ComplaintDraftRequest, language: L
       draft.issueType === "water_quality_concern"
         ? "\n\nनागरिक ने पेयजल की गुणवत्ता को लेकर चिंता बताई है। यह पानी की सुरक्षा के बारे में कोई निष्कर्ष नहीं है।"
         : "",
-      "\n\nकृपया बताई गई समस्या की समीक्षा कर उचित कार्रवाई करें।\n\nधन्यवाद।\n\nयह जलसारथी एआई प्रोटोटाइप द्वारा तैयार किया गया केवल एक शिकायत प्रारूप है। इसे किसी सरकारी प्राधिकरण को जमा नहीं किया गया है और जलसारथी एआई ने किसी सरकारी विभाग से संपर्क नहीं किया है। कोई शिकायत संदर्भ संख्या नहीं बनाई गई है और यह प्रोटोटाइप वर्तमान में शिकायत ट्रैकिंग प्रदान नहीं करता। आप इसे कॉपी करके उपयुक्त आधिकारिक माध्यम से स्वयं जमा कर सकते हैं।",
+      "\n\nकृपया बताई गई समस्या की समीक्षा कर उचित कार्रवाई करें।\n\nधन्यवाद।\n\nयह जलसारथी एआई द्वारा तैयार किया गया केवल एक शिकायत प्रारूप है। इसे किसी सरकारी प्राधिकरण को जमा नहीं किया गया है और जलसारथी एआई ने किसी सरकारी विभाग से संपर्क नहीं किया है। कोई शिकायत संदर्भ संख्या नहीं बनाई गई है और जलसारथी एआई वर्तमान में शिकायत ट्रैकिंग प्रदान नहीं करता। आप इसे कॉपी करके उपयुक्त आधिकारिक माध्यम से स्वयं जमा कर सकते हैं।",
     ].join("");
   }
 
@@ -145,6 +145,6 @@ export function createComplaintDraft(request: ComplaintDraftRequest, language: L
     draft.issueType === "water_quality_concern"
       ? "\n\nThe citizen reports a concern regarding drinking-water quality. This is not a finding about the water's safety."
       : "",
-    "\n\nI request that the concerned authority kindly review the reported issue and take appropriate action.\n\nThank you.\n\nThis is only a prototype-generated complaint draft prepared by JalSarthi AI. It has NOT been submitted to any government authority, and JalSarthi AI has not contacted any government department. No complaint reference number has been created, and this prototype does not currently provide complaint tracking. You can copy this draft and submit it yourself through an appropriate official channel.",
+    "\n\nI request that the concerned authority kindly review the reported issue and take appropriate action.\n\nThank you.\n\nThis is only a complaint draft prepared by JalSarthi AI. It has NOT been submitted to any government authority, and JalSarthi AI has not contacted any government department. No complaint reference number has been created, and JalSarthi AI does not currently provide complaint tracking. You can copy this draft and submit it yourself through an appropriate official channel.",
   ].join("");
 }
