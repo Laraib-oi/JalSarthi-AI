@@ -4,7 +4,7 @@ import type { Language } from "@/constants/translations";
 import type { WaterloggedPotholeAnalysis } from "@/types/pothole-analysis";
 
 export type ValidatedVisualImage = {
-  mimeType: "image/jpeg" | "image/png" | "image/webp";
+  mimeType: "image/jpeg" | "image/png";
   bytes: Uint8Array;
   width: number;
   height: number;

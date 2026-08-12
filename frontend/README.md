@@ -17,7 +17,7 @@ configured. Planner, complaint drafting, and official-source discovery do not
 call Gemini.
 
 The guided water-accumulating-pothole flow is isolated from normal chat. It
-validates JPEG, PNG, and WebP images on the server, sends only sanitized image
+validates JPEG and PNG images on the server, sends only sanitized image
 bytes to the server-owned Gemini visual analyzer, and continues only when the
 server determines that both a visible pothole and visible standing water are
 present with sufficient confidence. The location step supports one-time,

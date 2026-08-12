@@ -50,8 +50,8 @@ Government of India service.
 
 The water-accumulating-pothole workflow is an isolated client flow backed by
 the `/api/pothole/analyze` and `/api/pothole/reverse-geocode` routes. Server-side
-image validation uses Sharp to decode and canonicalize supported JPEG, PNG, and
-WebP input before the server-owned Gemini visual analyzer receives it. The
+image validation uses Sharp to decode and canonicalize supported JPEG and PNG
+input before the server-owned Gemini visual analyzer receives it. The
 server owns the eligibility threshold. GPS uses a single user-initiated
 `getCurrentPosition()` call; manual coordinates and area remain in React state.
 Both location methods converge on the same Leaflet/OpenStreetMap map, draggable

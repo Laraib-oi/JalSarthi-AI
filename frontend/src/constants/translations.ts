@@ -662,7 +662,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
           title: "Select or capture an image",
           description:
             "Use a clear image where both the pothole and standing water are visible.",
-          inputLabel: "Choose a JPEG, PNG, or WebP image",
+          inputLabel: "Choose a JPEG or PNG image",
           inputHelp:
             "Maximum file size: 8 MB. This client-side check is only for your convenience; the image will be validated again before analysis.",
           ready: "Ready for analysis",
@@ -672,7 +672,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
           size: "File size",
           replace: "Replace image",
           remove: "Remove image",
-          errorUnsupported: "Choose a JPEG, PNG, or WebP image.",
+          errorUnsupported: "Choose a JPEG or PNG image.",
           errorTooLarge: "Choose an image no larger than 8 MB.",
           privacyNotice:
             "Until you select Analyze image, the selected image remains in this browser session. JalSarthi does not store it.",
@@ -1188,7 +1188,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
           title: "चित्र चुनें या कैप्चर करें",
           description:
             "ऐसा स्पष्ट चित्र उपयोग करें जिसमें गड्ढा और खड़ा पानी, दोनों दिखाई दें।",
-          inputLabel: "JPEG, PNG या WebP चित्र चुनें",
+          inputLabel: "JPEG या PNG चित्र चुनें",
           inputHelp:
             "अधिकतम फ़ाइल आकार: 8 MB। यह क्लाइंट-साइड जाँच केवल आपकी सुविधा के लिए है; विश्लेषण से पहले चित्र फिर से सत्यापित किया जाएगा।",
           ready: "विश्लेषण के लिए तैयार",
@@ -1198,7 +1198,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
           size: "फ़ाइल आकार",
           replace: "चित्र बदलें",
           remove: "चित्र हटाएँ",
-          errorUnsupported: "JPEG, PNG या WebP चित्र चुनें।",
+          errorUnsupported: "JPEG या PNG चित्र चुनें।",
           errorTooLarge: "8 MB से बड़ी नहीं होने वाली चित्र फ़ाइल चुनें।",
           privacyNotice:
             "‘चित्र का विश्लेषण करें’ चुनने तक चुना गया चित्र इसी ब्राउज़र सत्र में रहता है। जलसारथी इसे संग्रहीत नहीं करता।",

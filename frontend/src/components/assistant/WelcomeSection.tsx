@@ -12,14 +12,6 @@ export default function WelcomeSection() {
       aria-labelledby="assistant-welcome-heading"
       className="mx-auto w-full max-w-3xl px-4 pb-6 pt-10 text-center sm:px-6 sm:pt-14"
     >
-      <motion.p
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="text-3xl sm:text-4xl"
-      >
-        Namaste <span aria-hidden="true">👋</span>
-      </motion.p>
 
       <motion.h2
         id="assistant-welcome-heading"

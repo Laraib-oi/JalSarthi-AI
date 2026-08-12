@@ -19,7 +19,7 @@ import { useLanguage } from "@/components/providers/LanguageProvider";
 import type { WaterloggedPotholeAnalysis } from "@/types/pothole-analysis";
 
 const WORKFLOW_ICONS = [Camera, Sparkles, MapPin, ClipboardCheck, CheckCircle2];
-const SUPPORTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const SUPPORTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png"]);
 const MAX_IMAGE_SIZE_BYTES = 8 * 1024 * 1024;
 const PotholeLocationMap = dynamic<PotholeLocationMapProps>(
   () => import("@/components/assistant/PotholeLocationMap"),
@@ -586,7 +586,7 @@ export default function WaterAccumulatingPotholeReport() {
                 ref={fileInputRef}
                 id="pothole-image"
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/jpeg,image/png"
                 onChange={selectImage}
                 disabled={workflowState === "analyzing"}
                 aria-invalid={Boolean(validationError)}
