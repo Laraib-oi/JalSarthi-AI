@@ -6,6 +6,10 @@ export type CitySimulationMetadata = {
   scenarioId: string;
   label: string;
   generatedAt: string;
+  category?: Exclude<CityIssueCategory, "NO_ISSUE" | "UNCERTAIN">;
+  confidence?: number;
+  area?: string;
+  address?: string;
 };
 
 export type CityMonitorCityConfig = {
@@ -71,6 +75,15 @@ export type CityIssueAnalysis = {
   evidence: string[];
 };
 
+/** Metadata from the same server-side validation pass used before AI screening. */
+export type CityImageValidation = {
+  status: "PASSED";
+  mimeType: "image/jpeg" | "image/png";
+  width: number;
+  height: number;
+  validatedAt: string;
+};
+
 export type CityIssueProcessingStatus =
   "accepted_issue" | "no_issue" | "uncertain" | "rejected" | "analysis_failed";
 
@@ -93,7 +106,10 @@ export type CityMonitorIssue = {
   analyzedAt: string;
   latitude: number;
   longitude: number;
+  area?: string;
+  address?: string;
   analysis: CityIssueAnalysis;
+  imageValidation?: CityImageValidation;
   simulation?: CitySimulationMetadata;
 };
 

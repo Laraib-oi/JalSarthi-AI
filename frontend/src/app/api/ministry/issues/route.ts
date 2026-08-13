@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { forwardToMinistry, MinistryIntakeError, MINISTRY_INTAKE_NAME } from "@/lib/ministry/intake";
+import {
+  forwardToMinistry,
+  MinistryIntakeError,
+  MINISTRY_INTAKE_NAME,
+} from "@/lib/ministry/intake";
 import { getMinistryIssueStore } from "@/lib/ministry/store";
 
 export const runtime = "nodejs";
@@ -16,7 +20,13 @@ function parseRequest(value: unknown): { cityIssueId: string } | undefined {
   if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
   const body = value as IntakeRequest;
   const keys = Object.keys(body);
-  if (keys.length !== 1 || keys[0] !== "cityIssueId" || typeof body.cityIssueId !== "string" || !body.cityIssueId.trim()) return undefined;
+  if (
+    keys.length !== 1 ||
+    keys[0] !== "cityIssueId" ||
+    typeof body.cityIssueId !== "string" ||
+    !body.cityIssueId.trim()
+  )
+    return undefined;
   return { cityIssueId: body.cityIssueId };
 }
 
@@ -42,8 +52,11 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof MinistryIntakeError) {
       const safeError =
-        error.code === "INVALID_ISSUE_ID" ? "INVALID_CITY_ISSUE_ID" :
-        error.code === "ISSUE_NOT_FOUND" ? "CITY_ISSUE_NOT_FOUND" : "CITY_ISSUE_NOT_ACCEPTED";
+        error.code === "INVALID_ISSUE_ID"
+          ? "INVALID_CITY_ISSUE_ID"
+          : error.code === "ISSUE_NOT_FOUND"
+            ? "CITY_ISSUE_NOT_FOUND"
+            : "CITY_ISSUE_NOT_ACCEPTED";
       const status = error.code === "ISSUE_NOT_ACCEPTED" ? 409 : 400;
       return noStoreJson({ error: safeError, intake: MINISTRY_INTAKE_NAME }, { status });
     }
@@ -53,11 +66,16 @@ export async function POST(request: Request) {
 
 export function GET() {
   const store = getMinistryIssueStore();
+  // Image locations remain server-owned. The issue-detail route supplies a
+  // JalSarthi image endpoint only when a KartaView image can be safely shown.
+  const issues = store
+    .list()
+    .map(({ sourceImageUrl: _sourceImageUrl, ...issue }) => issue);
   return noStoreJson({
     intake: MINISTRY_INTAKE_NAME,
     source: "CITY_MONITOR",
     supportedSources: ["KARTAVIEW_CITY_MONITOR", "DEMONSTRATION_SIMULATION"],
     summary: store.summary(),
-    issues: store.list(),
+    issues,
   });
 }

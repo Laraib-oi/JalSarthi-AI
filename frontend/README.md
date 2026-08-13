@@ -17,9 +17,9 @@ The current application provides:
   location.
 - A Lucknow-focused city monitor using KartaView imagery, server-side image
   validation, and structured Gemini visual analysis.
-- A local Demonstration Ministry Intake and read-only Ministry dashboard.
-- A controlled demonstration simulation for showing the complete city-monitor
-  to Ministry flow when external imagery is unavailable.
+- A local Demonstration Ministry Intake behind the City Monitor console.
+- A controlled, deterministic 120-record demonstration dataset for showing the
+  complete city-monitor to Ministry flow when external imagery is unavailable.
 
 JalSarthi AI is not an official Government of India service. It does not claim
 government authorization or connection to the real Ministry of Jal Shakti.
@@ -33,8 +33,8 @@ its records are held in memory and reset when the server process restarts.
 
 There is no real government API, government database, authentication system,
 government authorization, automatic real-world submission, complaint tracking,
-or durable citizen-reporting database. The Ministry dashboard is a local
-read-only console, not the real Ministry website.
+or durable citizen-reporting database. The City Monitor console is a local
+read-only view, not the real Ministry website.
 
 KartaView is the implemented external imagery source for the city monitor.
 Lucknow coverage is sparse and historical. Historical imagery is never
@@ -98,7 +98,7 @@ KartaView metadata
   → accepted city issue
   → deduplication
   → Demonstration Ministry Intake
-  → Ministry dashboard
+  → City Monitor console
 ```
 
 KartaView metadata is obtained from its official photo endpoint. Image URLs
@@ -106,6 +106,10 @@ are accepted only from HTTPS KartaView/OpenStreetCam hosts, and remote image
 responses are bounded before the shared Sharp validation path is used. Raw
 remote image bytes are not stored in the in-memory monitor store; the store
 keeps validated metadata, processing records, and accepted issue summaries.
+When an accepted KartaView issue is opened in the console, its image is
+retrieved again through a JalSarthi server route and revalidated before it is
+shown. The browser never calls KartaView directly. If that imagery is no
+longer available, the detail view shows a clear unavailable state instead.
 
 The configured city is:
 
@@ -149,8 +153,10 @@ through the intake request.
 
 | Method | Route | Purpose |
 | --- | --- | --- |
-| `POST` | `/api/ministry/issues` | Forward an accepted `kartaview:<photo-id>` or `demo:<scenario-id>` city issue. |
-| `GET` | `/api/ministry/issues` | Return the local intake summary and Ministry issue list. |
+| `POST` | `/api/ministry/issues` | Forward an accepted `kartaview:<photo-id>` or `demo:lucknow-monitor-<nnn>` city issue. |
+| `GET` | `/api/ministry/issues` | Return the local intake summary and safe issue list. |
+| `GET` | `/api/city-monitor/issues/:ministryIssueId` | Return safe evidence/detail metadata for one Ministry intake record. |
+| `GET` | `/api/city-monitor/issues/:ministryIssueId/image` | Server-side retrieval and revalidation of an available KartaView evidence image. |
 
 Ministry records include source identity, source image identity, category,
 confidence, AI description, evidence, coordinates, city/state, capture or
@@ -170,45 +176,55 @@ read-only; there is no status-update endpoint. Priority is derived server-side:
 The source is `KARTAVIEW_CITY_MONITOR` for external observations and
 `DEMONSTRATION_SIMULATION` for controlled simulated observations.
 
-## Ministry dashboard
+## City Monitor console
 
-`/ministry` is a read-only Ministry Monitoring Console for the local
-Demonstration Ministry Intake. It provides:
+`/city-monitor` is the judge-facing City Water Infrastructure Monitor. It reads
+the local Demonstration Ministry Intake and provides:
 
 - Total, new, high-priority, acknowledged, and resolved issue counts.
 - Category breakdown and priority summary.
 - Recent issue table with Ministry ID, category, location, priority,
   confidence, source, captured/generated timing, receipt time, and status.
-- Expandable issue details containing source identity, coordinates, city/state,
-  timestamps, AI description, and evidence.
-- Explicit manual refresh and a last-updated timestamp; the browser does not
-  poll in the background.
+- An issue-level investigation panel with source/image identity, provenance,
+  image-validation result, structured analysis, acceptance decision, full
+  address/locality, coordinates, Ministry receipt, and a compact processing
+  trace.
+- An actual KartaView image where the accepted record still has usable source
+  imagery. It is delivered through JalSarthi's server route, not by a browser
+  call to KartaView. Missing imagery is shown as unavailable.
+- Explicit manual refresh and a **Load demonstration dataset** action; the
+  browser does not poll or auto-seed in the background.
 - English/Hindi presentation, including an empty state when no accepted issues
   have reached the intake.
 - A persistent local-demonstration disclaimer.
 
 Real KartaView issues are labeled KartaView. Simulated issues are labeled
-Demonstration simulation in the table and details, and the dashboard shows a
-separate simulation pipeline.
+`DEMONSTRATION_SIMULATION` in the table and details, and the console shows the
+separate simulation pipeline. Simulation records have no external imagery and
+are explicitly described as controlled data rather than KartaView
+observations. Address/area and coordinates are shown for every record so the
+locality context is easy to inspect.
 
 ## Demonstration simulation
 
 The simulation exists to make the complete demonstration possible when sparse
 or historical external imagery cannot produce a qualifying observation. It is
-a separate, deterministic server-owned event and does not call KartaView or
-Gemini for an external image.
+a separate, deterministic server-owned dataset of 120 Lucknow records and does
+not call KartaView or Gemini for an external image.
 
 | Method | Route | Purpose |
 | --- | --- | --- |
-| `POST` | `/api/city-monitor/simulate` | Run the controlled Lucknow demonstration event. |
-| `POST` | `/api/city-monitor/demo` | Compatibility alias for the same simulation action. |
+| `POST` | `/api/city-monitor/simulate` | Load the controlled Lucknow demonstration dataset. |
+| `POST` | `/api/city-monitor/demo` | Compatibility alias for the dataset action. |
 
-The event uses scenario ID `lucknow-water-filled-pothole-001`, creates a
-structured AI-style result for `WATER_FILLED_POTHOLE`, accepts the city issue,
-and automatically forwards it to the Demonstration Ministry Intake. Its city
-issue ID is `demo:lucknow-water-filled-pothole-001`; its Ministry record is
-typically `JSM-LKO-000001` in a fresh server process. Repeating the event is
-idempotent and returns the existing Ministry ID with `duplicate: true`.
+The dataset ID is `lucknow-monitor-dataset`. It creates 120 structured
+AI-style results across six supported water-infrastructure categories, with
+realistic Lucknow localities/addresses, deterministic coordinates, confidence
+values from 0.80–0.99, and a mix of `NEW`, `ACKNOWLEDGED`, and `RESOLVED`
+statuses. Each accepted issue is automatically forwarded to the Demonstration
+Ministry Intake and receives a `JSM-LKO-XXXXXX` ID. Repeating the action is
+idempotent: existing records are retained and the response reports them as
+duplicates.
 
 Simulation assets use a `simulation://` source identity, provider-isolated
 store keys, and `DEMONSTRATION_SIMULATION` source labeling. **Simulated data is
@@ -224,7 +240,7 @@ external detection.**
 | `/` | Public JalSarthi AI landing page. |
 | `/assistant` | Normal citizen assistant. |
 | `/assistant/report-water-accumulating-pothole` | Citizen water-accumulating-pothole workflow. |
-| `/ministry` | Local Ministry Monitoring Console. |
+| `/city-monitor` | City Water Infrastructure Monitor and demonstration console. |
 
 ### API
 
@@ -236,8 +252,10 @@ external detection.**
 | `POST` | `/api/city-monitor/ingest` | Discover bounded KartaView imagery for a configured city. |
 | `POST` | `/api/city-monitor/analyze` | Ingest and screen configured city imagery. |
 | `GET` | `/api/city-monitor/status` | Read city-monitor status and provider/simulation availability. |
-| `POST` | `/api/city-monitor/simulate` | Run the controlled demonstration event. |
-| `POST` | `/api/city-monitor/demo` | Alias for the demonstration event endpoint. |
+| `POST` | `/api/city-monitor/simulate` | Load the controlled demonstration dataset. |
+| `POST` | `/api/city-monitor/demo` | Alias for the demonstration dataset endpoint. |
+| `GET` | `/api/city-monitor/issues/:ministryIssueId` | Read one safe issue evidence/detail record. |
+| `GET` | `/api/city-monitor/issues/:ministryIssueId/image` | Serve an available KartaView image through server-side validation. |
 | `POST` | `/api/ministry/issues` | Forward an accepted city issue to the local intake. |
 | `GET` | `/api/ministry/issues` | Read the local Ministry intake summary and records. |
 
@@ -261,7 +279,7 @@ flowchart TD
   KV --> KG[Gemini city-issue analysis]
   KG --> AI[Accepted city issue]
   AI --> MI[Demonstration Ministry Intake]
-  MI --> MD[Ministry dashboard]
+  MI --> MD[City Monitor console]
 
   S[Demonstration simulation] --> SA[Structured AI-style analysis]
   SA --> AI
@@ -341,19 +359,25 @@ historical; the bounded recent query may return no imagery. Do not describe
 returned historical imagery as live and do not create substitute KartaView
 records.
 
-### C. Ministry dashboard
+### C. City Monitor console
 
-Open `/ministry` and refresh the read-only intake view. Accepted city issues
-appear with their source, evidence, timestamps, priority, and Ministry ID.
+Open `/city-monitor` and use **Load demonstration dataset** when a controlled
+judge-facing run is needed. The console can also be refreshed independently;
+it never seeds records on page load. Select **View details** for one issue to
+show its source evidence, validation result, structured analysis, acceptance,
+address/area, coordinates, processing trace, and local Ministry receipt. A
+KartaView image appears only when the server can retrieve it; demonstration
+records clearly show that no external imagery is used.
 
 ### D. Demonstration simulation
 
-On `/ministry`, use **Run demonstration detection**, or call
-`POST /api/city-monitor/simulate` with `{ "cityId": "lucknow" }`. The result
-shows a `demo:` city issue and forwards it automatically to the local intake.
-The dashboard labels it Demonstration simulation and shows the separate
-simulation pipeline. This is the appropriate demonstration path when real
-KartaView imagery is unavailable; it is not a real-world infrastructure claim.
+On `/city-monitor`, use **Load demonstration dataset**, or call
+`POST /api/city-monitor/simulate` with `{ "cityId": "lucknow", "scenarioId": "lucknow-monitor-dataset" }`.
+The first run loads 120 synthetic records and forwards them automatically to
+the local intake. Repeating the call leaves the same records in place and
+reports duplicates. The console labels every simulated record
+`DEMONSTRATION_SIMULATION`; this is the appropriate demonstration path when
+real KartaView imagery is unavailable, not a real-world infrastructure claim.
 
 ## Security and privacy
 

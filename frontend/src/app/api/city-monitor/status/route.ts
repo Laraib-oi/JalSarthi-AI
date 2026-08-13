@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 
 import { getCityMonitorStatus } from "@/lib/city-monitor/ingestion";
 import { getCityMonitorConfig } from "@/lib/city-monitor/config";
-import { DEMONSTRATION_SCENARIO_ID } from "@/lib/city-monitor/simulation";
+import {
+  DEMONSTRATION_DATASET_ID,
+  DEMONSTRATION_DATASET_SIZE,
+} from "@/lib/city-monitor/simulation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,7 +22,8 @@ export function GET() {
         providers: ["kartaview", "demonstration"],
         demonstration: {
           enabled: true,
-          scenarioId: DEMONSTRATION_SCENARIO_ID,
+          datasetId: DEMONSTRATION_DATASET_ID,
+          recordCount: DEMONSTRATION_DATASET_SIZE,
           source: "DEMONSTRATION_SIMULATION",
         },
       },

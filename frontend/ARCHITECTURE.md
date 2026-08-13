@@ -7,6 +7,7 @@
 | `src/app/`                 | Next.js App Router entry points only — layout, page, metadata, global CSS. No business logic lives here.                                      |
 | `src/components/layout/`   | Chrome that wraps every page: `Navbar`, `Footer`. Rendered once, from `layout.tsx`.                                                           |
 | `src/components/sections/` | Page-specific composition blocks (`Hero`, `FeaturesSection`, `CtaSection`). Own their own layout, but source all copy/data from `constants/`. |
+| `src/components/city-monitor/` | Judge-facing City Monitor console: intake metrics, deterministic demonstration control, filters, issue table, and issue-level evidence panel. |
 | `src/components/shared/`   | Small pieces reused across sections but too specific to be a `ui/` primitive (`Logo`, `FeatureCard`, `WaveDivider`).                          |
 | `src/components/ui/`       | Framework-level primitives in the shadcn/ui convention (`Button`, `Card`). Unopinionated about copy or layout — composed by everything above. |
 | `src/constants/`           | The only place literal copy and link targets live. Changing a headline or adding a nav item never touches JSX.                                |
@@ -68,20 +69,33 @@ Jal Shakti and performs no government submission. The intake is in-memory and
 does not claim live or citywide Lucknow coverage; KartaView coverage remains
 sparse and historical.
 
-The `/ministry` route is a read-only Ministry Monitoring Console for the local
-Demonstration Ministry Intake. It reads the safe summary and issue list from
-`GET /api/ministry/issues`, supports explicit manual refresh, and does not run
-polling or background monitoring in the browser. It is not the real Ministry
-of Jal Shakti website and performs no government submission.
+The `/city-monitor` route is the judge-facing City Water Infrastructure Monitor
+for the local Demonstration Ministry Intake. It reads the safe summary and
+issue list from `GET /api/ministry/issues`, supports explicit refresh and an
+explicit demonstration-dataset load action, and does not poll or auto-seed in
+the browser. Its issue-level panel reads safe detail metadata from
+`GET /api/city-monitor/issues/:ministryIssueId` and presents the source,
+server-side image-validation result, structured analysis, location, acceptance
+decision, Ministry receipt, and provenance-specific processing trace. For a
+KartaView issue, the optional image is served only by the JalSarthi
+`/image` route, which retrieves and validates it server-side again; the
+provider URL is not exposed to the browser. For a controlled simulation, the
+panel explicitly says that no external imagery is used. It is not the real
+Ministry of Jal Shakti website and performs no government submission. The old
+standalone `/ministry` page is not part of the current navigation or route
+surface.
 
 Checkpoint 12 adds a controlled demonstration simulation layer. The
-`POST /api/city-monitor/simulate` route creates one deterministic, server-owned
-Lucknow detection event with a `demo:` issue ID, structured issue analysis, and
-automatic forwarding to the in-memory Demonstration Ministry Intake. The event
-uses no external image and is labeled `DEMONSTRATION_SIMULATION` throughout the
-API and dashboard. Repeating the event is idempotent and returns the existing
-`JSM-LKO-XXXXXX` intake record. This path supplements KartaView; it does not
-replace, fabricate, or present simulated observations as live external imagery.
+`POST /api/city-monitor/simulate` route loads a deterministic, server-owned
+120-record Lucknow dataset with realistic locality/address context, six issue
+categories, deterministic coordinates, confidence values from 0.80–0.99, and
+mixed Ministry statuses. Each record receives structured issue analysis and is
+automatically forwarded to the in-memory Demonstration Ministry Intake. The
+dataset uses no external image and is labeled `DEMONSTRATION_SIMULATION`
+throughout the API and City Monitor console. Repeating the load is idempotent
+and returns the existing `JSM-LKO-XXXXXX` intake records as duplicates. This
+path supplements KartaView; it does not replace, fabricate, or present
+simulated observations as live external imagery.
 
 The water-accumulating-pothole workflow is an isolated client flow backed by
 the `/api/pothole/analyze` and `/api/pothole/reverse-geocode` routes. Server-side

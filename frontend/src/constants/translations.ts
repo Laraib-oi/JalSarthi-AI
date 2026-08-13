@@ -5,7 +5,6 @@ export type Language = "en" | "hi";
 type Translation = {
   accessibility: { skipToContent: string };
   navbar: {
-    government: string;
     skipToContent: string;
     switchLanguage: string;
     home: string;
@@ -76,6 +75,25 @@ type Translation = {
       forwarded: string;
       error: string;
     };
+    datasetTitle: string;
+    datasetDescription: string;
+    loadDataset: string;
+    loadingDataset: string;
+    datasetLoaded: string;
+    datasetAlreadyLoaded: string;
+    datasetError: string;
+    searchPlaceholder: string;
+    filterCategory: string;
+    filterPriority: string;
+    filterStatus: string;
+    allCategories: string;
+    allPriorities: string;
+    allStatuses: string;
+    filteredResults: string;
+    overallTotals: string;
+    address: string;
+    area: string;
+    noResults: string;
     externalSource: string;
     simulationSource: string;
     refresh: string;
@@ -109,6 +127,35 @@ type Translation = {
     discovered: string;
     analyzed: string;
     ministryReceived: string;
+    issueDetails: string;
+    closeDetails: string;
+    issueSummary: string;
+    sourceEvidence: string;
+    sourceImagery: string;
+    sourceImageryUnavailable: string;
+    sourceImageryUnavailableDescription: string;
+    controlledSimulationEvidence: string;
+    controlledSimulationEvidenceDescription: string;
+    captureTimestamp: string;
+    sourceSequenceId: string;
+    imageValidation: string;
+    validationPassed: string;
+    validationNotApplicable: string;
+    validationDetailsUnavailable: string;
+    imageFormat: string;
+    imageDimensions: string;
+    aiAnalysis: string;
+    detectedCategory: string;
+    acceptanceDecision: string;
+    acceptedForIntake: string;
+    processingTrace: string;
+    kartaviewTrace: string[];
+    demonstrationTrace: string[];
+    ministryIntake: string;
+    forwarded: string;
+    notConnectedToRealMinistry: string;
+    intakeExplanation: string;
+    detailLoadError: string;
     noIssues: string;
     noIssuesDescription: string;
     operational: string;
@@ -381,7 +428,6 @@ export const TRANSLATIONS: Record<Language, Translation> = {
   en: {
     accessibility: { skipToContent: "Skip to main content" },
     navbar: {
-      government: "Inspired by the Ministry of Jal Shakti domain",
       skipToContent: "Skip to content",
       switchLanguage: "Switch language",
       home: "Home",
@@ -566,10 +612,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       sourceStatus: "Sources: KartaView + controlled demonstration",
       serviceAvailable: "Monitoring service available",
       demonstration: "Demonstration Ministry Intake",
-      demonstrationNotice: "Local demonstration environment — not connected to a government production system.",
+      demonstrationNotice:
+        "Local demonstration environment — not connected to a government production system.",
       simulation: {
-        title: "Run a controlled demonstration detection",
-        description: "Creates one clearly labeled simulated observation so the full city-monitor → Ministry flow can be shown when external imagery is unavailable.",
+        title: "Load controlled demonstration data",
+        description:
+          "Loads a clearly labeled synthetic dataset so the full city-monitor → Ministry flow can be shown when external imagery is unavailable.",
         run: "Run demonstration detection",
         running: "Running demonstration…",
         completed: "Demonstration detection completed",
@@ -578,15 +626,41 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         forwarded: "Forwarded to Ministry intake",
         error: "The demonstration event could not be completed.",
       },
+      datasetTitle: "Controlled demonstration data",
+      datasetDescription:
+        "Load 120 deterministic, server-owned synthetic monitoring records for the judge demonstration. These are not KartaView incidents.",
+      loadDataset: "Load demonstration monitoring data",
+      loadingDataset: "Loading demonstration data…",
+      datasetLoaded: "demonstration monitoring issues loaded",
+      datasetAlreadyLoaded: "demonstration issues available — no duplicates created",
+      datasetError: "The demonstration dataset could not be loaded.",
+      searchPlaceholder: "Search address, area, or Ministry ID",
+      filterCategory: "Category",
+      filterPriority: "Priority",
+      filterStatus: "Status",
+      allCategories: "All categories",
+      allPriorities: "All priorities",
+      allStatuses: "All statuses",
+      filteredResults: "Filtered results",
+      overallTotals: "Overall intake totals",
+      address: "Address",
+      area: "Area / locality",
+      noResults: "No issues match the current filters.",
       externalSource: "KartaView",
-      simulationSource: "Demonstration simulation",
+      simulationSource: "DEMONSTRATION_SIMULATION",
       refresh: "Refresh",
       refreshing: "Refreshing…",
       lastUpdated: "Last updated",
-      summary: { total: "Total issues", new: "New issues", highPriority: "High priority", acknowledged: "Acknowledged", resolved: "Resolved" },
+      summary: {
+        total: "Total issues",
+        new: "New issues",
+        highPriority: "High priority",
+        acknowledged: "Acknowledged",
+        resolved: "Resolved",
+      },
       categorySummary: "Issues by category",
       prioritySummary: "Issues by priority",
-      recentIssues: "Recent Ministry issues",
+      recentIssues: "Recent City Monitor issues",
       issueId: "Ministry issue ID",
       category: "Category",
       locationColumn: "Location",
@@ -605,12 +679,72 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       discovered: "Discovered",
       analyzed: "Analyzed",
       ministryReceived: "Ministry received",
+      issueDetails: "Issue evidence and processing details",
+      closeDetails: "Close details",
+      issueSummary: "Issue summary",
+      sourceEvidence: "Source evidence",
+      sourceImagery: "KartaView source imagery",
+      sourceImageryUnavailable: "Source imagery unavailable",
+      sourceImageryUnavailableDescription:
+        "No external source image is available for this issue. The record may still include source metadata and structured analysis.",
+      controlledSimulationEvidence: "No external imagery — controlled simulation",
+      controlledSimulationEvidenceDescription:
+        "This is a server-owned demonstration record, not a KartaView observation.",
+      captureTimestamp: "Capture timestamp",
+      sourceSequenceId: "Source sequence ID",
+      imageValidation: "Image validation",
+      validationPassed: "Passed server-side image validation",
+      validationNotApplicable:
+        "Not applicable — no external image is used for this controlled simulation.",
+      validationDetailsUnavailable:
+        "Validated before structured analysis; detailed image metadata is unavailable for this record.",
+      imageFormat: "Format",
+      imageDimensions: "Dimensions",
+      aiAnalysis: "Structured AI analysis",
+      detectedCategory: "Detected category",
+      acceptanceDecision: "Acceptance decision",
+      acceptedForIntake: "Accepted issue — forwarded to the local intake",
+      processingTrace: "Processing trace",
+      kartaviewTrace: [
+        "KartaView",
+        "Image validation",
+        "Gemini analysis",
+        "Accepted issue",
+        "Demonstration Ministry Intake",
+      ],
+      demonstrationTrace: [
+        "Demonstration simulation",
+        "Structured demonstration analysis",
+        "Accepted issue",
+        "Demonstration Ministry Intake",
+      ],
+      ministryIntake: "Demonstration Ministry Intake",
+      forwarded: "Forwarded: yes",
+      notConnectedToRealMinistry: "Not connected to the real Ministry of Jal Shakti.",
+      intakeExplanation:
+        "The accepted issue was forwarded server-side into the local Demonstration Ministry Intake.",
+      detailLoadError: "The issue details could not be loaded.",
       noIssues: "No accepted infrastructure issues have been received yet.",
-      noIssuesDescription: "New accepted issues will appear here when the city-monitor pipeline forwards them to the demonstration Ministry intake.",
+      noIssuesDescription:
+        "New accepted issues will appear here when the city-monitor pipeline forwards them to the demonstration Ministry intake.",
       operational: "Monitoring is operational",
-      awaiting: "0 accepted issues received · Awaiting qualifying city-monitor observations",
-      pipeline: ["KartaView", "Image validation", "Gemini analysis", "Accepted issue", "Automatic Ministry intake", "Ministry dashboard"],
-      simulationPipeline: ["Demonstration detection event", "Structured AI-style analysis", "Accepted city issue", "Automatic Ministry intake", "Ministry dashboard"],
+      awaiting:
+        "0 accepted issues received · Awaiting qualifying city-monitor observations",
+      pipeline: [
+        "KartaView",
+        "Image validation",
+        "Gemini analysis",
+        "Accepted issue",
+        "Automatic Ministry intake",
+        "City Monitor console",
+      ],
+      simulationPipeline: [
+        "Demonstration dataset",
+        "Structured AI-style analysis",
+        "Accepted city issue",
+        "Automatic Ministry intake",
+        "City Monitor console",
+      ],
       categories: {
         WATER_FILLED_POTHOLE: "Water-filled pothole",
         WATER_LEAKAGE: "Water leakage",
@@ -973,7 +1107,6 @@ export const TRANSLATIONS: Record<Language, Translation> = {
   hi: {
     accessibility: { skipToContent: "मुख्य सामग्री पर जाएँ" },
     navbar: {
-      government: "जल शक्ति मंत्रालय के क्षेत्र से प्रेरित",
       skipToContent: "मुख्य सामग्री पर जाएँ",
       switchLanguage: "भाषा बदलें",
       home: "होम",
@@ -1158,10 +1291,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       sourceStatus: "स्रोत: कार्टाव्यू + नियंत्रित प्रदर्शन",
       serviceAvailable: "निगरानी सेवा उपलब्ध",
       demonstration: "प्रदर्शन मंत्रालय इनटेक",
-      demonstrationNotice: "स्थानीय प्रदर्शन वातावरण — यह सरकारी उत्पादन प्रणाली से जुड़ा नहीं है।",
+      demonstrationNotice:
+        "स्थानीय प्रदर्शन वातावरण — यह सरकारी उत्पादन प्रणाली से जुड़ा नहीं है।",
       simulation: {
         title: "नियंत्रित प्रदर्शन पहचान चलाएँ",
-        description: "बाहरी चित्र उपलब्ध न होने पर पूरे शहर-निगरानी → मंत्रालय प्रवाह को दिखाने के लिए एक स्पष्ट रूप से चिह्नित सिम्युलेटेड अवलोकन बनाता है।",
+        description:
+          "बाहरी चित्र उपलब्ध न होने पर पूरे शहर-निगरानी → मंत्रालय प्रवाह को दिखाने के लिए एक स्पष्ट रूप से चिह्नित सिम्युलेटेड अवलोकन बनाता है।",
         run: "प्रदर्शन पहचान चलाएँ",
         running: "प्रदर्शन चल रहा है…",
         completed: "प्रदर्शन पहचान पूरी हुई",
@@ -1170,15 +1305,41 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         forwarded: "मंत्रालय इनटेक को भेजा गया",
         error: "प्रदर्शन घटना पूरी नहीं हो सकी।",
       },
+      datasetTitle: "नियंत्रित प्रदर्शन डेटा",
+      datasetDescription:
+        "जज प्रदर्शन के लिए 120 स्थिर, सर्वर-स्वामित्व वाले सिंथेटिक निगरानी रिकॉर्ड लोड करें। ये कार्टाव्यू घटनाएँ नहीं हैं।",
+      loadDataset: "प्रदर्शन निगरानी डेटा लोड करें",
+      loadingDataset: "प्रदर्शन डेटा लोड हो रहा है…",
+      datasetLoaded: "प्रदर्शन निगरानी समस्याएँ लोड हुईं",
+      datasetAlreadyLoaded: "प्रदर्शन समस्याएँ उपलब्ध हैं — कोई डुप्लिकेट नहीं बनाया गया",
+      datasetError: "प्रदर्शन डेटासेट लोड नहीं हो सका।",
+      searchPlaceholder: "पता, क्षेत्र या मंत्रालय आईडी खोजें",
+      filterCategory: "श्रेणी",
+      filterPriority: "प्राथमिकता",
+      filterStatus: "स्थिति",
+      allCategories: "सभी श्रेणियाँ",
+      allPriorities: "सभी प्राथमिकताएँ",
+      allStatuses: "सभी स्थितियाँ",
+      filteredResults: "फ़िल्टर किए गए परिणाम",
+      overallTotals: "कुल इनटेक आँकड़े",
+      address: "पता",
+      area: "क्षेत्र / स्थानीयता",
+      noResults: "वर्तमान फ़िल्टर से कोई समस्या मेल नहीं खाती।",
       externalSource: "कार्टाव्यू",
-      simulationSource: "प्रदर्शन सिमुलेशन",
+      simulationSource: "DEMONSTRATION_SIMULATION",
       refresh: "रिफ्रेश",
       refreshing: "रिफ्रेश हो रहा है…",
       lastUpdated: "अंतिम अपडेट",
-      summary: { total: "कुल समस्याएँ", new: "नई समस्याएँ", highPriority: "उच्च प्राथमिकता", acknowledged: "स्वीकृत", resolved: "समाधान किए गए" },
+      summary: {
+        total: "कुल समस्याएँ",
+        new: "नई समस्याएँ",
+        highPriority: "उच्च प्राथमिकता",
+        acknowledged: "स्वीकृत",
+        resolved: "समाधान किए गए",
+      },
       categorySummary: "श्रेणी के अनुसार समस्याएँ",
       prioritySummary: "प्राथमिकता के अनुसार समस्याएँ",
-      recentIssues: "हाल की मंत्रालय समस्याएँ",
+      recentIssues: "हाल की सिटी मॉनिटर समस्याएँ",
       issueId: "मंत्रालय समस्या आईडी",
       category: "श्रेणी",
       locationColumn: "स्थान",
@@ -1197,12 +1358,71 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       discovered: "खोजा गया",
       analyzed: "विश्लेषित",
       ministryReceived: "मंत्रालय को प्राप्त",
+      issueDetails: "समस्या साक्ष्य और प्रसंस्करण विवरण",
+      closeDetails: "विवरण बंद करें",
+      issueSummary: "समस्या सारांश",
+      sourceEvidence: "स्रोत साक्ष्य",
+      sourceImagery: "कार्टाव्यू स्रोत चित्र",
+      sourceImageryUnavailable: "स्रोत चित्र उपलब्ध नहीं है",
+      sourceImageryUnavailableDescription:
+        "इस समस्या के लिए कोई बाहरी स्रोत चित्र उपलब्ध नहीं है। रिकॉर्ड में फिर भी स्रोत मेटाडेटा और संरचित विश्लेषण हो सकता है।",
+      controlledSimulationEvidence: "कोई बाहरी चित्र नहीं — नियंत्रित सिमुलेशन",
+      controlledSimulationEvidenceDescription:
+        "यह सर्वर-स्वामित्व वाला प्रदर्शन रिकॉर्ड है, कार्टाव्यू अवलोकन नहीं।",
+      captureTimestamp: "कैप्चर समय",
+      sourceSequenceId: "स्रोत अनुक्रम आईडी",
+      imageValidation: "चित्र सत्यापन",
+      validationPassed: "सर्वर-साइड चित्र सत्यापन पास हुआ",
+      validationNotApplicable:
+        "लागू नहीं — इस नियंत्रित सिमुलेशन में कोई बाहरी चित्र उपयोग नहीं होता।",
+      validationDetailsUnavailable:
+        "संरचित विश्लेषण से पहले सत्यापित; इस रिकॉर्ड के लिए विस्तृत चित्र मेटाडेटा उपलब्ध नहीं है।",
+      imageFormat: "प्रारूप",
+      imageDimensions: "आयाम",
+      aiAnalysis: "संरचित एआई विश्लेषण",
+      detectedCategory: "पहचानी गई श्रेणी",
+      acceptanceDecision: "स्वीकृति निर्णय",
+      acceptedForIntake: "स्वीकृत समस्या — स्थानीय इनटेक को भेजी गई",
+      processingTrace: "प्रसंस्करण ट्रेस",
+      kartaviewTrace: [
+        "कार्टाव्यू",
+        "चित्र सत्यापन",
+        "जेमिनी विश्लेषण",
+        "स्वीकृत समस्या",
+        "प्रदर्शन मंत्रालय इनटेक",
+      ],
+      demonstrationTrace: [
+        "प्रदर्शन सिमुलेशन",
+        "संरचित प्रदर्शन विश्लेषण",
+        "स्वीकृत समस्या",
+        "प्रदर्शन मंत्रालय इनटेक",
+      ],
+      ministryIntake: "प्रदर्शन मंत्रालय इनटेक",
+      forwarded: "भेजा गया: हाँ",
+      notConnectedToRealMinistry: "वास्तविक जल शक्ति मंत्रालय से जुड़ा नहीं है।",
+      intakeExplanation:
+        "स्वीकृत समस्या को सर्वर-साइड स्थानीय प्रदर्शन मंत्रालय इनटेक में भेजा गया।",
+      detailLoadError: "समस्या विवरण लोड नहीं हो सका।",
       noIssues: "अभी तक कोई स्वीकृत अवसंरचना समस्या प्राप्त नहीं हुई है।",
-      noIssuesDescription: "जब शहर-निगरानी पाइपलाइन समस्याएँ प्रदर्शन मंत्रालय इनटेक को भेजेगी, तो नई स्वीकृत समस्याएँ यहाँ दिखाई देंगी।",
+      noIssuesDescription:
+        "जब शहर-निगरानी पाइपलाइन समस्याएँ प्रदर्शन मंत्रालय इनटेक को भेजेगी, तो नई स्वीकृत समस्याएँ यहाँ दिखाई देंगी।",
       operational: "निगरानी सक्रिय है",
       awaiting: "0 स्वीकृत समस्याएँ प्राप्त · योग्य शहर-निगरानी अवलोकनों की प्रतीक्षा",
-      pipeline: ["कार्टाव्यू", "चित्र सत्यापन", "जेमिनी विश्लेषण", "स्वीकृत समस्या", "स्वचालित मंत्रालय इनटेक", "मंत्रालय डैशबोर्ड"],
-      simulationPipeline: ["प्रदर्शन पहचान घटना", "संरचित एआई-शैली विश्लेषण", "स्वीकृत शहर समस्या", "स्वचालित मंत्रालय इनटेक", "मंत्रालय डैशबोर्ड"],
+      pipeline: [
+        "कार्टाव्यू",
+        "चित्र सत्यापन",
+        "जेमिनी विश्लेषण",
+        "स्वीकृत समस्या",
+        "स्वचालित मंत्रालय इनटेक",
+        "सिटी मॉनिटर कंसोल",
+      ],
+      simulationPipeline: [
+        "प्रदर्शन डेटासेट",
+        "संरचित एआई-शैली विश्लेषण",
+        "स्वीकृत शहर समस्या",
+        "स्वचालित मंत्रालय इनटेक",
+        "सिटी मॉनिटर कंसोल",
+      ],
       categories: {
         WATER_FILLED_POTHOLE: "पानी से भरा गड्ढा",
         WATER_LEAKAGE: "जल रिसाव",

@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { getCityMonitorConfig } from "@/lib/city-monitor/config";
-import { runDemonstrationDetection } from "@/lib/city-monitor/analysis";
-import { DEMONSTRATION_SCENARIO_ID } from "@/lib/city-monitor/simulation";
+import {
+  DEMONSTRATION_DATASET_ID,
+  DEMONSTRATION_DATASET_SIZE,
+  loadDemonstrationDataset,
+} from "@/lib/city-monitor/simulation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,7 +26,7 @@ function parseRequest(
   )
     return undefined;
   if (typeof body.cityId !== "string" || !body.cityId.trim()) return undefined;
-  if (body.scenarioId !== undefined && body.scenarioId !== DEMONSTRATION_SCENARIO_ID)
+  if (body.scenarioId !== undefined && body.scenarioId !== DEMONSTRATION_DATASET_ID)
     return undefined;
   return { cityId: body.cityId, scenarioId: body.scenarioId };
 }
@@ -40,34 +43,17 @@ export async function POST(request: Request) {
     return noStoreJson({ error: "UNKNOWN_CITY" }, { status: 400 });
 
   try {
-    const result = await runDemonstrationDetection(body.cityId);
+    const city = getCityMonitorConfig(body.cityId)!;
+    const result = await loadDemonstrationDataset(city);
     return noStoreJson({
       source: "DEMONSTRATION_SIMULATION",
-      // The screening path forwards accepted issues automatically. The
-      // runner's result distinguishes a first detection from a repeat; the
-      // second lookup below is intentionally idempotent.
-      duplicate: result.result === "duplicate",
-      event: result.event,
-      detection: {
-        detected: result.issue.analysis.detected,
-        category: result.issue.analysis.category,
-        confidence: result.issue.analysis.confidence,
-        description: result.issue.analysis.description,
-        evidence: result.issue.analysis.evidence,
-      },
-      cityIssue: {
-        issueId: result.issue.issueId,
-        sourceImageId: result.issue.sourceImageId,
-        latitude: result.issue.latitude,
-        longitude: result.issue.longitude,
-        analyzedAt: result.issue.analyzedAt,
-      },
-      ministry: {
-        ministryIssueId: result.ministry.issue.ministryIssueId,
-        status: result.ministry.issue.status,
-        priority: result.ministry.issue.priority,
-        source: result.ministry.issue.source,
-      },
+      dataset: DEMONSTRATION_DATASET_ID,
+      total: result.total,
+      loaded: result.loaded,
+      duplicate: result.duplicate,
+      uniqueMinistryRecords: result.total,
+      expectedDatasetSize: DEMONSTRATION_DATASET_SIZE,
+      byCategory: result.byCategory,
     });
   } catch {
     return noStoreJson({ error: "DEMONSTRATION_UNAVAILABLE" }, { status: 502 });

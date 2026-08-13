@@ -7,6 +7,7 @@ export interface MinistryIssueStore {
   create(record: Omit<MinistryIssueRecord, "ministryIssueId">): MinistryIssueRecord;
   get(ministryIssueId: string): MinistryIssueRecord | undefined;
   getBySource(source: MinistryIssueRecord["source"], sourceImageId: string): MinistryIssueRecord | undefined;
+  updateStatus(ministryIssueId: string, status: MinistryIssueRecord["status"]): MinistryIssueRecord | undefined;
   list(): MinistryIssueRecord[];
   summary(): MinistryIssueSummary;
 }
@@ -44,6 +45,14 @@ class InMemoryMinistryIssueStore implements MinistryIssueStore {
 
   getBySource(source: MinistryIssueRecord["source"], sourceImageId: string): MinistryIssueRecord | undefined {
     return [...this.issues.values()].find((issue) => issue.source === source && issue.sourceImageId === sourceImageId);
+  }
+
+  updateStatus(ministryIssueId: string, status: MinistryIssueRecord["status"]): MinistryIssueRecord | undefined {
+    const issue = this.issues.get(ministryIssueId);
+    if (!issue) return undefined;
+    const updated = { ...issue, status };
+    this.issues.set(ministryIssueId, updated);
+    return updated;
   }
 
   list(): MinistryIssueRecord[] {

@@ -1,14 +1,23 @@
 import "server-only";
 
 import { CityIssueAnalyzerError } from "@/lib/city-monitor/gemini-city-issue";
-import { fetchAndValidateCityImage, CityImageRetrievalError } from "@/lib/city-monitor/image-retrieval";
+import {
+  fetchAndValidateCityImage,
+  CityImageRetrievalError,
+} from "@/lib/city-monitor/image-retrieval";
 import { getCityIssueAnalyzer } from "@/lib/city-monitor/provider";
 import { getCityImageryStore } from "@/lib/city-monitor/store";
-import { ingestConfiguredCity, syncCityMonitorStoreStatus } from "@/lib/city-monitor/ingestion";
+import {
+  ingestConfiguredCity,
+  syncCityMonitorStoreStatus,
+} from "@/lib/city-monitor/ingestion";
 import { forwardToMinistry } from "@/lib/ministry/intake";
 import { getMinistryIssueStore } from "@/lib/ministry/store";
 import type { MinistryForwardResult } from "@/lib/ministry/intake";
-import { createDemonstrationDetectionEvent, analyzeDemonstrationAsset } from "@/lib/city-monitor/simulation";
+import {
+  createDemonstrationDetectionEvent,
+  analyzeDemonstrationAsset,
+} from "@/lib/city-monitor/simulation";
 import { getCityMonitorConfig } from "@/lib/city-monitor/config";
 import type {
   CityImageryAsset,
@@ -35,9 +44,10 @@ export class CityIssueScreeningError extends Error {
 }
 
 function isAcceptedIssue(asset: CityImageryAsset, analysis: CityIssueAnalysis): boolean {
-  const hasSourceTimestamp = asset.provider === "demonstration"
-    ? Boolean(asset.discoveredAt)
-    : Boolean(asset.capturedAt ?? asset.addedAt);
+  const hasSourceTimestamp =
+    asset.provider === "demonstration"
+      ? Boolean(asset.discoveredAt)
+      : Boolean(asset.capturedAt ?? asset.addedAt);
   return (
     analysis.detected &&
     analysis.category !== "NO_ISSUE" &&
@@ -56,32 +66,64 @@ function nonIssueStatus(analysis: CityIssueAnalysis): CityIssueProcessingStatus 
   return "rejected";
 }
 
-export async function screenCityImageryAsset(asset: CityImageryAsset): Promise<"accepted_issue" | "no_issue" | "uncertain" | "rejected" | "analysis_failed" | "duplicate"> {
+export async function screenCityImageryAsset(
+  asset: CityImageryAsset
+): Promise<
+  | "accepted_issue"
+  | "no_issue"
+  | "uncertain"
+  | "rejected"
+  | "analysis_failed"
+  | "duplicate"
+> {
   const store = getCityImageryStore();
   if (store.getProcessing(asset.providerPhotoId, asset.provider)) return "duplicate";
 
   let analysis: CityIssueAnalysis;
+  let imageValidation: CityMonitorIssue["imageValidation"];
   const analyzedAt = new Date().toISOString();
   try {
     if (asset.provider === "demonstration") {
       analysis = analyzeDemonstrationAsset(asset);
     } else {
       const image = await fetchAndValidateCityImage(asset);
+      imageValidation = {
+        status: "PASSED",
+        mimeType: image.mimeType,
+        width: image.width,
+        height: image.height,
+        validatedAt: analyzedAt,
+      };
       analysis = await getCityIssueAnalyzer().analyze(image);
     }
   } catch (error) {
     if (error instanceof CityImageRetrievalError) {
-      store.saveProcessing({ provider: asset.provider, providerPhotoId: asset.providerPhotoId, status: "rejected", analyzedAt: null });
+      store.saveProcessing({
+        provider: asset.provider,
+        providerPhotoId: asset.providerPhotoId,
+        status: "rejected",
+        analyzedAt: null,
+      });
       return "rejected";
     }
-    store.saveProcessing({ provider: asset.provider, providerPhotoId: asset.providerPhotoId, status: "analysis_failed", analyzedAt });
+    store.saveProcessing({
+      provider: asset.provider,
+      providerPhotoId: asset.providerPhotoId,
+      status: "analysis_failed",
+      analyzedAt,
+    });
     if (error instanceof CityIssueAnalyzerError) return "analysis_failed";
     return "analysis_failed";
   }
 
   if (!isAcceptedIssue(asset, analysis)) {
     const status = nonIssueStatus(analysis);
-    store.saveProcessing({ provider: asset.provider, providerPhotoId: asset.providerPhotoId, status, analyzedAt });
+    store.saveProcessing({
+      provider: asset.provider,
+      providerPhotoId: asset.providerPhotoId,
+      status,
+      analyzedAt,
+    });
     return status;
   }
 
@@ -98,10 +140,16 @@ export async function screenCityImageryAsset(asset: CityImageryAsset): Promise<"
     latitude: asset.latitude,
     longitude: asset.longitude,
     analysis,
+    ...(imageValidation ? { imageValidation } : {}),
     ...(asset.simulation ? { simulation: asset.simulation } : {}),
   };
   store.saveIssue(issue);
-  store.saveProcessing({ provider: asset.provider, providerPhotoId: asset.providerPhotoId, status: "accepted_issue", analyzedAt });
+  store.saveProcessing({
+    provider: asset.provider,
+    providerPhotoId: asset.providerPhotoId,
+    status: "accepted_issue",
+    analyzedAt,
+  });
   forwardToMinistry(issue.issueId);
   return "accepted_issue";
 }
@@ -146,14 +194,24 @@ export async function runDemonstrationDetection(cityId: string): Promise<{
     ministry = forwardToMinistry(issue.issueId);
   }
   syncCityMonitorStoreStatus();
-  return { event: stableEvent, result: existingIssue ? "duplicate" : "accepted_issue", issue, ministry };
+  return {
+    event: stableEvent,
+    result: existingIssue ? "duplicate" : "accepted_issue",
+    issue,
+    ministry,
+  };
 }
 
 export async function analyzeConfiguredCity(options: CityIssueScreeningOptions): Promise<{
   ingestion: Awaited<ReturnType<typeof ingestConfiguredCity>>;
   screening: CityIssueScreeningStats;
 }> {
-  if (options.maxImages !== undefined && (!Number.isInteger(options.maxImages) || options.maxImages < 1 || options.maxImages > 20)) {
+  if (
+    options.maxImages !== undefined &&
+    (!Number.isInteger(options.maxImages) ||
+      options.maxImages < 1 ||
+      options.maxImages > 20)
+  ) {
     throw new CityIssueScreeningError("INVALID_LIMIT");
   }
 
