@@ -1,97 +1,373 @@
 # JalSarthi AI
 
-JalSarthi AI is a Ministry of Jal Shakti domain-inspired application for
-bilingual water information and complaint-draft assistance. It is not an
-official Government of India service.
+JalSarthi AI is a bilingual (English/Hindi), citizen-facing assistant for
+water-related public information, services, and infrastructure observations.
+It combines a Gemini-backed assistant with deterministic service/planning
+workflows, a citizen water-accumulating-pothole flow, and a separate city-level
+water infrastructure monitor.
 
-The Next.js application includes a server-owned `/api/chat` route with:
+The current application provides:
 
-- Grounded English/Hindi water Q&A using language-isolated, verified knowledge.
-- Trusted source cards whose metadata is owned by the server.
-- A deterministic Water Conservation Planner.
-- A deterministic, session-only Complaint Draft Assistant with sensitive-detail redaction. Drafts are not submitted, routed, stored, or tracked.
-- A static, verified official-source catalogue. It does not perform live web searches or fetches.
+- Normal water-information chat with grounded source cards when the server AI
+  provider is configured.
+- English/Hindi language support.
+- Deterministic water-conservation planning, complaint drafting with
+  sensitive-detail redaction, and a verified official-source catalogue.
+- Water-accumulating-pothole image analysis with GPS or manually supplied
+  location.
+- A Lucknow-focused city monitor using KartaView imagery, server-side image
+  validation, and structured Gemini visual analysis.
+- A local Demonstration Ministry Intake and read-only Ministry dashboard.
+- A controlled demonstration simulation for showing the complete city-monitor
+  to Ministry flow when external imagery is unavailable.
 
-Normal grounded chat uses Gemini only when its server environment variable is
-configured. Planner, complaint drafting, and official-source discovery do not
-call Gemini.
+JalSarthi AI is not an official Government of India service. It does not claim
+government authorization or connection to the real Ministry of Jal Shakti.
 
-The guided water-accumulating-pothole flow is isolated from normal chat. It
-validates JPEG and PNG images on the server, sends only sanitized image
-bytes to the server-owned Gemini visual analyzer, and continues only when the
-server determines that both a visible pothole and visible standing water are
-present with sufficient confidence. The location step supports one-time,
-user-initiated browser GPS or manual latitude, longitude, and area input. Both
-paths use the same Leaflet/OpenStreetMap map, draggable marker, explicit
-confirmation, and server-side Nominatim reverse-geocoding route. The final
-preview shows the confirmed coordinates, the real reverse-geocoded address, and
-the user-entered area when applicable. It ends at `READY FOR REVIEW` and
-`NOT SUBMITTED`; there is no government submission API.
+## Product boundaries
 
-## Getting started
+The citizen pothole workflow ends at a review preview. It does not submit a
+complaint to the real Ministry of Jal Shakti or to any government system. The
+Ministry workflow is a local, server-side **Demonstration Ministry Intake**;
+its records are held in memory and reset when the server process restarts.
+
+There is no real government API, government database, authentication system,
+government authorization, automatic real-world submission, complaint tracking,
+or durable citizen-reporting database. The Ministry dashboard is a local
+read-only console, not the real Ministry website.
+
+KartaView is the implemented external imagery source for the city monitor.
+Lucknow coverage is sparse and historical. Historical imagery is never
+described as live, and the application makes no citywide or current-live
+Lucknow coverage claim. Demonstration records are explicitly labeled
+`DEMONSTRATION_SIMULATION`; simulated data is not KartaView data and must not
+be presented as a real KartaView or Gemini detection.
+
+## Citizen water-accumulating-pothole workflow
+
+The isolated route is `/assistant/report-water-accumulating-pothole`.
+
+1. The user selects a JPEG or PNG image. WebP and other formats are rejected in
+   the browser and again by the server.
+2. The server checks the image signature rather than trusting the browser MIME
+   value, enforces an 8 MiB input limit, decodes it with Sharp, and enforces an
+   8,000-pixel maximum dimension and 24-million-pixel maximum image size.
+3. Sharp re-encodes the image as canonical JPEG or PNG bytes. EXIF, XMP, IPTC,
+   ICC, and trailing input data are removed; the exact sanitized bytes are
+   decoded again before analysis.
+4. Sanitized bytes are sent server-side to the Gemini visual analyzer. The
+   server decides whether a visible pothole and visible standing water are
+   present with sufficient evidence. The response includes classification,
+   visibility flags, confidence, severity, description, and eligibility.
+5. The user can request one foreground browser GPS position using
+   `getCurrentPosition()`. There is no background GPS and no `watchPosition`.
+6. Alternatively, the user can enter latitude, longitude, and an area label.
+   Coordinates are parsed and range-checked; the area is required and limited
+   to 160 characters.
+7. Both location paths use the same Leaflet/OpenStreetMap map. The marker can
+   be moved, and the user must explicitly confirm the selected coordinates.
+   Moving the marker clears prior confirmation and address state.
+8. Confirmed coordinates are reverse-geocoded through the server-owned
+   `/api/pothole/reverse-geocode` route, which calls Nominatim with a controlled
+   URL, timeout, rate spacing, language, and sanitized address length.
+9. For manual input, the user-entered area is shown separately from the
+   reverse-geocoded address. A warning is displayed when the two do not appear
+   consistent; the user-entered area is not treated as authoritative address
+   data.
+10. A preview is available only after eligible analysis, an image, confirmed
+    coordinates, and successful reverse geocoding are present. Its terminal
+    labels are `READY FOR REVIEW` and `NOT SUBMITTED`.
+
+Changing or re-analyzing the image clears dependent location, confirmation,
+address, and preview state. Removing the image clears the workflow. Stale GPS
+and reverse-geocoding responses cannot overwrite newer state. Image previews,
+analysis, location, address, and draft state remain in current browser memory;
+the workflow does not use localStorage, sessionStorage, cookies, IndexedDB,
+analytics, or persistent image storage.
+
+## City Water Infrastructure Monitor
+
+The city monitor is separate from the citizen workflow. Its real-provider path
+is:
+
+```text
+KartaView metadata
+  → server retrieval of the selected image
+  → image signature validation, Sharp decoding, and sanitization
+  → structured Gemini city-issue analysis
+  → accepted city issue
+  → deduplication
+  → Demonstration Ministry Intake
+  → Ministry dashboard
+```
+
+KartaView metadata is obtained from its official photo endpoint. Image URLs
+are accepted only from HTTPS KartaView/OpenStreetCam hosts, and remote image
+responses are bounded before the shared Sharp validation path is used. Raw
+remote image bytes are not stored in the in-memory monitor store; the store
+keeps validated metadata, processing records, and accepted issue summaries.
+
+The configured city is:
+
+- City: Lucknow, India
+- Center: latitude `26.8467`, longitude `80.9462`
+- Scan radius: `1,000` metres
+- Date windows: bounded `YYYY-MM-DD` start and end dates
+
+This is a small configured scan area, not an administrative boundary. During
+validation, the bounded recent Lucknow query returned no imagery. One
+historical KartaView image was discovered and analyzed during development.
+No fake KartaView records are inserted when coverage is unavailable.
+
+### City issue categories and acceptance
+
+The visual analyzer recognizes exactly these categories:
+
+- `WATER_FILLED_POTHOLE`
+- `WATER_LEAKAGE`
+- `DRAINAGE_ISSUE`
+- `WATERLOGGING`
+- `DAMAGED_WATER_INFRASTRUCTURE`
+- `OTHER_WATER_RELATED_ISSUE`
+- `NO_ISSUE`
+- `UNCERTAIN`
+
+An accepted issue must have `detected === true`, a supported positive category
+(not `NO_ISSUE` or `UNCERTAIN`), confidence of at least `0.80`, finite valid
+latitude and longitude, a non-empty source image identity, and a valid source
+timestamp. KartaView issues require a capture time or provider-added time.
+The controlled simulation uses its generated/discovered event timestamp and
+is labeled separately. KartaView provider metadata and image identity are
+validated before analysis, and duplicate provider records are not reprocessed.
+
+## Demonstration Ministry Intake
+
+The local intake accepts an accepted city issue by ID and derives authoritative
+issue fields from the server-owned city-monitor store. A caller cannot submit
+arbitrary confidence, category, priority, evidence, coordinates, or timestamps
+through the intake request.
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/ministry/issues` | Forward an accepted `kartaview:<photo-id>` or `demo:<scenario-id>` city issue. |
+| `GET` | `/api/ministry/issues` | Return the local intake summary and Ministry issue list. |
+
+Ministry records include source identity, source image identity, category,
+confidence, AI description, evidence, coordinates, city/state, capture or
+generated/discovered time, analysis time, and Ministry receipt time. IDs use
+the form `JSM-LKO-000001` and increment in the in-memory store. Forwarding the
+same source issue again returns the existing record instead of creating a
+duplicate.
+
+Statuses are `NEW`, `ACKNOWLEDGED`, and `RESOLVED`. The current dashboard is
+read-only; there is no status-update endpoint. Priority is derived server-side:
+
+- `HIGH` for `WATER_LEAKAGE` or `WATERLOGGING` with confidence at least `0.90`.
+- `MEDIUM` for supported water infrastructure categories including leakage and
+  waterlogging below that high-confidence condition.
+- `LOW` for other accepted water-related categories.
+
+The source is `KARTAVIEW_CITY_MONITOR` for external observations and
+`DEMONSTRATION_SIMULATION` for controlled simulated observations.
+
+## Ministry dashboard
+
+`/ministry` is a read-only Ministry Monitoring Console for the local
+Demonstration Ministry Intake. It provides:
+
+- Total, new, high-priority, acknowledged, and resolved issue counts.
+- Category breakdown and priority summary.
+- Recent issue table with Ministry ID, category, location, priority,
+  confidence, source, captured/generated timing, receipt time, and status.
+- Expandable issue details containing source identity, coordinates, city/state,
+  timestamps, AI description, and evidence.
+- Explicit manual refresh and a last-updated timestamp; the browser does not
+  poll in the background.
+- English/Hindi presentation, including an empty state when no accepted issues
+  have reached the intake.
+- A persistent local-demonstration disclaimer.
+
+Real KartaView issues are labeled KartaView. Simulated issues are labeled
+Demonstration simulation in the table and details, and the dashboard shows a
+separate simulation pipeline.
+
+## Demonstration simulation
+
+The simulation exists to make the complete demonstration possible when sparse
+or historical external imagery cannot produce a qualifying observation. It is
+a separate, deterministic server-owned event and does not call KartaView or
+Gemini for an external image.
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/city-monitor/simulate` | Run the controlled Lucknow demonstration event. |
+| `POST` | `/api/city-monitor/demo` | Compatibility alias for the same simulation action. |
+
+The event uses scenario ID `lucknow-water-filled-pothole-001`, creates a
+structured AI-style result for `WATER_FILLED_POTHOLE`, accepts the city issue,
+and automatically forwards it to the Demonstration Ministry Intake. Its city
+issue ID is `demo:lucknow-water-filled-pothole-001`; its Ministry record is
+typically `JSM-LKO-000001` in a fresh server process. Repeating the event is
+idempotent and returns the existing Ministry ID with `duplicate: true`.
+
+Simulation assets use a `simulation://` source identity, provider-isolated
+store keys, and `DEMONSTRATION_SIMULATION` source labeling. **Simulated data is
+not real KartaView data and must never be presented as a live or historical
+external detection.**
+
+## Important routes
+
+### Pages
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Public JalSarthi AI landing page. |
+| `/assistant` | Normal citizen assistant. |
+| `/assistant/report-water-accumulating-pothole` | Citizen water-accumulating-pothole workflow. |
+| `/ministry` | Local Ministry Monitoring Console. |
+
+### API
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/chat` | Server-owned normal assistant chat. |
+| `POST` | `/api/pothole/analyze` | Validate/sanitize and analyze a citizen image. |
+| `POST` | `/api/pothole/reverse-geocode` | Server-owned Nominatim reverse geocoding. |
+| `POST` | `/api/city-monitor/ingest` | Discover bounded KartaView imagery for a configured city. |
+| `POST` | `/api/city-monitor/analyze` | Ingest and screen configured city imagery. |
+| `GET` | `/api/city-monitor/status` | Read city-monitor status and provider/simulation availability. |
+| `POST` | `/api/city-monitor/simulate` | Run the controlled demonstration event. |
+| `POST` | `/api/city-monitor/demo` | Alias for the demonstration event endpoint. |
+| `POST` | `/api/ministry/issues` | Forward an accepted city issue to the local intake. |
+| `GET` | `/api/ministry/issues` | Read the local Ministry intake summary and records. |
+
+## Architecture
+
+The citizen workflow and city-monitor workflow do not share client state or
+analysis systems:
+
+```mermaid
+flowchart TD
+  C[Citizen pothole page] --> CV[Server image validation and Sharp sanitization]
+  CV --> CG[Gemini pothole analysis]
+  CG --> CL[GPS or manual location]
+  CL --> CM[Leaflet/OpenStreetMap map]
+  CM --> CR[Explicit confirmation]
+  CR --> RG[Server Nominatim reverse geocoding]
+  RG --> RP[READY FOR REVIEW / NOT SUBMITTED]
+
+  K[KartaView] --> KR[Server retrieval]
+  KR --> KV[Validation and sanitization]
+  KV --> KG[Gemini city-issue analysis]
+  KG --> AI[Accepted city issue]
+  AI --> MI[Demonstration Ministry Intake]
+  MI --> MD[Ministry dashboard]
+
+  S[Demonstration simulation] --> SA[Structured AI-style analysis]
+  SA --> AI
+```
+
+The city-monitor store and Ministry store are server-side in-memory stores
+behind interfaces. They are not durable databases and reset with the server
+process. Provider-qualified store keys keep KartaView and demonstration
+records separate.
+
+## Setup
+
+From this directory:
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Put real local values in
+`.env.local`; do not commit that file. The current environment variable names
+are:
 
-| Script              | Purpose                           |
-| ------------------- | --------------------------------- |
-| `npm run dev`       | Start the local dev server        |
-| `npm run build`     | Production build                  |
-| `npm run start`     | Serve the production build        |
-| `npm run lint`      | Run ESLint                        |
-| `npm run format`    | Format the codebase with Prettier |
-| `npm run typecheck` | Run `tsc --noEmit`                |
+| Variable | Use |
+| --- | --- |
+| `GEMINI_API_KEY` | Server-only Gemini credential for normal chat and visual analysis. |
+| `GEMINI_MODEL` | Present in the environment template but not currently read by the providers; the current Gemini provider code uses `gemini-3.5-flash`. |
 
-## Tech stack
+Never prefix these variables with `NEXT_PUBLIC_`. No secret value belongs in
+source control or client code.
 
-Next.js 15 (App Router) &middot; TypeScript (strict) &middot; Tailwind CSS
-&middot; shadcn/ui primitives &middot; Framer Motion &middot; Lucide Icons
+## Development and validation
 
-## Project structure
-
-```
-src/
-  app/            Route entry points (layout, page, global styles)
-  components/
-    layout/       Navbar, Footer — persistent page chrome
-    sections/     Hero, FeaturesSection, CtaSection — page-specific blocks
-    shared/       Small reusable pieces (Logo, FeatureCard, WaveDivider)
-    ui/           Low-level shadcn-style primitives (Button, Card)
-  constants/      Static content: nav links, feature copy, site metadata
-  hooks/          Reusable client hooks (e.g. useScrolled)
-  lib/            Server-owned workflows, retrieval, source catalogue, AI provider, utilities
-  styles/         Base/typography layer imported by app/globals.css
-  types/          Shared TypeScript interfaces
-public/           Static assets
+```bash
+npm run typecheck
+npm run lint
+npm run build
+npm ls --depth=0
+cd ..
+git diff --check
 ```
 
-See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for the full rationale behind
-this structure and the package choices.
+The current validation status is:
 
-## Design system
+- Typecheck: PASS.
+- ESLint: PASS with no warnings or errors. `next lint` reports the framework's
+  deprecation notice and is not treated as a lint failure.
+- Production build: PASS.
+- Dependency tree: inspected; `@emnapi/runtime` may appear as extraneous in
+  the local install.
+- Whitespace/diff check: PASS.
+- Simulation idempotency: verified; repeat runs return the existing Ministry
+  issue.
+- KartaView/simulation separation: verified through provider/source labels and
+  provider-qualified store keys.
+- WebP rejection: verified; only JPEG and PNG are accepted.
+- `Namaste` is absent from user-facing source.
+- No tracked secret values were found.
+- No real Ministry submission endpoint exists.
+- The citizen pothole route and APIs remain present and intact.
 
-Colors, type scale, spacing, radii, and shadows are defined once in
-`tailwind.config.ts` as semantic tokens (`primary`, `ink`, `surface`, ...).
-Components should always reach for a token class over an arbitrary value.
+## Current limitations and demo flow
 
-## Boundaries and data lifecycle
+### A. Citizen workflow
 
-The application does not include:
+Open `/assistant/report-water-accumulating-pothole`, select a JPEG or PNG,
+complete server-side eligibility analysis, choose GPS or manual location,
+move and confirm the map marker, obtain the reverse-geocoded address, and open
+the review preview. The result is `READY FOR REVIEW` and `NOT SUBMITTED`.
 
-- Live government APIs or real-time government data
-- Complaint submission, routing, reference numbers, or tracking
-- Authentication, database storage, persistence, or analytics
-- Voice input
+### B. Real city-monitor workflow
 
-Selected images, analysis results, GPS/manual location, addresses, and drafts
-remain in React/browser memory for the current session. They are not written to
-localStorage, sessionStorage, cookies, IndexedDB, or a database. Confirmed
-coordinates are sent through the server only for the explicit reverse-geocoding
-request; they are not sent to a government service.
+Use the city-monitor ingestion and analysis APIs for the configured Lucknow
+scan. KartaView is the real external source, but current coverage is sparse and
+historical; the bounded recent query may return no imagery. Do not describe
+returned historical imagery as live and do not create substitute KartaView
+records.
 
-For normal chat, set `GEMINI_API_KEY` only in a local, untracked environment
-file such as `.env.local`. Do not expose it to the client.
+### C. Ministry dashboard
+
+Open `/ministry` and refresh the read-only intake view. Accepted city issues
+appear with their source, evidence, timestamps, priority, and Ministry ID.
+
+### D. Demonstration simulation
+
+On `/ministry`, use **Run demonstration detection**, or call
+`POST /api/city-monitor/simulate` with `{ "cityId": "lucknow" }`. The result
+shows a `demo:` city issue and forwards it automatically to the local intake.
+The dashboard labels it Demonstration simulation and shows the separate
+simulation pipeline. This is the appropriate demonstration path when real
+KartaView imagery is unavailable; it is not a real-world infrastructure claim.
+
+## Security and privacy
+
+- Gemini credentials are read only on the server and are not exposed through
+  `NEXT_PUBLIC_` variables or client bundles.
+- Citizen images and remote KartaView images are signature-checked, decoded,
+  dimension-limited, and re-encoded by Sharp before visual analysis.
+- Sanitized image bytes are the bytes passed to Gemini; metadata is removed.
+- Provider URLs are constrained to HTTPS KartaView/OpenStreetCam hosts, and
+  provider errors are translated to safe application errors.
+- Citizen GPS is a single user-initiated request. No background location,
+  `watchPosition`, analytics, or persistent location storage is used.
+- Reverse-geocoded addresses are sanitized and are requested only after the
+  user confirms coordinates.
+- No path submits a citizen report or city issue to the real Ministry of Jal
+  Shakti. The Ministry backend in this repository is demonstration-only and
+  in-memory.

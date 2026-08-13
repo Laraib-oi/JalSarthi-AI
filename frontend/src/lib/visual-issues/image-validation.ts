@@ -94,6 +94,14 @@ export async function validateVisualImage(file: File): Promise<ValidatedVisualIm
   if (file.size === 0) throw new ImageValidationError("INVALID_IMAGE");
 
   const bytes = new Uint8Array(await file.arrayBuffer());
+  return validateVisualImageBytes(bytes);
+}
+
+/** The same server-owned validation path for non-browser image sources. */
+export async function validateVisualImageBytes(bytes: Uint8Array): Promise<ValidatedVisualImage> {
+  if (bytes.byteLength > MAX_IMAGE_SIZE_BYTES) throw new ImageValidationError("IMAGE_TOO_LARGE");
+  if (bytes.byteLength === 0) throw new ImageValidationError("INVALID_IMAGE");
+
   const mimeType = getMimeType(bytes);
   if (!mimeType) throw new ImageValidationError("UNSUPPORTED_IMAGE");
 

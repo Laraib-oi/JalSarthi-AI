@@ -45,8 +45,43 @@ configured; planner, complaint drafting, and official-source discovery are
 deterministic and do not call it.
 
 There is no live government API, complaint submission, complaint tracking,
-authentication, database, or persistence. JalSarthi AI is not an official
-Government of India service.
+authentication, or durable citizen-reporting database. JalSarthi AI is not an
+official Government of India service.
+
+The separate JalSarthi City Water Infrastructure Monitor currently has a
+server-owned KartaView metadata ingestion layer. Lucknow is the initial
+configured city, represented by a configurable center and small scan radius,
+not an asserted administrative boundary. The ingestion records public
+street-level imagery metadata and distinguishes capture time, provider-added
+time, processing time, and discovery time. It reports latest available
+imagery and new imagery discovered; it does not claim that KartaView imagery
+is live. Checkpoint 8 uses an in-memory store behind a persistence interface,
+so state resets when the server restarts. Checkpoint 9 adds server-only image
+retrieval, Sharp validation, and a separate structured Gemini city-issue
+screening path. The browser never accesses the provider directly; Ministry
+intake and dashboard reads remain server-owned. A city issue is retained only
+when the validated analysis has a supported category, usable source metadata, and
+confidence of at least 0.80; source capture and analysis timestamps remain
+separate. Accepted city issues can be forwarded server-side to the local
+Demonstration Ministry Intake, which is not connected to the real Ministry of
+Jal Shakti and performs no government submission. The intake is in-memory and
+does not claim live or citywide Lucknow coverage; KartaView coverage remains
+sparse and historical.
+
+The `/ministry` route is a read-only Ministry Monitoring Console for the local
+Demonstration Ministry Intake. It reads the safe summary and issue list from
+`GET /api/ministry/issues`, supports explicit manual refresh, and does not run
+polling or background monitoring in the browser. It is not the real Ministry
+of Jal Shakti website and performs no government submission.
+
+Checkpoint 12 adds a controlled demonstration simulation layer. The
+`POST /api/city-monitor/simulate` route creates one deterministic, server-owned
+Lucknow detection event with a `demo:` issue ID, structured issue analysis, and
+automatic forwarding to the in-memory Demonstration Ministry Intake. The event
+uses no external image and is labeled `DEMONSTRATION_SIMULATION` throughout the
+API and dashboard. Repeating the event is idempotent and returns the existing
+`JSM-LKO-XXXXXX` intake record. This path supplements KartaView; it does not
+replace, fabricate, or present simulated observations as live external imagery.
 
 The water-accumulating-pothole workflow is an isolated client flow backed by
 the `/api/pothole/analyze` and `/api/pothole/reverse-geocode` routes. Server-side

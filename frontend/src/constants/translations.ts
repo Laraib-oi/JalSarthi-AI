@@ -14,6 +14,7 @@ type Translation = {
     benefits: string;
     about: string;
     ministry: string;
+    monitor: string;
     officialAssistant: string;
     talkToAssistant: string;
     openMenu: string;
@@ -56,6 +57,74 @@ type Translation = {
     items: Record<FeatureIconName, { title: string; description: string }>;
   };
   cta: { heading: string; description: string; button: string };
+  ministryDashboard: {
+    title: string;
+    subtitle: string;
+    location: string;
+    sourceStatus: string;
+    serviceAvailable: string;
+    demonstration: string;
+    demonstrationNotice: string;
+    simulation: {
+      title: string;
+      description: string;
+      run: string;
+      running: string;
+      completed: string;
+      duplicate: string;
+      accepted: string;
+      forwarded: string;
+      error: string;
+    };
+    externalSource: string;
+    simulationSource: string;
+    refresh: string;
+    refreshing: string;
+    lastUpdated: string;
+    summary: {
+      total: string;
+      new: string;
+      highPriority: string;
+      acknowledged: string;
+      resolved: string;
+    };
+    categorySummary: string;
+    prioritySummary: string;
+    recentIssues: string;
+    issueId: string;
+    category: string;
+    locationColumn: string;
+    priority: string;
+    confidence: string;
+    source: string;
+    captured: string;
+    received: string;
+    status: string;
+    details: string;
+    sourceImageId: string;
+    description: string;
+    evidence: string;
+    coordinates: string;
+    cityState: string;
+    discovered: string;
+    analyzed: string;
+    ministryReceived: string;
+    noIssues: string;
+    noIssuesDescription: string;
+    operational: string;
+    awaiting: string;
+    pipeline: string[];
+    simulationPipeline: string[];
+    categories: {
+      WATER_FILLED_POTHOLE: string;
+      WATER_LEAKAGE: string;
+      DRAINAGE_ISSUE: string;
+      WATERLOGGING: string;
+      DAMAGED_WATER_INFRASTRUCTURE: string;
+      OTHER_WATER_RELATED_ISSUE: string;
+    };
+    errors: { load: string; retry: string };
+  };
   footer: {
     ministry: string;
     portal: string;
@@ -321,6 +390,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       benefits: "Benefits",
       about: "About",
       ministry: "Ministry of Jal Shakti domain-inspired",
+      monitor: "City monitor",
       officialAssistant: "Jal Shakti-Inspired AI Assistant",
       talkToAssistant: "Talk to JalSarthi",
       openMenu: "Open menu",
@@ -488,6 +558,68 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       description:
         "JalSarthi AI is inspired by the Ministry of Jal Shakti domain and helps people find clear, source-backed water information.",
       button: "Start Chat with JalSarthi AI",
+    },
+    ministryDashboard: {
+      title: "JalSarthi City Water Infrastructure Monitor",
+      subtitle: "Ministry Monitoring Console",
+      location: "Lucknow, Uttar Pradesh",
+      sourceStatus: "Sources: KartaView + controlled demonstration",
+      serviceAvailable: "Monitoring service available",
+      demonstration: "Demonstration Ministry Intake",
+      demonstrationNotice: "Local demonstration environment — not connected to a government production system.",
+      simulation: {
+        title: "Run a controlled demonstration detection",
+        description: "Creates one clearly labeled simulated observation so the full city-monitor → Ministry flow can be shown when external imagery is unavailable.",
+        run: "Run demonstration detection",
+        running: "Running demonstration…",
+        completed: "Demonstration detection completed",
+        duplicate: "This demonstration event was already forwarded",
+        accepted: "Accepted city issue",
+        forwarded: "Forwarded to Ministry intake",
+        error: "The demonstration event could not be completed.",
+      },
+      externalSource: "KartaView",
+      simulationSource: "Demonstration simulation",
+      refresh: "Refresh",
+      refreshing: "Refreshing…",
+      lastUpdated: "Last updated",
+      summary: { total: "Total issues", new: "New issues", highPriority: "High priority", acknowledged: "Acknowledged", resolved: "Resolved" },
+      categorySummary: "Issues by category",
+      prioritySummary: "Issues by priority",
+      recentIssues: "Recent Ministry issues",
+      issueId: "Ministry issue ID",
+      category: "Category",
+      locationColumn: "Location",
+      priority: "Priority",
+      confidence: "Confidence",
+      source: "Source",
+      captured: "Captured",
+      received: "Received",
+      status: "Status",
+      details: "View details",
+      sourceImageId: "Source image ID",
+      description: "AI description",
+      evidence: "Evidence",
+      coordinates: "Coordinates",
+      cityState: "City / state",
+      discovered: "Discovered",
+      analyzed: "Analyzed",
+      ministryReceived: "Ministry received",
+      noIssues: "No accepted infrastructure issues have been received yet.",
+      noIssuesDescription: "New accepted issues will appear here when the city-monitor pipeline forwards them to the demonstration Ministry intake.",
+      operational: "Monitoring is operational",
+      awaiting: "0 accepted issues received · Awaiting qualifying city-monitor observations",
+      pipeline: ["KartaView", "Image validation", "Gemini analysis", "Accepted issue", "Automatic Ministry intake", "Ministry dashboard"],
+      simulationPipeline: ["Demonstration detection event", "Structured AI-style analysis", "Accepted city issue", "Automatic Ministry intake", "Ministry dashboard"],
+      categories: {
+        WATER_FILLED_POTHOLE: "Water-filled pothole",
+        WATER_LEAKAGE: "Water leakage",
+        DRAINAGE_ISSUE: "Drainage issue",
+        WATERLOGGING: "Waterlogging",
+        DAMAGED_WATER_INFRASTRUCTURE: "Damaged water infrastructure",
+        OTHER_WATER_RELATED_ISSUE: "Other water-related issue",
+      },
+      errors: { load: "The Ministry intake could not be reached.", retry: "Try again" },
     },
     footer: {
       ministry: "Ministry of Jal Shakti domain-inspired",
@@ -850,6 +982,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       benefits: "लाभ",
       about: "परिचय",
       ministry: "जल शक्ति मंत्रालय क्षेत्र-प्रेरित",
+      monitor: "शहर निगरानी",
       officialAssistant: "जल शक्ति-प्रेरित एआई सहायक",
       talkToAssistant: "जलसारथी से बात करें",
       openMenu: "मेनू खोलें",
@@ -1017,6 +1150,68 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       description:
         "जलसारथी एआई जल शक्ति मंत्रालय क्षेत्र से प्रेरित है और लोगों को स्पष्ट, स्रोत-आधारित जल जानकारी पाने में मदद करता है।",
       button: "जलसारथी एआई के साथ चैट शुरू करें",
+    },
+    ministryDashboard: {
+      title: "जलसारथी शहर जल अवसंरचना निगरानी",
+      subtitle: "मंत्रालय निगरानी कंसोल",
+      location: "लखनऊ, उत्तर प्रदेश",
+      sourceStatus: "स्रोत: कार्टाव्यू + नियंत्रित प्रदर्शन",
+      serviceAvailable: "निगरानी सेवा उपलब्ध",
+      demonstration: "प्रदर्शन मंत्रालय इनटेक",
+      demonstrationNotice: "स्थानीय प्रदर्शन वातावरण — यह सरकारी उत्पादन प्रणाली से जुड़ा नहीं है।",
+      simulation: {
+        title: "नियंत्रित प्रदर्शन पहचान चलाएँ",
+        description: "बाहरी चित्र उपलब्ध न होने पर पूरे शहर-निगरानी → मंत्रालय प्रवाह को दिखाने के लिए एक स्पष्ट रूप से चिह्नित सिम्युलेटेड अवलोकन बनाता है।",
+        run: "प्रदर्शन पहचान चलाएँ",
+        running: "प्रदर्शन चल रहा है…",
+        completed: "प्रदर्शन पहचान पूरी हुई",
+        duplicate: "यह प्रदर्शन घटना पहले ही भेजी जा चुकी है",
+        accepted: "स्वीकृत शहर समस्या",
+        forwarded: "मंत्रालय इनटेक को भेजा गया",
+        error: "प्रदर्शन घटना पूरी नहीं हो सकी।",
+      },
+      externalSource: "कार्टाव्यू",
+      simulationSource: "प्रदर्शन सिमुलेशन",
+      refresh: "रिफ्रेश",
+      refreshing: "रिफ्रेश हो रहा है…",
+      lastUpdated: "अंतिम अपडेट",
+      summary: { total: "कुल समस्याएँ", new: "नई समस्याएँ", highPriority: "उच्च प्राथमिकता", acknowledged: "स्वीकृत", resolved: "समाधान किए गए" },
+      categorySummary: "श्रेणी के अनुसार समस्याएँ",
+      prioritySummary: "प्राथमिकता के अनुसार समस्याएँ",
+      recentIssues: "हाल की मंत्रालय समस्याएँ",
+      issueId: "मंत्रालय समस्या आईडी",
+      category: "श्रेणी",
+      locationColumn: "स्थान",
+      priority: "प्राथमिकता",
+      confidence: "विश्वास स्तर",
+      source: "स्रोत",
+      captured: "कैप्चर किया गया",
+      received: "प्राप्त",
+      status: "स्थिति",
+      details: "विवरण देखें",
+      sourceImageId: "स्रोत चित्र आईडी",
+      description: "एआई विवरण",
+      evidence: "साक्ष्य",
+      coordinates: "निर्देशांक",
+      cityState: "शहर / राज्य",
+      discovered: "खोजा गया",
+      analyzed: "विश्लेषित",
+      ministryReceived: "मंत्रालय को प्राप्त",
+      noIssues: "अभी तक कोई स्वीकृत अवसंरचना समस्या प्राप्त नहीं हुई है।",
+      noIssuesDescription: "जब शहर-निगरानी पाइपलाइन समस्याएँ प्रदर्शन मंत्रालय इनटेक को भेजेगी, तो नई स्वीकृत समस्याएँ यहाँ दिखाई देंगी।",
+      operational: "निगरानी सक्रिय है",
+      awaiting: "0 स्वीकृत समस्याएँ प्राप्त · योग्य शहर-निगरानी अवलोकनों की प्रतीक्षा",
+      pipeline: ["कार्टाव्यू", "चित्र सत्यापन", "जेमिनी विश्लेषण", "स्वीकृत समस्या", "स्वचालित मंत्रालय इनटेक", "मंत्रालय डैशबोर्ड"],
+      simulationPipeline: ["प्रदर्शन पहचान घटना", "संरचित एआई-शैली विश्लेषण", "स्वीकृत शहर समस्या", "स्वचालित मंत्रालय इनटेक", "मंत्रालय डैशबोर्ड"],
+      categories: {
+        WATER_FILLED_POTHOLE: "पानी से भरा गड्ढा",
+        WATER_LEAKAGE: "जल रिसाव",
+        DRAINAGE_ISSUE: "जल निकासी समस्या",
+        WATERLOGGING: "जलभराव",
+        DAMAGED_WATER_INFRASTRUCTURE: "क्षतिग्रस्त जल अवसंरचना",
+        OTHER_WATER_RELATED_ISSUE: "अन्य जल-संबंधी समस्या",
+      },
+      errors: { load: "मंत्रालय इनटेक तक पहुँचा नहीं जा सका।", retry: "फिर प्रयास करें" },
     },
     footer: {
       ministry: "जल शक्ति मंत्रालय क्षेत्र-प्रेरित",
