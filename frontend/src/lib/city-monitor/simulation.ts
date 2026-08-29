@@ -11,6 +11,7 @@ import { getCityImageryStore } from "@/lib/city-monitor/store";
 import { forwardToMinistry } from "@/lib/ministry/intake";
 import { getMinistryIssueStore } from "@/lib/ministry/store";
 import type { MinistryIssueStatus } from "@/lib/ministry/types";
+import { getDemonstrationTimestamps } from "@/lib/city-monitor/demo-timestamps";
 
 /**
  * A deterministic, server-created observation for demonstrations and judging.
@@ -71,6 +72,10 @@ export type DemonstrationDatasetResult = {
   byCategory: Record<string, number>;
 };
 
+type DemonstrationGlobalState = typeof globalThis & {
+  __jalsarthiDemonstrationDatasetLoad?: Promise<DemonstrationDatasetResult>;
+};
+
 function categoryForIndex(index: number): Exclude<CityIssueCategory, "NO_ISSUE" | "UNCERTAIN"> {
   let cursor = 0;
   for (const [category, count] of CATEGORY_COUNTS) {
@@ -93,6 +98,7 @@ function createDatasetAsset(city: CityMonitorCityConfig, index: number): CityIma
   const category = categoryForIndex(index);
   const scenarioId = `lucknow-monitor-${String(index + 1).padStart(3, "0")}`;
   const confidence = confidenceForIndex(index);
+  const { discoveredAt } = getDemonstrationTimestamps(scenarioId);
   const generatedAt = DEMONSTRATION_DATASET_TIMESTAMP;
   const address = `${area}, Lucknow, Uttar Pradesh`;
   const scenario: CitySimulationMetadata = {
@@ -116,7 +122,7 @@ function createDatasetAsset(city: CityMonitorCityConfig, index: number): CityIma
     capturedAt: null,
     addedAt: null,
     processedAt: null,
-    discoveredAt: generatedAt,
+    discoveredAt,
     visibility: "simulation",
     status: "generated",
     qualityLevel: null,
@@ -208,7 +214,7 @@ export async function loadDemonstrationDataset(city: CityMonitorCityConfig): Pro
     let issue = imageryStore.getIssue(asset.providerPhotoId, "demonstration");
     if (!processing || !issue) {
       const analysis = analyzeDemonstrationAsset(asset);
-      const analyzedAt = DEMONSTRATION_DATASET_TIMESTAMP;
+      const { analyzedAt } = getDemonstrationTimestamps(asset.providerPhotoId);
       issue = {
         issueId: `demo:${asset.providerPhotoId}`,
         provider: "demonstration",
@@ -234,4 +240,13 @@ export async function loadDemonstrationDataset(city: CityMonitorCityConfig): Pro
     loaded += 1;
   }
   return { total: DEMONSTRATION_DATASET_SIZE, loaded, duplicate, byCategory };
+}
+
+/** Hydrate the deterministic demo through the same intake/store path on demand. */
+export function ensureDemonstrationDatasetLoaded(
+  city: CityMonitorCityConfig
+): Promise<DemonstrationDatasetResult> {
+  const globalState = globalThis as DemonstrationGlobalState;
+  globalState.__jalsarthiDemonstrationDatasetLoad ??= loadDemonstrationDataset(city);
+  return globalState.__jalsarthiDemonstrationDatasetLoad;
 }

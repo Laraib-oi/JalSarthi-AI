@@ -71,9 +71,9 @@ sparse and historical.
 
 The `/city-monitor` route is the judge-facing City Water Infrastructure Monitor
 for the local Demonstration Ministry Intake. It reads the safe summary and
-issue list from `GET /api/ministry/issues`, supports explicit refresh and an
-explicit demonstration-dataset load action, and does not poll or auto-seed in
-the browser. Its issue-level panel reads safe detail metadata from
+issue list from `GET /api/ministry/issues`, which initializes the server-owned
+demonstration dataset idempotently when needed. Refresh re-fetches the current
+state; the browser does not poll or generate records. Its issue-level panel reads safe detail metadata from
 `GET /api/city-monitor/issues/:ministryIssueId` and presents the source,
 server-side image-validation result, structured analysis, location, acceptance
 decision, Ministry receipt, and provenance-specific processing trace. For a
@@ -94,7 +94,9 @@ automatically forwarded to the in-memory Demonstration Ministry Intake. The
 dataset uses no external image and is labeled `DEMONSTRATION_SIMULATION`
 throughout the API and City Monitor console. Repeating the load is idempotent
 and returns the existing `JSM-LKO-XXXXXX` intake records as duplicates. This
-path supplements KartaView; it does not replace, fabricate, or present
+City Monitor initializes this dataset through the server-owned GET hydration
+path; Refresh only re-fetches the current state. The path supplements
+KartaView; it does not replace, fabricate, or present
 simulated observations as live external imagery.
 
 The water-accumulating-pothole workflow is an isolated client flow backed by

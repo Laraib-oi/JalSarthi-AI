@@ -13,7 +13,6 @@ type Translation = {
     benefits: string;
     about: string;
     ministry: string;
-    monitor: string;
     officialAssistant: string;
     talkToAssistant: string;
     openMenu: string;
@@ -75,13 +74,8 @@ type Translation = {
       forwarded: string;
       error: string;
     };
-    datasetTitle: string;
-    datasetDescription: string;
-    loadDataset: string;
-    loadingDataset: string;
-    datasetLoaded: string;
-    datasetAlreadyLoaded: string;
-    datasetError: string;
+    demonstrationDisclosure: string;
+    initializing: string;
     searchPlaceholder: string;
     filterCategory: string;
     filterPriority: string;
@@ -170,7 +164,7 @@ type Translation = {
       DAMAGED_WATER_INFRASTRUCTURE: string;
       OTHER_WATER_RELATED_ISSUE: string;
     };
-    errors: { load: string; retry: string };
+    errors: { load: string; refresh: string; retry: string };
   };
   footer: {
     ministry: string;
@@ -436,7 +430,6 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       benefits: "Benefits",
       about: "About",
       ministry: "Ministry of Jal Shakti domain-inspired",
-      monitor: "City monitor",
       officialAssistant: "Jal Shakti-Inspired AI Assistant",
       talkToAssistant: "Talk to JalSarthi",
       openMenu: "Open menu",
@@ -609,7 +602,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       title: "JalSarthi City Water Infrastructure Monitor",
       subtitle: "Ministry Monitoring Console",
       location: "Lucknow, Uttar Pradesh",
-      sourceStatus: "Sources: KartaView + controlled demonstration",
+      sourceStatus: "Sources: KartaView",
       serviceAvailable: "Monitoring service available",
       demonstration: "Demonstration Ministry Intake",
       demonstrationNotice:
@@ -626,14 +619,8 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         forwarded: "Forwarded to Ministry intake",
         error: "The demonstration event could not be completed.",
       },
-      datasetTitle: "Controlled demonstration data",
-      datasetDescription:
-        "Load 120 deterministic, server-owned synthetic monitoring records for the judge demonstration. These are not KartaView incidents.",
-      loadDataset: "Load demonstration monitoring data",
-      loadingDataset: "Loading demonstration data…",
-      datasetLoaded: "demonstration monitoring issues loaded",
-      datasetAlreadyLoaded: "demonstration issues available — no duplicates created",
-      datasetError: "The demonstration dataset could not be loaded.",
+      demonstrationDisclosure: "Demonstration data: 120 controlled synthetic records",
+      initializing: "Initializing monitoring data…",
       searchPlaceholder: "Search address, area, or Ministry ID",
       filterCategory: "Category",
       filterPriority: "Priority",
@@ -753,7 +740,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         DAMAGED_WATER_INFRASTRUCTURE: "Damaged water infrastructure",
         OTHER_WATER_RELATED_ISSUE: "Other water-related issue",
       },
-      errors: { load: "The Ministry intake could not be reached.", retry: "Try again" },
+      errors: {
+        load: "City Monitor demonstration data could not be initialized.",
+        refresh: "City Monitor data could not be refreshed.",
+        retry: "Try again",
+      },
     },
     footer: {
       ministry: "Ministry of Jal Shakti domain-inspired",
@@ -891,17 +882,17 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       potholeReport: {
         entry: {
           eyebrow: "Guided reporting",
-          title: "Report water-accumulating pothole",
+          title: "Report water-accumulating infrastructure",
           description:
-            "Prepare a session-only report for a visible pothole containing standing water.",
-          open: "Open pothole report",
+            "Prepare a session-only report for visible road infrastructure with standing water. The current image check looks for a pothole containing standing water.",
+          open: "Open infrastructure report",
         },
         eyebrow: "Guided reporting",
-        title: "Report Water-Accumulating Pothole",
+        title: "Report Water-Accumulating Infrastructure",
         description:
-          "This guided flow is only for a visible road pothole containing visible standing or accumulated water. It is not for general road damage or dry potholes.",
+          "This guided flow prepares a report for water-accumulating road infrastructure. The current image check looks for a visible pothole containing standing or accumulated water; it is not for general road damage or dry potholes.",
         targetCondition:
-          "The selected image is analyzed to determine whether a visible pothole contains visible standing water.",
+          "The selected image is analyzed using the current supported condition: a visible pothole containing visible standing water.",
         futureWorkflow: "Workflow",
         steps: [
           {
@@ -951,13 +942,13 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         analysis: {
           loading: "Analyzing image…",
           resultHeading: "Analysis result",
-          eligible: "Water-accumulating pothole detected.",
+          eligible: "Water-accumulating infrastructure detected.",
           eligibleDescription:
-            "Both a visible pothole and standing water were identified in this image.",
+            "The current image check identified both a visible pothole and standing water in this image.",
           notEligible:
-            "This image does not provide sufficient evidence of a water-accumulating pothole.",
+            "This image does not provide sufficient evidence of water-accumulating infrastructure.",
           notEligibleDescription:
-            "The image did not meet the required water-accumulating pothole criteria.",
+            "The image did not meet the current supported criteria: a visible pothole containing standing water.",
           insufficientEvidence: "More evidence is needed. Please try a clearer image.",
           insufficientEvidenceDescription:
             "The image does not provide enough visual evidence to make this determination.",
@@ -1076,7 +1067,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
           notSubmitted: "NOT SUBMITTED",
           evidence: "Evidence",
           issue: "Issue",
-          issueType: "Water-accumulating pothole",
+          issueType: "Water-accumulating infrastructure",
           aiObservation: "AI observation",
           location: "Location",
           confirmedCoordinates: "Confirmed coordinates",
@@ -1115,7 +1106,6 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       benefits: "लाभ",
       about: "परिचय",
       ministry: "जल शक्ति मंत्रालय क्षेत्र-प्रेरित",
-      monitor: "शहर निगरानी",
       officialAssistant: "जल शक्ति-प्रेरित एआई सहायक",
       talkToAssistant: "जलसारथी से बात करें",
       openMenu: "मेनू खोलें",
@@ -1305,14 +1295,8 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         forwarded: "मंत्रालय इनटेक को भेजा गया",
         error: "प्रदर्शन घटना पूरी नहीं हो सकी।",
       },
-      datasetTitle: "नियंत्रित प्रदर्शन डेटा",
-      datasetDescription:
-        "जज प्रदर्शन के लिए 120 स्थिर, सर्वर-स्वामित्व वाले सिंथेटिक निगरानी रिकॉर्ड लोड करें। ये कार्टाव्यू घटनाएँ नहीं हैं।",
-      loadDataset: "प्रदर्शन निगरानी डेटा लोड करें",
-      loadingDataset: "प्रदर्शन डेटा लोड हो रहा है…",
-      datasetLoaded: "प्रदर्शन निगरानी समस्याएँ लोड हुईं",
-      datasetAlreadyLoaded: "प्रदर्शन समस्याएँ उपलब्ध हैं — कोई डुप्लिकेट नहीं बनाया गया",
-      datasetError: "प्रदर्शन डेटासेट लोड नहीं हो सका।",
+      demonstrationDisclosure: "प्रदर्शन डेटा: 120 नियंत्रित सिंथेटिक रिकॉर्ड",
+      initializing: "निगरानी डेटा शुरू किया जा रहा है…",
       searchPlaceholder: "पता, क्षेत्र या मंत्रालय आईडी खोजें",
       filterCategory: "श्रेणी",
       filterPriority: "प्राथमिकता",
@@ -1431,7 +1415,11 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         DAMAGED_WATER_INFRASTRUCTURE: "क्षतिग्रस्त जल अवसंरचना",
         OTHER_WATER_RELATED_ISSUE: "अन्य जल-संबंधी समस्या",
       },
-      errors: { load: "मंत्रालय इनटेक तक पहुँचा नहीं जा सका।", retry: "फिर प्रयास करें" },
+      errors: {
+        load: "सिटी मॉनिटर प्रदर्शन डेटा शुरू नहीं हो सका।",
+        refresh: "सिटी मॉनिटर डेटा रिफ्रेश नहीं हो सका।",
+        retry: "फिर प्रयास करें",
+      },
     },
     footer: {
       ministry: "जल शक्ति मंत्रालय क्षेत्र-प्रेरित",
@@ -1566,17 +1554,17 @@ export const TRANSLATIONS: Record<Language, Translation> = {
       potholeReport: {
         entry: {
           eyebrow: "निर्देशित रिपोर्टिंग",
-          title: "पानी भरे गड्ढे की रिपोर्ट करें",
+          title: "जल-जमाव वाली अवसंरचना की रिपोर्ट करें",
           description:
-            "दिखाई देने वाले गड्ढे में खड़े पानी के लिए सत्र-केवल रिपोर्ट तैयार करें।",
-          open: "गड्ढा रिपोर्ट खोलें",
+            "दिखाई देने वाली सड़क अवसंरचना में पानी जमा होने के लिए सत्र-केवल रिपोर्ट तैयार करें। वर्तमान चित्र जाँच खड़े पानी वाले गड्ढे की पहचान करती है।",
+          open: "अवसंरचना रिपोर्ट खोलें",
         },
         eyebrow: "निर्देशित रिपोर्टिंग",
-        title: "पानी भरे गड्ढे की रिपोर्ट करें",
+        title: "जल-जमाव वाली अवसंरचना की रिपोर्ट करें",
         description:
-          "यह निर्देशित प्रवाह केवल ऐसे सड़क गड्ढे के लिए है जिसमें दिखाई देने वाला खड़ा या जमा हुआ पानी हो। यह सामान्य सड़क क्षति या सूखे गड्ढों के लिए नहीं है।",
+          "यह निर्देशित प्रवाह जल-जमाव वाली सड़क अवसंरचना के लिए रिपोर्ट तैयार करता है। वर्तमान चित्र जाँच ऐसे दिखाई देने वाले गड्ढे की पहचान करती है जिसमें खड़ा या जमा हुआ पानी हो; यह सामान्य सड़क क्षति या सूखे गड्ढों के लिए नहीं है।",
         targetCondition:
-          "चुने गए चित्र का विश्लेषण यह जानने के लिए किया जाता है कि दिखाई देने वाले गड्ढे में खड़ा पानी है या नहीं।",
+          "चुने गए चित्र का विश्लेषण वर्तमान समर्थित स्थिति के आधार पर किया जाता है: दिखाई देने वाले गड्ढे में खड़ा पानी।",
         futureWorkflow: "प्रक्रिया",
         steps: [
           {
@@ -1626,12 +1614,12 @@ export const TRANSLATIONS: Record<Language, Translation> = {
         analysis: {
           loading: "चित्र का विश्लेषण किया जा रहा है…",
           resultHeading: "विश्लेषण का परिणाम",
-          eligible: "पानी भरा गड्ढा पाया गया।",
+          eligible: "जल-जमाव वाली अवसंरचना मिली।",
           eligibleDescription:
-            "इस चित्र में दिखाई देने वाला गड्ढा और उसमें खड़ा पानी, दोनों पहचाने गए।",
-          notEligible: "इस चित्र में पानी भरे गड्ढे के पर्याप्त साक्ष्य नहीं हैं।",
+            "वर्तमान चित्र जाँच में इस चित्र में दिखाई देने वाला गड्ढा और खड़ा पानी, दोनों पहचाने गए।",
+          notEligible: "इस चित्र में जल-जमाव वाली अवसंरचना के पर्याप्त साक्ष्य नहीं हैं।",
           notEligibleDescription:
-            "चित्र पानी भरे गड्ढे के आवश्यक मानदंडों को पूरा नहीं करता।",
+            "चित्र वर्तमान समर्थित मानदंड—खड़े पानी वाले दिखाई देने वाले गड्ढे—को पूरा नहीं करता।",
           insufficientEvidence:
             "अधिक साक्ष्य की आवश्यकता है। कृपया अधिक स्पष्ट चित्र आज़माएँ।",
           insufficientEvidenceDescription:
@@ -1750,7 +1738,7 @@ export const TRANSLATIONS: Record<Language, Translation> = {
           notSubmitted: "जमा नहीं किया गया",
           evidence: "साक्ष्य",
           issue: "समस्या",
-          issueType: "पानी जमा करने वाला गड्ढा",
+          issueType: "जल-जमाव वाली अवसंरचना",
           aiObservation: "एआई अवलोकन",
           location: "स्थान",
           confirmedCoordinates: "पुष्टि किए गए निर्देशांक",

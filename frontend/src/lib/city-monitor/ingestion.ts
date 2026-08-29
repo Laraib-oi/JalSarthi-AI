@@ -251,7 +251,14 @@ export async function ingestConfiguredCity(
 }
 
 export function getCityMonitorStatus(): CityMonitorStatus {
-  return { ...monitorStatus, totalKnownImages: getCityImageryStore().count() };
+  const store = getCityImageryStore();
+  return {
+    ...monitorStatus,
+    totalKnownImages: store.count(),
+    totalAnalyzedImages: store.countAnalyzed(),
+    totalAcceptedIssues: store.countIssues(),
+    totalRejectedImages: store.countRejected(),
+  };
 }
 
 export function syncCityMonitorStoreStatus(): void {

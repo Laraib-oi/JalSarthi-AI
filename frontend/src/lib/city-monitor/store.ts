@@ -102,7 +102,14 @@ class InMemoryCityImageryStore implements CityImageryStore {
   }
 }
 
-const cityImageryStore: CityImageryStore = new InMemoryCityImageryStore();
+type CityMonitorGlobalState = typeof globalThis & {
+  __jalsarthiCityImageryStore?: CityImageryStore;
+};
+
+const globalState = globalThis as CityMonitorGlobalState;
+const cityImageryStore =
+  globalState.__jalsarthiCityImageryStore ?? new InMemoryCityImageryStore();
+globalState.__jalsarthiCityImageryStore = cityImageryStore;
 
 export function getCityImageryStore(): CityImageryStore {
   return cityImageryStore;

@@ -4,6 +4,7 @@ import { getCityImageryStore } from "@/lib/city-monitor/store";
 import type { CityIssueCategory, CityMonitorIssue } from "@/lib/city-monitor/types";
 import { getMinistryIssueStore } from "@/lib/ministry/store";
 import type { MinistryIssuePriority, MinistryIssueRecord } from "@/lib/ministry/types";
+import { getDemonstrationTimestamps } from "@/lib/city-monitor/demo-timestamps";
 
 export const MINISTRY_INTAKE_NAME = "Demonstration Ministry Intake";
 export const MINISTRY_SOURCE = "KARTAVIEW_CITY_MONITOR" as const;
@@ -62,6 +63,10 @@ function createRecord(issue: CityMonitorIssue): MinistryIssueRecord {
   const store = getMinistryIssueStore();
   const source =
     issue.provider === "demonstration" ? "DEMONSTRATION_SIMULATION" : MINISTRY_SOURCE;
+  const receivedAt =
+    issue.provider === "demonstration"
+      ? getDemonstrationTimestamps(issue.sourceImageId).receivedAt
+      : new Date().toISOString();
   return store.create({
     source,
     sourceImageId: issue.sourceImageId,
@@ -78,7 +83,7 @@ function createRecord(issue: CityMonitorIssue): MinistryIssueRecord {
     capturedAt: issue.capturedAt,
     discoveredAt: issue.discoveredAt,
     analyzedAt: issue.analyzedAt,
-    receivedAt: new Date().toISOString(),
+    receivedAt,
     status: "NEW",
     priority: priorityForIssue(issue.analysis.category, issue.analysis.confidence),
     city: "Lucknow",

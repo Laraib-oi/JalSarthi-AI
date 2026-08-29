@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { getMinistryIssueStore } from "@/lib/ministry/store";
+import { getCityMonitorConfig } from "@/lib/city-monitor/config";
+import { ensureDemonstrationDatasetLoaded } from "@/lib/city-monitor/simulation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +18,7 @@ function validId(value: string): boolean {
 }
 
 export async function GET(_request: Request, { params }: RouteContext) {
+  await ensureDemonstrationDatasetLoaded(getCityMonitorConfig("lucknow")!);
   const { ministryIssueId } = await params;
   if (!validId(ministryIssueId))
     return noStoreJson({ error: "ISSUE_NOT_FOUND" }, { status: 404 });

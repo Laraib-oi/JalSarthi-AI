@@ -78,7 +78,14 @@ class InMemoryMinistryIssueStore implements MinistryIssueStore {
   }
 }
 
-const ministryIssueStore: MinistryIssueStore = new InMemoryMinistryIssueStore();
+type MinistryGlobalState = typeof globalThis & {
+  __jalsarthiMinistryIssueStore?: MinistryIssueStore;
+};
+
+const globalState = globalThis as MinistryGlobalState;
+const ministryIssueStore =
+  globalState.__jalsarthiMinistryIssueStore ?? new InMemoryMinistryIssueStore();
+globalState.__jalsarthiMinistryIssueStore = ministryIssueStore;
 
 export function getMinistryIssueStore(): MinistryIssueStore {
   return ministryIssueStore;

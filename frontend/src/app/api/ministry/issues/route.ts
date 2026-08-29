@@ -6,6 +6,8 @@ import {
   MINISTRY_INTAKE_NAME,
 } from "@/lib/ministry/intake";
 import { getMinistryIssueStore } from "@/lib/ministry/store";
+import { getCityMonitorConfig } from "@/lib/city-monitor/config";
+import { ensureDemonstrationDatasetLoaded } from "@/lib/city-monitor/simulation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -64,7 +66,8 @@ export async function POST(request: Request) {
   }
 }
 
-export function GET() {
+export async function GET() {
+  await ensureDemonstrationDatasetLoaded(getCityMonitorConfig("lucknow")!);
   const store = getMinistryIssueStore();
   // Image locations remain server-owned. The issue-detail route supplies a
   // JalSarthi image endpoint only when a KartaView image can be safely shown.

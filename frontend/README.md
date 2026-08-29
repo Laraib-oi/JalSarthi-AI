@@ -192,8 +192,9 @@ the local Demonstration Ministry Intake and provides:
 - An actual KartaView image where the accepted record still has usable source
   imagery. It is delivered through JalSarthi's server route, not by a browser
   call to KartaView. Missing imagery is shown as unavailable.
-- Explicit manual refresh and a **Load demonstration dataset** action; the
-  browser does not poll or auto-seed in the background.
+- Automatic server-owned initialization of the controlled demonstration dataset
+  when the console opens, plus explicit manual refresh; the browser does not
+  poll or generate records in the background.
 - English/Hindi presentation, including an empty state when no accepted issues
   have reached the intake.
 - A persistent local-demonstration disclaimer.
@@ -361,9 +362,9 @@ records.
 
 ### C. City Monitor console
 
-Open `/city-monitor` and use **Load demonstration dataset** when a controlled
-judge-facing run is needed. The console can also be refreshed independently;
-it never seeds records on page load. Select **View details** for one issue to
+Open `/city-monitor`; the controlled server-owned demonstration dataset is
+initialized automatically for the judge-facing run. The Refresh control
+re-fetches the current state without creating duplicates. Select **View details** for one issue to
 show its source evidence, validation result, structured analysis, acceptance,
 address/area, coordinates, processing trace, and local Ministry receipt. A
 KartaView image appears only when the server can retrieve it; demonstration
@@ -371,11 +372,12 @@ records clearly show that no external imagery is used.
 
 ### D. Demonstration simulation
 
-On `/city-monitor`, use **Load demonstration dataset**, or call
+On `/city-monitor`, initialization loads 120 synthetic records and forwards
+them automatically to the local intake. The simulation endpoint remains
+available for explicit API validation: call
 `POST /api/city-monitor/simulate` with `{ "cityId": "lucknow", "scenarioId": "lucknow-monitor-dataset" }`.
-The first run loads 120 synthetic records and forwards them automatically to
-the local intake. Repeating the call leaves the same records in place and
-reports duplicates. The console labels every simulated record
+Repeating the call leaves the same records in place and reports duplicates.
+The console labels every simulated record
 `DEMONSTRATION_SIMULATION`; this is the appropriate demonstration path when
 real KartaView imagery is unavailable, not a real-world infrastructure claim.
 

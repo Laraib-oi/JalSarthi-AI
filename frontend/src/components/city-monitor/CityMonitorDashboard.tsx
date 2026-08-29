@@ -10,7 +10,6 @@ import {
   Clock3,
   ImageIcon,
   MapPin,
-  PlayCircle,
   RefreshCw,
   ScanLine,
   Send,
@@ -76,6 +75,7 @@ type DetailPayload = {
   issue: Issue;
   sourceEvidence: { imageState: "AVAILABLE" | "UNAVAILABLE"; imageUrl?: string };
 };
+type LoadMode = "initialization" | "refresh";
 
 const CATEGORIES: Category[] = [
   "WATER_FILLED_POTHOLE",
@@ -130,10 +130,8 @@ export default function CityMonitorDashboard() {
   const copy = t.ministryDashboard;
   const [payload, setPayload] = useState<Payload | null>(null);
   const [loading, setLoading] = useState(true);
-  const [datasetBusy, setDatasetBusy] = useState(false);
   const [error, setError] = useState(false);
-  const [datasetError, setDatasetError] = useState(false);
-  const [datasetMessage, setDatasetMessage] = useState<string | null>(null);
+  const [errorMode, setErrorMode] = useState<LoadMode>("initialization");
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<"" | Category>("");
@@ -145,9 +143,10 @@ export default function CityMonitorDashboard() {
   const [detailError, setDetailError] = useState(false);
   const [imageUnavailable, setImageUnavailable] = useState(false);
 
-  const loadIssues = useCallback(async () => {
+  const loadIssues = useCallback(async (mode: LoadMode) => {
     setLoading(true);
     setError(false);
+    setErrorMode(mode);
     try {
       const response = await fetch("/api/ministry/issues", { cache: "no-store" });
       if (!response.ok) throw new Error("MINISTRY_API_ERROR");
@@ -164,7 +163,7 @@ export default function CityMonitorDashboard() {
   }, []);
 
   useEffect(() => {
-    void loadIssues();
+    void loadIssues("initialization");
   }, [loadIssues]);
 
   useEffect(() => {
@@ -207,40 +206,6 @@ export default function CityMonitorDashboard() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [selectedIssueId]);
-
-  const loadDataset = async () => {
-    setDatasetBusy(true);
-    setDatasetError(false);
-    setDatasetMessage(null);
-    try {
-      const response = await fetch("/api/city-monitor/simulate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cityId: "lucknow",
-          scenarioId: "lucknow-monitor-dataset",
-        }),
-        cache: "no-store",
-      });
-      const result = (await response.json()) as {
-        total?: number;
-        loaded?: number;
-        duplicate?: number;
-      };
-      if (!response.ok || typeof result.total !== "number")
-        throw new Error("DATASET_ERROR");
-      setDatasetMessage(
-        result.loaded
-          ? `${result.loaded} ${copy.datasetLoaded}`
-          : `${result.total} ${copy.datasetAlreadyLoaded}`
-      );
-      await loadIssues();
-    } catch {
-      setDatasetError(true);
-    } finally {
-      setDatasetBusy(false);
-    }
-  };
 
   const summary = payload?.summary ?? {
     totalIssues: 0,
@@ -335,12 +300,13 @@ export default function CityMonitorDashboard() {
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-600">
               <span className="font-semibold text-slate-800">{copy.location}</span>
               <span>{copy.sourceStatus}</span>
+              <span>{copy.demonstrationDisclosure}</span>
             </div>
           </div>
           <div className="flex flex-col items-start gap-2 sm:items-end">
             <button
               type="button"
-              onClick={() => void loadIssues()}
+              onClick={() => void loadIssues("refresh")}
               disabled={loading}
               className="inline-flex items-center gap-2 rounded-md bg-blue-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-800 disabled:cursor-wait disabled:opacity-70"
             >
@@ -348,70 +314,39 @@ export default function CityMonitorDashboard() {
                 className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
                 aria-hidden="true"
               />
-              {loading ? copy.refreshing : copy.refresh}
+              {loading ? (payload ? copy.refreshing : copy.initializing) : copy.refresh}
             </button>
             <p className="text-xs text-slate-500" aria-live="polite">
               {copy.lastUpdated}: {lastUpdated ? dateLabel(lastUpdated, language) : "—"}
             </p>
           </div>
         </header>
+        {loading && !payload && (
+          <div
+            className="flex items-center gap-2 rounded-lg border border-cyan-200 bg-cyan-50 px-4 py-3 text-sm font-medium text-cyan-950"
+            role="status"
+            aria-live="polite"
+          >
+            <RefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" />
+            {copy.initializing}
+          </div>
+        )}
         {error && (
           <div
             role="alert"
             className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900"
           >
             <AlertTriangle className="mr-2 inline h-4 w-4" aria-hidden="true" />
-            {copy.errors.load}{" "}
+            {errorMode === "refresh" ? copy.errors.refresh : copy.errors.load}{" "}
             <button
               type="button"
-              onClick={() => void loadIssues()}
+              onClick={() => void loadIssues(errorMode)}
               className="ml-3 font-semibold underline"
             >
               {copy.errors.retry}
             </button>
           </div>
         )}
-        <section
-          className="rounded-lg border border-cyan-200 bg-cyan-50 p-5"
-          aria-labelledby="dataset-heading"
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h2
-                id="dataset-heading"
-                className="flex items-center gap-2 text-lg font-bold text-cyan-950"
-              >
-                <PlayCircle className="h-5 w-5 text-cyan-700" aria-hidden="true" />
-                {copy.datasetTitle}
-              </h2>
-              <p className="mt-1 max-w-3xl text-sm leading-6 text-cyan-900">
-                {copy.datasetDescription}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => void loadDataset()}
-              disabled={datasetBusy}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-cyan-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-cyan-700 disabled:cursor-wait disabled:opacity-70"
-            >
-              <PlayCircle
-                className={`h-4 w-4 ${datasetBusy ? "animate-pulse" : ""}`}
-                aria-hidden="true"
-              />
-              {datasetBusy ? copy.loadingDataset : copy.loadDataset}
-            </button>
-          </div>
-          {datasetError && (
-            <p className="mt-3 text-sm font-semibold text-rose-800" role="alert">
-              {copy.datasetError}
-            </p>
-          )}
-          {datasetMessage && (
-            <p className="mt-3 text-sm font-bold text-cyan-950" role="status">
-              {datasetMessage}
-            </p>
-          )}
-        </section>
         <section aria-labelledby="summary-heading">
           <h2 id="summary-heading" className="sr-only">
             {copy.overallTotals}
@@ -575,7 +510,12 @@ export default function CityMonitorDashboard() {
               {filteredIssues.length} {copy.summary.total.toLowerCase()}
             </span>
           </div>
-          {filteredIssues.length === 0 ? (
+          {loading && !payload ? (
+            <div className="flex min-h-52 items-center justify-center gap-2 px-5 py-14 text-sm font-medium text-slate-600">
+              <RefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" />
+              {copy.initializing}
+            </div>
+          ) : filteredIssues.length === 0 ? (
             <div className="px-5 py-14 text-center">
               <ShieldCheck
                 className="mx-auto h-8 w-8 text-emerald-700"

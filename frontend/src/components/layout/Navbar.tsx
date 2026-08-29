@@ -17,7 +17,6 @@ export default function Navbar() {
     { label: t.navbar.howItWorks, href: "/#how-it-works" },
     { label: t.navbar.benefits, href: "/#benefits" },
     { label: t.navbar.about, href: "/#about" },
-    { label: t.navbar.monitor, href: "/city-monitor" },
   ];
 
   useEffect(() => {
